@@ -39,6 +39,15 @@ mkdir -p ${DIR}/docker-test-network
 cp -r ${tempdir}/fabric-operator/* ${DIR}/operator-network
 cp -r ${tempdir}/fabric-samples/test-network/* ${DIR}/docker-test-network
 
+# get the very latest ansible updates
+git clone git@github.com:IBM-Blockchain/ansible-collection.git
+pushd ansible-collection
+git fetch pull/608/head:ofs-ansible
+docker build -t ofs-ansible .
+popd
+
+
+
 rm -Rf "$tempdir"
 
 # ---- now need to get the fabric-operator

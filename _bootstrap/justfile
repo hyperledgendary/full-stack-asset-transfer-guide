@@ -16,7 +16,7 @@ _default:
 
 bootstrap:
     #!/bin/bash
-    
+    ./_bootstrap/fabric-quickly.sh
 
 # Starts and configures a local KIND cluster
 cluster:
@@ -31,31 +31,37 @@ cluster:
 network:
     #!/bin/bash
     set -ex -o pipefail
+        
+    # insert ansible here
 
-    cp _cfg/auth-vars.yml  ${CWDIR}/infrastructure/fabric_network_playbooks
-    docker run --rm -v ${HOME}/.kube/:/home/ibp-user/.kube/ -v  ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks --network=host ofs-ansible:latest ansible-playbook /playbooks/00-complete.yml        
-
+# Cluster and Fabric Network
+everything: cluster console
 
 # Install the operations console
 console: operator
     #!/bin/bash
     set -ex -o pipefail
+    
+    pushd  ./fabric/operator-network/sample-network
+    ./network console
+    popd
 
-    docker run --rm -v ${HOME}/.kube/:/home/ibp-user/.kube/ -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks --network=host ofs-ansible:latest ansible-playbook /playbooks/01-operator-install.yml    
-    docker run --rm -v ${HOME}/.kube/:/home/ibp-user/.kube/ -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks --network=host ofs-ansible:latest ansible-playbook /playbooks/02-console-install.yml
+    # curl -X POST --insecure -L https://test-network-hlf-console-console.localho.st/ak/api/v2/permissions/keys -u admin:password  -k  -H 'Content-Type: application/json'  -d '{"roles": ["writer", "manager"],"description": "newkey"     }' > console_key.json
+    # Basic auth passed here must match that in the generated ansible playbooks. You have been warned.
 
-    AUTH=$(curl -X POST https://fabricinfra-hlf-console-console.localho.st:443/ak/api/v2/permissions/keys -u admin:password -k -H 'Content-Type: application/json' -d '{"roles": ["writer", "manager"],"description": "newkey"}')
+    AUTH=$(curl -X POST https://test-network-hlf-console-console.localho.st:443/ak/api/v2/permissions/keys -u admin:password -k -H 'Content-Type: application/json' -d '{"roles": ["writer", "manager"],"description": "newkey"}')
+
     KEY=$(echo $AUTH | jq .api_key | tr -d '"')
     SECRET=$(echo $AUTH | jq .api_secret | tr -d '"')
 
     echo "Writing authentication file for Ansible based IBP (Software) network building"
     cat << EOF > $CWDIR/_cfg/auth-vars.yml
     api_key: $KEY
-    api_endpoint: http://fabricinfra-hlf-console-console.localho.st/
+    api_endpoint: http://test-network-hlf-console-console.localho.st
     api_authtype: basic
     api_secret: $SECRET
     EOF
-    cat ${CWDIR}/_cfg/auth-vars.yml
+    cat $ROOT_DIR/_cfg/auth-vars.yml
 
 # Installs just the operator
 operator:
