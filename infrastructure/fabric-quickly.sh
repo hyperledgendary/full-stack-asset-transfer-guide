@@ -42,7 +42,7 @@ cp -r ${tempdir}/fabric-samples/test-network/* ${DIR}/docker-test-network
 # get the very latest ansible updates
 git clone git@github.com:IBM-Blockchain/ansible-collection.git
 pushd ansible-collection
-git fetch pull/608/head:ofs-ansible
+git fetch pull/610/head:ofs-ansible
 docker build -t ofs-ansible .
 popd
 

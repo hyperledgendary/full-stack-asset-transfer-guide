@@ -1,25 +1,6 @@
 # full-stack-asset-transfer-guide
 
 > NOTE to Early Users Please ensure that you clone and build the docker image for the ansible-collection
-
-## ALPHA Important Setup Steps
-
-Ahead of the [PR](https://github.com/IBM-Blockchain/ansible-collection/pull/608/files) being available
-
-```
-git clone git@github.com:IBM-Blockchain/ansible-collection.git
-cd ansible-collection
-git fetch pull/608/head:ofs-ansible
-docker build -t ofs-ansible .
-```
-
-The Operator's sample-network is also required for some intial setup for the cluster
-```
-git clone https://github.com/hyperledger-labs/fabric-operator.git ./fabric/operator-network
-```
-
-_however_ if you run the `./infrastructure/fabric-quickly.sh` script the above will be done for you
-
 ## Scenario
 
 - Asset transfer, based on the secured assest transfer scenario.
@@ -28,6 +9,9 @@ _however_ if you run the `./infrastructure/fabric-quickly.sh` script the above w
     - Escrow (as endorsing org)
     - Regulator (as ordering org)
     - Bank/Finance Company (two of)
+
+
+
 
 ## Parts of the system
 
@@ -39,6 +23,24 @@ _however_ if you run the `./infrastructure/fabric-quickly.sh` script the above w
 - Tokens..... yes
 
 ## Orchestration of System to provision
+
+## 0. Important Setup Steps 
+
+Ahead of the [PR](https://github.com/IBM-Blockchain/ansible-collection/pull/610/files) being available
+
+```
+git clone git@github.com:IBM-Blockchain/ansible-collection.git
+cd ansible-collection
+git fetch pull/610/head:ofs-ansible
+docker build -t ofs-ansible .
+```
+
+The Operator's sample-network is also required for some intial setup for the cluster
+```
+git clone https://github.com/hyperledger-labs/fabric-operator.git ./fabric/operator-network
+```
+
+_however_ if you run the `./infrastructure/fabric-quickly.sh` script the above will be done for you
 
 ### 1. Create a KIND local Cluster
 
@@ -104,7 +106,7 @@ docker run --rm -v ${HOME}/.kube/:/home/ibp-user/.kube/ -v $(pwd)/infrastructure
 The console will be running on `https://fabricinfra-hlf-console-console.localho.st/` - give it a try in your favourite browser. Be aware though it will complain as the certificate for HTTPS is not setup.
 
 
-### 3. Create Two org network within the console
+### 3. Create Two org network within the console  *AS-IS*
 
 This is the standard Ansible Collection network.
 
