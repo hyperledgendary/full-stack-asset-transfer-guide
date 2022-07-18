@@ -8,6 +8,7 @@
     state: present
     organization_name: "{{ ordering_org_name }}"
     organization_msp_id: "{{ ordering_service_msp }}"
+    wallet: "/playbooks"
   vars_files:
     - common-vars.yml
     - auth-vars.yml
