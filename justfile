@@ -159,11 +159,17 @@ console: operator
     EOF
     cat ${CWDIR}/_cfg/auth-vars.yml
 
-# Installs just the operator
+
+# Just install the operator
 operator:
     #!/bin/bash
-    pushd  ./fabric/operator-network/sample-network
-    ./network operator
-    popd
+    set -ex -o pipefail
 
+    docker run \
+        --rm \
+        -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
+        -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
+        --network=host \
+        ofs-ansible:latest \
+        ansible-playbook /playbooks/01-operator-install.yml
 
