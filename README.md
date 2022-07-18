@@ -31,7 +31,8 @@ Ahead of the [PR](https://github.com/IBM-Blockchain/ansible-collection/pull/610/
 ```
 git clone git@github.com:IBM-Blockchain/ansible-collection.git
 cd ansible-collection
-git fetch pull/610/head:ofs-ansible
+git fetch origin pull/610/head:ofs-ansible
+git checkout ofs-ansible
 docker build -t ofs-ansible .
 ```
 
