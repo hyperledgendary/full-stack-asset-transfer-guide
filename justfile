@@ -151,6 +151,7 @@ console: operator
     SECRET=$(echo $AUTH | jq .api_secret | tr -d '"')
 
     echo "Writing authentication file for Ansible based IBP (Software) network building"
+    mkdir -p _cfg
     cat << EOF > $CWDIR/_cfg/auth-vars.yml
     api_key: $KEY
     api_endpoint: http://fabricinfra-hlf-console-console.localho.st/
