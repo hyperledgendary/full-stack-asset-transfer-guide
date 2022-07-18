@@ -67,10 +67,11 @@ At this point you may wish to run k9s to watch changes in the cluster
 
 This will deloy the Fabric Operator and the Fabric Operations console via two Ansible Playbooks, and some configuration variables. 
 
-```shell
-ansible-playbook ./infrastructure/01-operator-install.yml
-ansible-playbook ./infrastructure/02-console-install.yml
-```
+
+Creation of the operator - `ansible-playbook ./infrastructure/01-operator-install.yml`
+Creation of the console - `ansible-playbook ./infrastructure/02-console-install.yml`
+
+The configuration file is `vars.yml`
 
 ```yaml
 # The type of K8S cluster this is using
@@ -103,7 +104,23 @@ docker run --rm -v ${HOME}/.kube/:/home/ibp-user/.kube/ -v $(pwd)/infrastructure
 docker run --rm -v ${HOME}/.kube/:/home/ibp-user/.kube/ -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks --network=host fabric-ansible:latest ansible-playbook /playbooks/02-console-install.yml
 ```
 
+or
+
+```shell
+just console  
+```
+
 The console will be running on `https://fabricinfra-hlf-console-console.localho.st/` - give it a try in your favourite browser. Be aware though it will complain as the certificate for HTTPS is not setup.
+The default password and admin account is defined in the `vars.yml` above - you will need to change this on first login
+
+It is best to create an API key to be able to work with teh Console/Operator programmatically, the `just console` command does this for you. For reference the command is (change the password here if you've altered in the console)
+
+```
+curl -X POST https://fabricinfra-hlf-console-console.localho.st:443/ak/api/v2/permissions/keys -u admin:password -k -H 'Content-Type: application/json' -d '{"roles": ["writer", "manager"],"description": "newkey"}'
+```
+
+
+This producces json, that the script will parse into a auth-vars.yml for ansible to use in step 3.
 
 
 ### 3. Create Two org network within the console  *AS-IS*
@@ -113,6 +130,8 @@ This is the standard Ansible Collection network.
 ```
 just fabric-network
 ```
+
+When this has completed, there will be a 2 org network ready to go. 
 
 ### 3. Confirm the Fabric Sail Descriptor   **TO-BE**
 

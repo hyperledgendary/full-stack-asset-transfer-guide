@@ -10,6 +10,7 @@
     organization_msp_id: "{{ org2_msp_id }}"
     ca_name: "{{ org2_ca_name }}"
     peer_name: "{{ org2_peer_name }}"
+    wallet: "/_cfg"
   vars_files:
     - common-vars.yml
     - org2-vars.yml

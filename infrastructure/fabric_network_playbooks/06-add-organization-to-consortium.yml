@@ -4,6 +4,8 @@
 ---
 - name: Add the organization to the consortium
   hosts: localhost
+  vars: 
+    wallet: "/_cfg"
   vars_files:
     - common-vars.yml
     - ordering-org-vars.yml
@@ -31,7 +33,7 @@
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         ordering_service: "{{ ordering_service_name }}"
-        identity: "{{ ordering_org_name }} Admin.json"
+        identity: "{{ wallet }}/{{ ordering_org_name }} Admin.json"
         msp_id: "{{ ordering_service_msp }}"
         operation: fetch
         name: "{{ ordering_service.ordering_service[0].system_channel_id }}"
@@ -65,7 +67,7 @@
     - name: Sign the system channel configuration update
       ibm.blockchain_platform.channel_config:
         operation: sign_update
-        identity: "{{ ordering_org_name }} Admin.json"
+        identity: "{{ wallet }}/{{ ordering_org_name }} Admin.json"
         msp_id: "{{ ordering_service_msp }}"
         name: "{{ ordering_service.ordering_service[0].system_channel_id }}"
         path: config_update.bin
@@ -80,7 +82,7 @@
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         operation: apply_update
         ordering_service: "{{ ordering_service_name }}"
-        identity: "{{ ordering_org_name }} Admin.json"
+        identity: "{{ wallet }}/{{ ordering_org_name }} Admin.json"
         msp_id: "{{ ordering_service_msp }}"
         name: "{{ ordering_service.ordering_service[0].system_channel_id }}"
         path: config_update.bin

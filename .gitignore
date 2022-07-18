@@ -1,3 +1,4 @@
 fabric
 _cfg
 node_modules
+*.bin

@@ -32,8 +32,7 @@ network:
     #!/bin/bash
     set -ex -o pipefail
 
-    cp _cfg/auth-vars.yml  ${CWDIR}/infrastructure/fabric_network_playbooks
-    docker run --rm -v ${HOME}/.kube/:/home/ibp-user/.kube/ -v  ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks --network=host ofs-ansible:latest ansible-playbook /playbooks/00-complete.yml        
+    docker run --rm -u $(id -u) -v ${HOME}/.kube/:/home/ibp-user/.kube/ -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks -v ${CWDIR}/_cfg:/_cfg --network=host ofs-ansible:latest ansible-playbook /playbooks/00-complete.yml        
 
 
 # Install the operations console

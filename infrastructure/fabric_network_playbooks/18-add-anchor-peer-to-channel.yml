@@ -4,6 +4,8 @@
 ---
 - name: Add the anchor peer to the channel
   hosts: localhost
+  vars:
+    wallet: "/_cfg"
   vars_files:
     - common-vars.yml
     - org2-vars.yml
@@ -31,7 +33,7 @@
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         ordering_service: "{{ ordering_service_name }}"
-        identity: "{{ org2_name }} Admin.json"
+        identity: "{{ wallet }}/{{ org2_name }} Admin.json"
         msp_id: "{{ org2_msp_id }}"
         operation: fetch
         name: "{{ channel_name }}"
@@ -67,7 +69,7 @@
     - name: Sign the channel configuration update
       ibm.blockchain_platform.channel_config:
         operation: sign_update
-        identity: "{{ org2_name }} Admin.json"
+        identity: "{{ wallet }}/{{ org2_name }} Admin.json"
         msp_id: "{{ org2_msp_id }}"
         name: "{{ channel_name }}"
         path: config_update.bin
@@ -82,7 +84,7 @@
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         operation: apply_update
         ordering_service: "{{ ordering_service_name }}"
-        identity: "{{ org2_name }} Admin.json"
+        identity: "{{ wallet }}/{{ org2_name }} Admin.json"
         msp_id: "{{ org2_msp_id }}"
         name: "{{ channel_name }}"
         path: config_update.bin
