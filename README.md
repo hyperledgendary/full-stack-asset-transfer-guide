@@ -48,21 +48,9 @@ _however_ if you run the `./infrastructure/fabric-quickly.sh` script the above w
 This will start a local KIND cluster running in a docker container; there are some minor variations beween K8S clusters, for example default storage class, which this will configure for you.
 
 ```shell
-just cluster
+just kind
 ```
 
-This runs the following commands
-
-```shell
-    pushd  ./fabric/operator-network/sample-network
-    ./network kind
-    ./network cluster init
-    popd
-```
-At this point you may wish to run k9s to watch changes in the cluster
-
-> this really needs to be one command to start KIND, and setup anything it needs eg storage/ingress
-> cluster init actually is doing too much, as some of that is then replicated by the playbooks below
 
 ### 2. Deploy the Fabric Operator and Console
 
