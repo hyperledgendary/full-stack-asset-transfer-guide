@@ -31,41 +31,23 @@ Ahead of the [PR](https://github.com/IBM-Blockchain/ansible-collection/pull/610/
 ```
 git clone git@github.com:IBM-Blockchain/ansible-collection.git
 cd ansible-collection
-git fetch pull/610/head:ofs-ansible
+git fetch origin pull/610/head:ofs-ansible
+git checkout ofs-ansible
 docker build -t ofs-ansible .
 ```
-
-The Operator's sample-network is also required for some intial setup for the cluster
-```
-git clone https://github.com/hyperledger-labs/fabric-operator.git ./fabric/operator-network
-```
-
-_however_ if you run the `./infrastructure/fabric-quickly.sh` script the above will be done for you
 
 ### 1. Create a KIND local Cluster
 
 This will start a local KIND cluster running in a docker container; there are some minor variations beween K8S clusters, for example default storage class, which this will configure for you.
 
 ```shell
-just cluster
+just kind
 ```
 
-This runs the following commands
-
-```shell
-    pushd  ./fabric/operator-network/sample-network
-    ./network kind
-    ./network cluster init
-    popd
-```
-At this point you may wish to run k9s to watch changes in the cluster
-
-> this really needs to be one command to start KIND, and setup anything it needs eg storage/ingress
-> cluster init actually is doing too much, as some of that is then replicated by the playbooks below
 
 ### 2. Deploy the Fabric Operator and Console
 
-This will deloy the Fabric Operator and the Fabric Operations console via two Ansible Playbooks, and some configuration variables. 
+This will deploy the Fabric Operator and the Fabric Operations console via two Ansible Playbooks, and some configuration variables. 
 
 
 Creation of the operator - `ansible-playbook ./infrastructure/01-operator-install.yml`
