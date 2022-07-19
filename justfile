@@ -49,7 +49,7 @@ unkind:
 
 
 # Installs and configures a sample Fabric Network
-network:
+sample-network: console
     #!/bin/bash
     set -ex -o pipefail
 
@@ -60,7 +60,7 @@ network:
         -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ofs-ansible:latest /
+        ofs-ansible:latest \
             ansible-playbook /playbooks/00-complete.yml
 
 
