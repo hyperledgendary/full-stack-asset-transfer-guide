@@ -50,8 +50,8 @@ just kind
 This will deploy the Fabric Operator and the Fabric Operations console via two Ansible Playbooks, and some configuration variables. 
 
 
-Creation of the operator - `ansible-playbook ./infrastructure/01-operator-install.yml`
-Creation of the console - `ansible-playbook ./infrastructure/02-console-install.yml`
+- Creation of the operator: `ansible-playbook ./infrastructure/01-operator-install.yml`
+- Creation of the console:  `ansible-playbook ./infrastructure/02-console-install.yml`
 
 The configuration file is `vars.yml`
 
