@@ -53,16 +53,37 @@ network:
     #!/bin/bash
     set -ex -o pipefail
 
-    docker run --rm -u $(id -u) -v ${HOME}/.kube/:/home/ibp-user/.kube/ -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks -v ${CWDIR}/_cfg:/_cfg --network=host ofs-ansible:latest ansible-playbook /playbooks/00-complete.yml        
+    docker run \
+        --rm \
+        -u $(id -u) \
+        -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
+        -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks \
+        -v ${CWDIR}/_cfg:/_cfg \
+        --network=host \
+        ofs-ansible:latest /
+            ansible-playbook /playbooks/00-complete.yml
 
 
-# Install the operations console
+# Install the operations console and fabric-operator
 console: operator
     #!/bin/bash
     set -ex -o pipefail
 
-    docker run --rm -v ${HOME}/.kube/:/home/ibp-user/.kube/ -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks --network=host ofs-ansible:latest ansible-playbook /playbooks/01-operator-install.yml    
-    docker run --rm -v ${HOME}/.kube/:/home/ibp-user/.kube/ -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks --network=host ofs-ansible:latest ansible-playbook /playbooks/02-console-install.yml
+    docker run \
+        --rm \
+        -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
+        -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
+        --network=host \
+        ofs-ansible:latest \
+            ansible-playbook /playbooks/01-operator-install.yml
+
+    docker run \
+        --rm \
+        -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
+        -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
+        --network=host \
+        ofs-ansible:latest \
+            ansible-playbook /playbooks/02-console-install.yml
 
     AUTH=$(curl -X POST https://fabricinfra-hlf-console-console.localho.st:443/ak/api/v2/permissions/keys -u admin:password -k -H 'Content-Type: application/json' -d '{"roles": ["writer", "manager"],"description": "newkey"}')
     KEY=$(echo $AUTH | jq .api_key | tr -d '"')
@@ -79,7 +100,7 @@ console: operator
     cat ${CWDIR}/_cfg/auth-vars.yml
 
 
-# Just install the operator
+# Just install the fabric-operator
 operator:
     #!/bin/bash
     set -ex -o pipefail
