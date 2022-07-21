@@ -2,25 +2,38 @@
   SPDX-License-Identifier: Apache-2.0
 */
 
-import {Object as DataType, Property} from 'fabric-contract-api';
+import { Object, Property } from 'fabric-contract-api';
+import { TextDecoder } from 'util';
 
-@DataType()
+const utf8Decoder = new TextDecoder();
+
+@Object()
 export class Asset {
-    @Property()
+    static unmarshal(bytes: Uint8Array | string): Asset {
+        const json = typeof bytes === 'string' ? bytes : utf8Decoder.decode(bytes);
+        try {
+            return JSON.parse(json) as Asset;
+        } catch (err) {
+            console.log('Malformed asset JSON:', json);
+            throw err;
+        }
+    }
+
+    @Property('docType', 'string')
     public docType?: string;
 
-    @Property()
-    public ID: string;
+    @Property('ID', 'string')
+    public ID = '';
 
-    @Property()
-    public Color: string;
+    @Property('Color', 'string')
+    public Color = '';
 
-    @Property()
-    public Size: number;
+    @Property('Size', 'number')
+    public Size = 0;
 
-    @Property()
-    public Owner: string;
+    @Property('Owner', 'string')
+    public Owner = '';
 
-    @Property()
-    public AppraisedValue: number;
+    @Property('AppraisedValue', 'number')
+    public AppraisedValue = 0;
 }
