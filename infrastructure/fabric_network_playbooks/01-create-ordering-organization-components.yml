@@ -10,7 +10,7 @@
     organization_msp_id: "{{ ordering_service_msp }}"
     wallet: "/_cfg"
   vars_files:
-    - common-vars.yml
-    - ordering-org-vars.yml
+    - /_cfg/fabric-common-vars.yml
+    - /_cfg/fabric-ordering-org-vars.yml
   roles:
     - ibm.blockchain_platform.ordering_organization

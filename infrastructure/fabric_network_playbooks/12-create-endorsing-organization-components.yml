@@ -12,7 +12,7 @@
     peer_name: "{{ org2_peer_name }}"
     wallet: "/_cfg"
   vars_files:
-    - common-vars.yml
-    - org2-vars.yml
+    - /_cfg/fabric-common-vars.yml
+    - /_cfg/fabric-org2-vars.yml
   roles:
     - ibm.blockchain_platform.endorsing_organization

@@ -5,8 +5,8 @@
 - name: Import the ordering service
   hosts: localhost
   vars_files:
-    - common-vars.yml
-    - org2-vars.yml
+    - /_cfg/fabric-common-vars.yml
+    - /_cfg/fabric-org2-vars.yml
   tasks:
     - name: Import the ordering service
       ibm.blockchain_platform.external_ordering_service:
