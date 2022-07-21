@@ -5,7 +5,7 @@
 - name: Deploy Opensource Console
   hosts: localhost
   vars_files:
-    - vars.yml
+    - /_cfg/operator-console-vars.yml
   vars:
     state: present
     wait_timeout: 3600

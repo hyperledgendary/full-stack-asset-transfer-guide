@@ -37,6 +37,9 @@ bootstrap:
 
 cluster_name := "kind"
 
+
+doit: kind review-config operator console sample-network
+
 # Starts a local KIND Kubernetes cluster
 # Installs Nginx ingress controller
 # Adds a DNS override in kube DNS for *.localho.st -> Nginx LB IP
@@ -47,40 +50,55 @@ unkind:
     #!/bin/bash
     kind delete cluster --name {{cluster_name}}
 
+review-config:
+    #!/bin/bash
+    cp ${CWDIR}/infrastructure/configuration/*.yml ${CWDIR}/_cfg
 
-# Installs and configures a sample Fabric Network
-sample-network: console
+    echo ">> Fabric Operations Console Configuration"
+    echo ""
+    cat ${CWDIR}/_cfg/operator-console-vars.yml
+
+    echo ">> Fabric Common Configuration"
+    echo ""
+    cat ${CWDIR}/_cfg/fabric-common-vars.yml
+
+    echo ">> Fabric Org1 Configuration"
+    echo ""
+    cat ${CWDIR}/_cfg/fabric-org1-vars.yml
+
+    echo ">> Fabric Org2 Configuration"
+    echo ""
+    cat ${CWDIR}/_cfg/fabric-org2-vars.yml
+
+    echo ">> Fabric Orderer Configuration"
+    echo ""
+    cat ${CWDIR}/_cfg/fabric-ordering-org-vars.yml
+
+# Just install the fabric-operator
+operator:
     #!/bin/bash
     set -ex -o pipefail
 
     docker run \
         --rm \
-        -u $(id -u) \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
-        -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
-        --network=host \
-        ofs-ansible:latest \
-            ansible-playbook /playbooks/00-complete.yml
-
-
-# Install the operations console and fabric-operator
-console: operator
-    #!/bin/bash
-    set -ex -o pipefail
-
-    docker run \
-        --rm \
-        -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
         -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
         --network=host \
         ofs-ansible:latest \
             ansible-playbook /playbooks/01-operator-install.yml
 
+
+# Install the operations console and fabric-operator
+console: 
+    #!/bin/bash
+    set -ex -o pipefail
+
     docker run \
         --rm \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
         -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
+        -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         ofs-ansible:latest \
             ansible-playbook /playbooks/02-console-install.yml
@@ -99,17 +117,65 @@ console: operator
     EOF
     cat ${CWDIR}/_cfg/auth-vars.yml
 
-
-# Just install the fabric-operator
-operator:
+# Installs and configures a sample Fabric Network
+sample-network: 
     #!/bin/bash
     set -ex -o pipefail
 
     docker run \
         --rm \
+        -u $(id -u) \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
-        -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
+        -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks \
+        -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         ofs-ansible:latest \
-            ansible-playbook /playbooks/01-operator-install.yml
+            ansible-playbook /playbooks/00-complete.yml
 
+deploy-chaincode: 
+    #!/bin/bash
+    set -ex -o pipefail
+
+    docker run \
+        --rm \
+        -u $(id -u) \
+        -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
+        -v ${CWDIR}/infrastructure/chaincode_playbooks:/playbooks \
+        -v ${CWDIR}/_cfg:/_cfg \
+        --network=host \
+        ofs-ansible:latest \
+            ansible-playbook /playbooks/19-install-and-approve-chaincode.yml 
+
+    docker run \
+        --rm \
+        -u $(id -u) \
+        -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
+        -v ${CWDIR}/infrastructure/chaincode_playbooks:/playbooks \
+        -v ${CWDIR}/_cfg:/_cfg \
+        --network=host \
+        ofs-ansible:latest \
+            ansible-playbook /playbooks/20-install-and-approve-chaincode.yml 
+
+    docker run \
+        --rm \
+        -u $(id -u) \
+        -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
+        -v ${CWDIR}/infrastructure/chaincode_playbooks:/playbooks \
+        -v ${CWDIR}/_cfg:/_cfg \
+        --network=host \
+        ofs-ansible:latest \
+            ansible-playbook /playbooks/21-commit-chaincode.yml 
+
+# register-application: 
+#     #!/bin/bash
+#     set -ex -o pipefail
+
+#     docker run \
+#         --rm \
+#         -u $(id -u) \
+#         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
+#         -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks \
+#         -v ${CWDIR}/_cfg:/_cfg \
+#         --network=host \
+#         ofs-ansible:latest \
+#             ansible-playbook /playbooks/22-register-application.yml           

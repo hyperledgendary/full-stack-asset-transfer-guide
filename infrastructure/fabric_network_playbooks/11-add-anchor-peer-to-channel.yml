@@ -7,8 +7,8 @@
   vars:
     wallet: "/_cfg"
   vars_files:
-    - common-vars.yml
-    - org1-vars.yml
+    - /_cfg/fabric-common-vars.yml
+    - /_cfg/fabric-org1-vars.yml
   tasks:
     - name: Get the ordering service information
       ibm.blockchain_platform.ordering_service_info:

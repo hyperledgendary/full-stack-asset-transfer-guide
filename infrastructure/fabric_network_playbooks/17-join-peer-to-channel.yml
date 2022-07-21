@@ -7,8 +7,8 @@
   vars:
     wallet: "/_cfg"
   vars_files:
-    - common-vars.yml
-    - org2-vars.yml
+    - /_cfg/fabric-common-vars.yml
+    - /_cfg/fabric-org2-vars.yml
   tasks:
     - name: Fetch the genesis block for the channel
       ibm.blockchain_platform.channel_block:

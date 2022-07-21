@@ -11,8 +11,6 @@
     - Bank/Finance Company (two of)
 
 
-
-
 ## Parts of the system
 
 - Chaincode for the private asset transfer
@@ -26,15 +24,19 @@
 
 ## 0. Important Setup Steps 
 
-Ahead of the [PR](https://github.com/IBM-Blockchain/ansible-collection/pull/610/files) being available
+Ahead of the [PR](https://github.com/IBM-Blockchain/ansible-collection/pull/610/files) being available please checkout the main branch
 
 ```
 git clone git@github.com:IBM-Blockchain/ansible-collection.git
 cd ansible-collection
-git fetch origin pull/610/head:ofs-ansible
-git checkout ofs-ansible
 docker build -t ofs-ansible .
 ```
+
+> For the impatient
+```
+just kind review-config operator console fabric-network
+```
+
 
 ### 1. Create a KIND local Cluster
 
@@ -44,16 +46,24 @@ This will start a local KIND cluster running in a docker container; there are so
 just kind
 ```
 
+### 1.5. Review the Configuration of the Fabric Operator/Console/Network
+
+To validate / see the configuration of the componets that will be created run 
+
+```shell
+just review-config
+```
+
+This will copy the default files into the `_cfg` directory, and display them. You're at liberty to alter these if you wish
 
 ### 2. Deploy the Fabric Operator and Console
 
 This will deploy the Fabric Operator and the Fabric Operations console via two Ansible Playbooks, and some configuration variables. 
 
-
 - Creation of the operator: `ansible-playbook ./infrastructure/01-operator-install.yml`
 - Creation of the console:  `ansible-playbook ./infrastructure/02-console-install.yml`
 
-The configuration file is `vars.yml`
+The configuration file is `operator-console-vars.yml`
 
 ```yaml
 # The type of K8S cluster this is using
@@ -89,7 +99,7 @@ docker run --rm -v ${HOME}/.kube/:/home/ibp-user/.kube/ -v $(pwd)/infrastructure
 or
 
 ```shell
-just console  
+just operator console  
 ```
 
 The console will be running on `https://fabricinfra-hlf-console-console.localho.st/` - give it a try in your favourite browser. Be aware though it will complain as the certificate for HTTPS is not setup.
@@ -110,7 +120,7 @@ This producces json, that the script will parse into a auth-vars.yml for ansible
 This is the standard Ansible Collection network.
 
 ```
-just fabric-network
+just sample-network
 ```
 
 When this has completed, there will be a 2 org network ready to go. 
