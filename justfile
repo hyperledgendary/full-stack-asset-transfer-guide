@@ -45,6 +45,8 @@ doit: kind review-config operator console sample-network
 # Adds a DNS override in kube DNS for *.localho.st -> Nginx LB IP
 kind:
     infrastructure/kind_with_nginx.sh {{cluster_name}}
+    ls -lart ~/.kube/config
+    chmod o+r ~/.kube/config
 
 unkind:
     #!/bin/bash
@@ -52,6 +54,7 @@ unkind:
 
 review-config:
     #!/bin/bash
+    mkdir -p _cfg
     cp ${CWDIR}/infrastructure/configuration/*.yml ${CWDIR}/_cfg
 
     echo ">> Fabric Operations Console Configuration"
