@@ -1,0 +1,33 @@
+# Copyright the Hyperledger Fabric contributors. All rights reserved.
+# SPDX-License-Identifier: Apache-2.0
+
+name: fabric-stack-asset-transfer-guide
+
+on:
+  pull_request:
+    branches:
+    - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          clean: true
+      - uses: actions/checkout@v2
+        with:
+          clean: true
+          repository: git@github.com:IBM-Blockchain/ansible-collection.git          
+          path: ansiblecollection
+      - name: build ansible docker image
+        run: \
+          docker build -t ofs-ansible $GITHUB_WORKSPACE/ansiblecollection
+      - uses: engineerd/setup-kind@v0.5.0
+        with:
+          skipClusterCreation: true
+      - uses: extractions/setup-just@v1
+      - name: production test flow
+        run: |
+          just doit
