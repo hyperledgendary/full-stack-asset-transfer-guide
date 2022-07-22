@@ -37,7 +37,7 @@
 
 ## Deploy to production-grade
 
-[Production Deployment Guide](./docs/Production.md)
+[KIND - Deployment Guide](./docs/k8sProduction/01-KINDOpenSourcFabricStack.md)
 
 - Start KIND
 - Add the Operator/Console
