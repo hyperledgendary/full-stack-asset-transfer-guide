@@ -4,30 +4,36 @@
 name: fabric-stack-asset-transfer-guide
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
-    - main
+      - main
+  create:
+    tags:
+      - "*"      
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
-          clean: true
-      - uses: actions/checkout@v2
-        with:
-          clean: true
-          repository: git@github.com:IBM-Blockchain/ansible-collection.git          
+          repository: IBM-Blockchain/ansible-collection
           path: ansiblecollection
-      - name: build ansible docker image
-        run: \
-          docker build -t ofs-ansible $GITHUB_WORKSPACE/ansiblecollection
+
+      - name: Build Docker image
+        run: |
+          docker build -t ofs-ansible ansiblecollection
+
       - uses: engineerd/setup-kind@v0.5.0
         with:
           skipClusterCreation: true
+          version: "v0.14.0"
       - uses: extractions/setup-just@v1
       - name: production test flow
         run: |
-          just doit
+          just kind review-config operator console
