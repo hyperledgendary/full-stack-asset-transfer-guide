@@ -15,6 +15,9 @@
 	- Show how this streamlined approach improves resilience and availability
 - Show how the tooling around Fabric can be used to improve the experience.
 
+---
+Please ensure you've the [requisite tools installed](./SETUP.md)
+---
 ## Scenario
 
 - Asset transfer, based on the secured assest transfer scenario.
@@ -23,12 +26,14 @@
     - Escrow (as endorsing org)
     - Regulator (as ordering org)
     - Bank/Finance Company (two of)
+
+
 ## Smart Contract Developing
 
 [Smart Contract Developing](./docs/SmartContractDev/00-Introduction.md)
 - write contract
 - test deployment
-- iterate on changes to confirm function
+- iterate on changes to confirm fun ction
 
 ## Write Application Code
 
