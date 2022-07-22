@@ -2,9 +2,9 @@
   SPDX-License-Identifier: Apache-2.0
 */
 
-import {Object, Property} from 'fabric-contract-api';
+import {Object as DataType, Property} from 'fabric-contract-api';
 
-@Object()
+@DataType()
 export class Asset {
     @Property()
     public docType?: string;
