@@ -25,19 +25,22 @@
     - Bank/Finance Company (two of)
 ## Smart Contract Developing
 
-[Smart Contract Developing](./docs/SmartContractDev/00-Introduction.md)
+- [Introduction to Smart Contract Developing](./docs/SmartContractDev/00-Introduction.md)
 - write contract
 - test deployment
 - iterate on changes to confirm function
 
 ## Write Application Code
 
+- [Introuction to Application Developing](./docs/ApplicationDev/00-introduction.md)
 - client sdks for both parties working with assets
 - how these can be written and debugged
 
 ## Deploy to production-grade
 
-[KIND - Deployment Guide](./docs/k8sProduction/01-KINDOpenSourcFabricStack.md)
+- [Introduction to Deploying to k8s clusters](./docs/k8sProduction/00-Introduction.md)
+- [Locally using KIND](./docs/k8sProduction/01-KINDOpenSourcFabricStack.md)
+
 
 - Start KIND
 - Add the Operator/Console
