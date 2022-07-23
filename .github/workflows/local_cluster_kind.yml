@@ -25,5 +25,6 @@ jobs:
       - name: build ansible
         run: docker build -t ofs-ansible .
         working-directory: ansible-collection
+      - uses: extractions/setup-just@v1
       - name: run kind
         run: just kind
