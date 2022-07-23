@@ -41,7 +41,7 @@ jobs:
 
       - name: build up fabric network
         working-directory: fabric-operator/sample-network 
-        run: ./network up
+        run: ./network cluster load-images && ./network up
 
       - name: check k8s service
         run: kubectl get service --all-namespaces
