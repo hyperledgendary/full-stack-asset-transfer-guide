@@ -5,11 +5,7 @@ name: fabric-stack-asset-transfer-guide
 
 on:
   push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - main
   create:
     tags:
       - "*"      
