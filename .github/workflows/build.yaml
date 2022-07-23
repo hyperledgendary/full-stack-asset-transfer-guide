@@ -33,5 +33,17 @@ jobs:
       - name: production test flow
         run: |
           just kind review-config operator console
-      - name: check k8s
+
+      - uses: actions/checkout@v3
+        with:
+          repository: hyperledger-labs/fabric-operator
+          path: fabric-operator
+
+      - name: build up fabric network
+        working-directory: fabric-operator/sample-network 
+        run: network up
+
+      - name: check k8s service
         run: kubectl get service --all-namespaces
+      - name: check k8s deployment
+        run: kubectl get deployment --all-namespaces
