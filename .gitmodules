@@ -1,0 +1,3 @@
+[submodule "ansible-collection"]
+	path = ansible-collection
+	url = git@github.com:IBM-Blockchain/ansible-collection.git
