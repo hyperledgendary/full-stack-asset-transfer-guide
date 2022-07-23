@@ -24,6 +24,6 @@ jobs:
         run: kubectl version || true
       - name: build ansible
         run: docker build -t ofs-ansible .
-        workdir: ansible-collection
+        working-directory: ansible-collection
       - name: run kind
         run: just kind
