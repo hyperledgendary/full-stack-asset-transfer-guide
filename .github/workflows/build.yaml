@@ -37,3 +37,5 @@ jobs:
       - name: production test flow
         run: |
           just kind review-config operator console
+      - name: check k8s
+        run: kubectl get service --all-namespaces
