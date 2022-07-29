@@ -4,39 +4,30 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Client } from '@grpc/grpc-js';
-import { connect } from '@hyperledger/fabric-gateway';
+import { Gateway } from '@hyperledger/fabric-gateway';
 import * as crypto from 'crypto';
-import { chaincodeName, channelName, newConnectOptions } from './connect';
-import { Asset, AssetTransferBasic } from './contract';
+import { chaincodeName, channelName } from './connect';
+import { AssetCreate, AssetTransfer } from './contract';
 import { allFulfilled, differentElement, randomElement, randomInt } from './utils';
 
-export async function main(client: Client): Promise<void> {
-    const connectOptions = await newConnectOptions(client);
-    const gateway = connect(connectOptions);
+export default async function main(gateway: Gateway): Promise<void> {
+    const network = gateway.getNetwork(channelName);
+    const contract = network.getContract(chaincodeName);
 
-    try {
-        const network = gateway.getNetwork(channelName);
-        const contract = network.getContract(chaincodeName);
-
-        const smartContract = new AssetTransferBasic(contract);
-        const app = new TransactApp(smartContract);
-        await app.run();
-    } finally {
-        gateway.close();
-    }
+    const smartContract = new AssetTransfer(contract);
+    const app = new TransactApp(smartContract);
+    await app.run();
 }
 
 const colors = ['red', 'green', 'blue'];
-const owners = ['alice', 'bob', 'charlie'];
 const maxInitialValue = 1000;
 const maxInitialSize = 10;
 
 class TransactApp {
-    readonly #smartContract: AssetTransferBasic;
+    readonly #smartContract: AssetTransfer;
     #batchSize = 10;
 
-    constructor(smartContract: AssetTransferBasic) {
+    constructor(smartContract: AssetTransfer) {
         this.#smartContract = smartContract;
     }
 
@@ -51,11 +42,12 @@ class TransactApp {
         await this.#smartContract.createAsset(asset);
         console.log(`Created asset ${asset.ID}`);
 
-        // Transfer randomly 1 in 2 assets to a new owner.
+        // Update randomly 1 in 2 assets to a new owner.
         if (randomInt(2) === 0) {
-            const newOwner = differentElement(owners, asset.Owner);
-            const oldOwner = await this.#smartContract.transferAsset(asset.ID, newOwner);
-            console.log(`Transferred asset ${asset.ID} from ${oldOwner} to ${newOwner}`);
+            const oldColor = asset.Color;
+            asset.Color = differentElement(colors, oldColor);
+            await this.#smartContract.updateAsset(asset);
+            console.log(`Updated color of asset ${asset.ID} from ${oldColor} to ${asset.Color}`);
         }
 
         // Delete randomly 1 in 4 created assets.
@@ -65,12 +57,11 @@ class TransactApp {
         }
     }
 
-    #newAsset(): Asset {
+    #newAsset(): AssetCreate {
         return {
             ID: crypto.randomUUID(),
             Color: randomElement(colors),
             Size: randomInt(maxInitialSize) + 1,
-            Owner: randomElement(owners),
             AppraisedValue: randomInt(maxInitialValue) + 1,
         };
     }

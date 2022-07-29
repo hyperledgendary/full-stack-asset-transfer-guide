@@ -4,10 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Client } from '@grpc/grpc-js';
-import { ChaincodeEvent, checkpointers, connect } from '@hyperledger/fabric-gateway';
+import { ChaincodeEvent, checkpointers, Gateway } from '@hyperledger/fabric-gateway';
 import * as path from 'path';
-import { chaincodeName, channelName, newConnectOptions } from './connect';
+import { chaincodeName, channelName } from './connect';
 import { ExpectedError } from './expectedError';
 import { printable } from './utils';
 
@@ -23,35 +22,28 @@ function onEvent(event: ChaincodeEvent): void {
     console.log(printable(event));
 }
 
-export async function main(client: Client): Promise<void> {
-    const connectOptions = await newConnectOptions(client);
-    const gateway = connect(connectOptions);
+export default async function main(gateway: Gateway): Promise<void> {
+    const network = gateway.getNetwork(channelName);
+    const checkpointer = await checkpointers.file(checkpointFile);
+
+    console.log(`Starting event listening from block ${checkpointer.getBlockNumber() ?? startBlock}`);
+    console.log('Last processed transaction ID within block:', checkpointer.getTransactionId());
+    if (simulatedFailureCount > 0) {
+        console.log(`Simulating a write failure every ${simulatedFailureCount} transactions`);
+    }
+
+    const events = await network.getChaincodeEvents(chaincodeName, {
+        checkpoint: checkpointer,
+        startBlock, // Used only if there is no checkpoint block number
+    });
 
     try {
-        const network = gateway.getNetwork(channelName);
-        const checkpointer = await checkpointers.file(checkpointFile);
-
-        console.log(`Starting event listening from block ${checkpointer.getBlockNumber() ?? startBlock}`);
-        console.log('Last processed transaction ID within block:', checkpointer.getTransactionId());
-        if (simulatedFailureCount > 0) {
-            console.log(`Simulating a write failure every ${simulatedFailureCount} transactions`);
-        }
-
-        const events = await network.getChaincodeEvents(chaincodeName, {
-            checkpoint: checkpointer,
-            startBlock, // Used only if there is no checkpoint block number
-        });
-
-        try {
-            for await (const event of events) {
-                onEvent(event);
-                await checkpointer.checkpointChaincodeEvent(event);
-            }
-        } finally {
-            events.close();
+        for await (const event of events) {
+            onEvent(event);
+            await checkpointer.checkpointChaincodeEvent(event);
         }
     } finally {
-        gateway.close();
+        events.close();
     }
 }
 

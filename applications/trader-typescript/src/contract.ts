@@ -17,16 +17,17 @@ export interface Asset {
     AppraisedValue: number;
 }
 
-export type AssetUpdate = Pick<Asset, 'ID'> & Partial<Asset>;
+export type AssetCreate = Omit<Asset, 'Owner'>;
+export type AssetUpdate = Pick<Asset, 'ID'> & Partial<AssetCreate>;
 
-export class AssetTransferBasic {
+export class AssetTransfer {
     readonly #contract: Contract;
 
     constructor(contract: Contract) {
         this.#contract = contract;
     }
 
-    async createAsset(asset: Asset): Promise<void> {
+    async createAsset(asset: AssetCreate): Promise<void> {
         await this.#contract.submit('CreateAsset', {
             arguments: [JSON.stringify(asset)],
         });
@@ -58,11 +59,10 @@ export class AssetTransferBasic {
         return utf8Decoder.decode(result).toLowerCase() === 'true';
     }
 
-    async transferAsset(id: string, newOwner: string): Promise<string> {
-        const result = await this.#contract.submit('TransferAsset', {
-            arguments: [id, newOwner],
+    async transferAsset(id: string, newOwner: string, newOwnerOrg: string): Promise<void> {
+        await this.#contract.submit('TransferAsset', {
+            arguments: [id, newOwner, newOwnerOrg],
         });
-        return utf8Decoder.decode(result);
     }
 
     async getAllAssets(): Promise<Asset[]> {
