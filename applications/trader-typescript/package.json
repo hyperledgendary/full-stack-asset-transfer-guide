@@ -1,11 +1,11 @@
 {
-    "name": "trader-org1",
+    "name": "trader",
     "version": "1.0.0",
     "description": "Asset transfer client application",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
     "engines": {
-        "node": ">=14.15.0"
+        "node": ">=16.13.0"
     },
     "scripts": {
         "build": "tsc",
@@ -24,8 +24,8 @@
         "@hyperledger/fabric-protos": "^0.1.0-dev.2300102001.1"
     },
     "devDependencies": {
-        "@tsconfig/node14": "^1.0.3",
-        "@types/node": "^14.18.16",
+        "@tsconfig/node16": "^1.0.3",
+        "@types/node": "^16.11.46",
         "@typescript-eslint/eslint-plugin": "^5.22.0",
         "@typescript-eslint/parser": "^5.22.0",
         "eslint": "^8.14.0",

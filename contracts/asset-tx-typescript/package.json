@@ -1,11 +1,11 @@
 {
-    "name": "asset-transfer-basic",
+    "name": "asset-transfer",
     "version": "1.0.0",
-    "description": "Asset Transfer Basic contract implemented in TypeScript",
+    "description": "Asset Transfer contract implemented in TypeScript",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
     "engines": {
-        "node": ">=14.15.0"
+        "node": ">=16.13.0"
     },
     "scripts": {
         "lint": "eslint ./src --ext .ts",
@@ -30,8 +30,8 @@
         "sort-keys-recursive": "^2.1.7"
     },
     "devDependencies": {
-        "@tsconfig/node14": "^1.0.3",
-        "@types/node": "^14.18.22",
+        "@tsconfig/node16": "^1.0.3",
+        "@types/node": "^16.11.46",
         "@typescript-eslint/eslint-plugin": "^5.30.7",
         "@typescript-eslint/parser": "^5.30.7",
         "eslint": "^8.20.0",
