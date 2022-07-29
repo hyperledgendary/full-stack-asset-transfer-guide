@@ -2,38 +2,29 @@
   SPDX-License-Identifier: Apache-2.0
 */
 
-import { Object, Property } from 'fabric-contract-api';
-import { TextDecoder } from 'util';
+export interface Asset {
+    docType?: string;
+    ID: string;
+    Color: string;
+    Size: number;
+    Owner: string;
+    AppraisedValue: number;
+}
 
-const utf8Decoder = new TextDecoder();
+export function newAsset(state: Partial<Asset> = {}): Asset {
+    return {
+        ID: assertHasValue(state.ID, 'Missing ID'),
+        Color: state.Color ?? '',
+        Size: state.Size ?? 0,
+        Owner: assertHasValue(state.Owner, 'Missing Owner'),
+        AppraisedValue: state.AppraisedValue ?? 0,
+    };
+}
 
-@Object()
-export class Asset {
-    static unmarshal(bytes: Uint8Array | string): Asset {
-        const json = typeof bytes === 'string' ? bytes : utf8Decoder.decode(bytes);
-        try {
-            return JSON.parse(json) as Asset;
-        } catch (err) {
-            console.log('Malformed asset JSON:', json);
-            throw err;
-        }
+function assertHasValue<T>(value: T | undefined | null, message: string): T {
+    if (value == undefined || typeof value === 'string' && value.length === 0) {
+        throw new Error(message);
     }
 
-    @Property('docType', 'string')
-    public docType?: string;
-
-    @Property('ID', 'string')
-    public ID = '';
-
-    @Property('Color', 'string')
-    public Color = '';
-
-    @Property('Size', 'number')
-    public Size = 0;
-
-    @Property('Owner', 'string')
-    public Owner = '';
-
-    @Property('AppraisedValue', 'number')
-    public AppraisedValue = 0;
+    return value;
 }

@@ -4,38 +4,41 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import * as grpc from '@grpc/grpc-js';
-import { newGrpcConnection } from './connect';
+import { connect, Gateway } from '@hyperledger/fabric-gateway';
+import { newConnectOptions, newGrpcConnection } from './connect';
 import { ExpectedError } from './expectedError';
-import { main as getAllAssets } from './getAllAssets';
-import { main as listen } from './listen';
-import { main as transact } from './transact';
+import getAllAssets from './getAllAssets';
+import listen from './listen';
+import transact from './transact';
+import transfer from './transfer';
+import deleteCommand from './delete';
 
-const allCommands: Record<string, (client: grpc.Client) => Promise<void>> = {
+const allCommands: Record<string, (gateway: Gateway, args: string[]) => Promise<void>> = {
     getAllAssets,
-    listen,
     transact,
+    listen,
+    transfer,
+    delete: deleteCommand,
 };
 
 async function main(): Promise<void> {
-    const commands = process.argv.slice(2).map(name => {
-        const command = allCommands[name];
-        if (!command) {
-            printUsage();
-            throw new Error(`Unknown command: ${name}`);
-        }
+    const commandName = process.argv[2];
+    const args = process.argv.slice(3);
 
-        return command;
-    });
-    if (commands.length === 0) {
+    const command = allCommands[commandName];
+    if (!command) {
         printUsage();
-        throw new Error('Missing command');
+        throw new Error(`Unknown command: ${commandName}`);
     }
 
     const client = await newGrpcConnection();
     try {
-        for (const command of commands) {
-            await command(client);
+        const connectOptions = await newConnectOptions(client);
+        const gateway = connect(connectOptions);
+        try {
+            await command(gateway, args);
+        } finally {
+            gateway.close();
         }
     } finally {
         client.close();
@@ -43,7 +46,7 @@ async function main(): Promise<void> {
 }
 
 function printUsage(): void {
-    console.log('Arguments: <command1> [<command2> ...]');
+    console.log('Arguments: <command> [<arg1> ...]');
     console.log('Available commands:', Object.keys(allCommands).join(', '));
 }
 

@@ -60,3 +60,11 @@ export function printable<T extends object>(event: T): PrintView<T> {
         Object.entries(event).map(([k, v]) => [k, v instanceof Uint8Array ? utf8Decoder.decode(v) : v])
     ) as PrintView<T>;
 }
+
+export function assertDefined<T>(value: T, message: string): T {
+    if (value == undefined) {
+        throw new Error(message);
+    }
+
+    return value;
+}
