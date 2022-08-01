@@ -7,7 +7,8 @@ WORKDIR /usr/src/app
 
 # Copy node.js source and build, changing owner as well
 COPY --chown=node:node . /usr/src/app
-RUN npm ci && npm run package
+RUN npm ci 
+RUN npm run package
 
 
 FROM node:16 AS production
@@ -15,8 +16,8 @@ ARG CC_SERVER_PORT
 
 # Setup tini to work better handle signals
 ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
+# ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+# RUN chmod +x /tini
 
 
 WORKDIR /usr/src/app
@@ -31,4 +32,4 @@ EXPOSE $CC_SERVER_PORT
 ENV NODE_ENV=production
 
 USER node
-ENTRYPOINT [ "/tini", "--", "/usr/src/app/docker-entrypoint.sh" ]
+# ENTRYPOINT [ "/tini", "--", "/usr/src/app/docker-entrypoint.sh" ]

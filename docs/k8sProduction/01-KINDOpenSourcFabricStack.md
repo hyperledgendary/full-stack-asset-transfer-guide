@@ -4,21 +4,10 @@
 
 ## Orchestration of System to provision
 
-## 0. Important Setup Steps 
-
-Ahead of the [PR](https://github.com/IBM-Blockchain/ansible-collection/pull/610/files) being available please checkout the main branch
-
-```
-git clone git@github.com:IBM-Blockchain/ansible-collection.git
-cd ansible-collection
-docker build -t ofs-ansible .
-```
-
 > For the impatient
 ```
 just kind review-config operator console fabric-network
 ```
-
 
 ### 1. Create a KIND local Cluster
 

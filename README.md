@@ -43,12 +43,9 @@ Please ensure you've the [requisite tools installed](./SETUP.md)
 
 ## Deploy to production-grade
 
-- [Introduction to Deploying to k8s clusters](./docs/k8sProduction/00-Introduction.md)
+- [Introduction to Deploying onto k8s clusters](./docs/k8sProduction/00-Introduction.md)
 - [Locally using KIND](./docs/k8sProduction/01-KINDOpenSourcFabricStack.md)
 
-
-- Start KIND
-- Add the Operator/Console
 - Create network
 
 ## Operate
