@@ -25,7 +25,7 @@ const maxInitialSize = 10;
 
 class TransactApp {
     readonly #smartContract: AssetTransfer;
-    #batchSize = 10;
+    #batchSize = 6;
 
     constructor(smartContract: AssetTransfer) {
         this.#smartContract = smartContract;
