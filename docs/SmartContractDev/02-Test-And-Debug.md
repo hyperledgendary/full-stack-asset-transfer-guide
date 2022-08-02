@@ -33,7 +33,7 @@ The _high level process_ is
 
 You'll need to have docker available to you, along with VSCode and the IBM Blockchain Platofrm Extension installed. Also, install the VSCode extensions you prefer for debugging your preferred language.
 
-- For TypeScript and JavaScript VSCode has built-in support.
+- For TypeScript and JavaScript VSCode has built-in support
 - For Java the [JavaExtension pack](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack) is suggested
 - For go [_to be added_]
 
@@ -46,19 +46,10 @@ As a result this makes it very hard to deploy into Kubernetes (K8S) style enviro
 
 Chaincode-as-service requires you to orchestrate the build and deployment phase yourself. Whilst this is an additional step, it gives control back. The Peer still requires a 'chaincode package' to be installed. In this case this doesn't contain code, but the information about where the chaincode is hosted. (Hostname,Port,TLS config etc)
 
-#### Fabric v2.4.1 Improvements
-
-We need to use the latest 2.4.1 release as this contains some improvements to make this process easier. The core functionality is available in earlier releases but requires more configuration.
-
-- The docker image for the peer contains a builder for chaincode-as-a-service preconfigured. This is named 'ccaasbuilder'. This removes the need to build your own external builder and repackage and configure the peer
-- The `ccaasbuilder` applications are included in the binary tgz archive download for use in other circumstances. The `sampleconfig/core.yaml` is updated as well to refer to 'ccaasbuilder'
-- The 2.4.1 Java Chaincode release has been updated to remove the need to write a custom bootstrap main class, similar  to the Node.js Chaincode. It is intended that this will be added to the go chaincode as well.
-
 ## Which Fabric deployment to use?
 
 The core Peer, Orderer and Certificate Authority binaries can be deployed in many different configurations, for example
 
-- VSCode Extension, using it's built in templates for Microfab. All the Fabric binaries within 1 docker container
 - Running Microfab standalone from the extensions
 - Fabric's test network found within the fabric-samples repo
 - [_test-network-k8s?_]

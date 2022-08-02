@@ -3,3 +3,10 @@ _cfg
 node_modules
 *.bin
 .idea/
+_*
+*tgz
+*.tar.gz
+
+
+bin
+config

@@ -1,6 +1,10 @@
 # full-stack-asset-transfer-guide
 
 **AIM:** To show a full end-to-end development of a solution on the Hyperledger Fabric Platform
+
+Fabric can be used to represent many types of assets from 'marbles/pineapples/classic cars/monetary products' and track their 
+exchange, provenance and lifecycle.
+
 **OBJECTIVES:** 
 
 - Show how a Asset Transfer solution can be modelled and take advantage of a blockchains qualitites of service.
@@ -20,14 +24,19 @@ Please ensure you've the [requisite tools installed](./SETUP.md)
 ---
 ## Scenario
 
-- Asset transfer, based on the secured assest transfer scenario.
-- Token based settlement of the final amount
+As a real-world example, lets assuming a 'game/trading card'. Each card represents a comic book character, with their attributes such as strength.
+These can be passed between people, with some cards having more 'value' due to rarity or having notable attibutes.  
+
+In token terms, these cards have aspects of Fungible tokens in that a card for say "Mr Blockchain" is equally exchangable for another "Mr Blockchain card"
+But there are limited number of different types of cards, and one card can't be subdivided. So have more in common with non-fungible tokens.
+
+- Asset transfer - move cards between people
 - Organizations: 
-    - Escrow (as endorsing org)
-    - Regulator (as ordering org)
-    - Bank/Finance Company (two of)
-
-
+    - Escrow (as endorsing org) and the original holder of all the cards
+    - Regulator (as ordering org) to ensure fair play
+    - Owner Organizations
+		- 3 organizations that people can belong too
+		
 ## Smart Contract Developing
 
 - [Introduction to Smart Contract Developing](./docs/SmartContractDev/00-Introduction.md)
@@ -43,12 +52,9 @@ Please ensure you've the [requisite tools installed](./SETUP.md)
 
 ## Deploy to production-grade
 
-- [Introduction to Deploying to k8s clusters](./docs/k8sProduction/00-Introduction.md)
+- [Introduction to Deploying onto k8s clusters](./docs/k8sProduction/00-Introduction.md)
 - [Locally using KIND](./docs/k8sProduction/01-KINDOpenSourcFabricStack.md)
 
-
-- Start KIND
-- Add the Operator/Console
 - Create network
 
 ## Operate
