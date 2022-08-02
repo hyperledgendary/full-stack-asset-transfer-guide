@@ -15,6 +15,7 @@
         "build": "tsc",
         "build:watch": "tsc -w",
         "prepublishOnly": "npm run build",
+        "metadata":"set -x && fabric-chaincode-node metadata generate --file metadata.json",
         "docker": "docker build -f ./Dockerfile -t asset-transfer-basic .",
         "package": "npm run build && npm shrinkwrap",
         "start:server-nontls": "set -x && fabric-chaincode-node server --chaincode-address=$CHAINCODE_SERVER_ADDRESS --chaincode-id=$CHAINCODE_ID",
