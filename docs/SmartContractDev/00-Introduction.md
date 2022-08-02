@@ -10,9 +10,10 @@ This example shows how details of an asset may be stored in the ledger itself, w
 
 This document shows the design process before writing any code.
 
----
+{ talk about trading cards here}
 
-### [Get started with coding the example!](./01-Getting-Started.md)
+
+[NEXT - Getting Stared with Code](./01-Getting-Started.md)
 
 ---
 
@@ -32,22 +33,30 @@ It is important to take care over the 'key' that will be used, composite keys ar
 
 ### Create
 
+
+{tbc}
 ### Get
 
+{tbc}
 ### Get all
 
+{tbc}
 ### 
 
-
+{tbc}
 ## Important considerations
 
 ### Composite Keys and hierarchy query
 
+{tbc}
+
 ### MVCC Conflicts
+
+{tbc}
 
 ### Is data storage on the ledger bad or good?
 
-
+{tbc}
 
 ## Use with other Fabric Deployments
 

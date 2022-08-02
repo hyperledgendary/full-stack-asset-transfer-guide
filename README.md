@@ -40,9 +40,10 @@ But there are limited number of different types of cards, and one card can't be 
 ## Smart Contract Developing
 
 - [Introduction to Smart Contract Developing](./docs/SmartContractDev/00-Introduction.md)
-- write contract
-- test deployment
-- iterate on changes to confirm fun ction
+- [Getting Started with a Smart Contract](./docs/SmartContractDev/01-Getting-Started.md)
+- [Creating a blank contract](./docs/SmartContractDev/02-Creating-Blank-Contract.md)
+- [Detailed Test and Debug](./docs/SmartContractDev//03-Test-And-Debug.md)
+- [Deploying to Production](./docs/SmartContractDev/04-Production-Pipelines.md)
 
 ## Write Application Code
 
