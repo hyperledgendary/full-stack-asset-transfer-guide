@@ -42,12 +42,31 @@ But there are limited number of different types of cards, and one card can't be 
     - Owner Organizations
 		- 3 organizations that people can belong too
 		
+
+## Running the workshop
+
+- Ensure you've got the tools you may need installed, or the Vagrant DevImage started
+- Clone this repository to a convient location
+- We suggest that you open 3 or 4 terminal windows
+  - One for running chaincode in dev mode
+  - One for running the fabric infrastructure and optionally one for monitoring it
+  - One for client applications
+		
+## Running a Fabric Infrastrucure
+
+Even the simplest smart contract needs a running Fabric Infrastructure; one size does not fit all
+so there are configurations that can run Fabric either as local binaries, in a single docker container, 
+in multiple containers, or in K8S. 
+
+{tbc}
+
 ## Smart Contract Developing
 
 - [Introduction to Smart Contract Developing](./docs/SmartContractDev/00-Introduction.md)
 - [Getting Started with a Smart Contract](./docs/SmartContractDev/01-Getting-Started.md)
-- [Creating a blank contract](./docs/SmartContractDev/02-Creating-Blank-Contract.md)
-- [Detailed Test and Debug](./docs/SmartContractDev//03-Test-And-Debug.md)
+- [Creating a Blank Contract](./docs/SmartContractDev/02-Creating-Blank-Contract.md)
+  - Here you can fill in the functions based on the Trading Card Scenario
+- [Detailed Test and Debug](./docs/SmartContractDev/03-Test-And-Debug.md)
 - [Deploying to Production](./docs/SmartContractDev/04-Production-Pipelines.md)
 
 ## Write Application Code
