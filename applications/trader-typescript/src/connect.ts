@@ -81,5 +81,5 @@ function locatePrivateKeyFile(): string {
         throw new Error(`No private key files found in directory ${keyDirectoryPath}`);
     }
 
-    return keyFiles[0];
+    return path.resolve(keyDirectoryPath, keyFiles[0]);
 }
