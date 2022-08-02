@@ -1,4 +1,4 @@
-# full-stack-asset-transfer-guide
+# Fabric Full Stack Development Workshop
 
 **AIM:** To show a full end-to-end development of a solution on the Hyperledger Fabric Platform
 
@@ -20,8 +20,13 @@ exchange, provenance and lifecycle.
 - Show how the tooling around Fabric can be used to improve the experience.
 
 ---
-Please ensure you've the [requisite tools installed](./SETUP.md)
+
+**Please ensure you've the [required tools](./SETUP.md) on your local machine**
+
+**If you wish to use a VM on your machine there is a [Vagrant configuration](./docs/vagrant-setup.sh)**
+
 ---
+
 ## Scenario
 
 As a real-world example, lets assuming a 'game/trading card'. Each card represents a comic book character, with their attributes such as strength.
