@@ -23,7 +23,7 @@ exchange, provenance and lifecycle.
 
 **Please ensure you've the [required tools](./SETUP.md) on your local machine**
 
-**If you wish to use a VM on your machine there is a [Vagrant configuration](./docs/vagrant-setup.sh)**
+**If you wish to use a VM on your machine there is a [Vagrant configuration](./docs/vagrant.md)**
 
 ---
 
