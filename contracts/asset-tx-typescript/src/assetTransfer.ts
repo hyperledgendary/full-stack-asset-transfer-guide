@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { X509Certificate } from 'crypto';
 import { Context, Contract, Info, Returns, Transaction } from 'fabric-contract-api';
 import { KeyEndorsementPolicy } from 'fabric-shim';
 import stringify from 'json-stringify-deterministic'; // Deterministic JSON.stringify()
@@ -11,35 +12,6 @@ import { Asset, newAsset } from './asset';
 
 const utf8Decoder = new TextDecoder();
 
-function unmarshal(bytes: Uint8Array | string): object {
-    const json = typeof bytes === 'string' ? bytes : utf8Decoder.decode(bytes);
-    const parsed: unknown = JSON.parse(json);
-    if (parsed === null || typeof parsed !== 'object') {
-        throw new Error(`Invalid JSON type (${typeof parsed}): ${json}`);
-    }
-
-    return parsed;
-}
-
-function marshal(o: object): Buffer {
-    return Buffer.from(toJSON(o));
-}
-
-function toJSON(o: object): string {
-    // Insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
-    return stringify(sortKeysRecursive(o));
-}
-
-function newMemberPolicy(...orgs: string[]): KeyEndorsementPolicy {
-    const policy = new KeyEndorsementPolicy();
-    policy.addOrgs('MEMBER', ...orgs);
-    return policy;
-}
-
-function hasWritePermission(ctx: Context, owner: string): boolean {
-    return owner === ctx.clientIdentity.getID();
-}
-
 @Info({title: 'AssetTransfer', description: 'Smart contract for trading assets'})
 export class AssetTransferContract extends Contract {
     /**
@@ -48,7 +20,7 @@ export class AssetTransferContract extends Contract {
     @Transaction()
     async CreateAsset(ctx: Context, assetJson: string): Promise<void> {
         const state = Object.assign(unmarshal(assetJson), {
-            Owner: ctx.clientIdentity.getID(),
+            Owner: clientIdentifier(ctx),
         });
         const asset = newAsset(state);
 
@@ -60,8 +32,7 @@ export class AssetTransferContract extends Contract {
         const assetBytes = marshal(asset);
         await ctx.stub.putState(asset.ID, assetBytes);
 
-        const policy = newMemberPolicy(ctx.clientIdentity.getMSPID());
-        await ctx.stub.setStateValidationParameter(asset.ID, policy.getPolicy());
+        await setEndorsingOrgs(ctx, asset.ID, ctx.clientIdentity.getMSPID());
 
         ctx.stub.setEvent('CreateAsset', assetBytes);
     }
@@ -111,8 +82,7 @@ export class AssetTransferContract extends Contract {
         const updatedAssetBytes = marshal(updatedAsset);
         await ctx.stub.putState(updatedAsset.ID, updatedAssetBytes);
 
-        const policy = newMemberPolicy(ctx.clientIdentity.getMSPID());
-        await ctx.stub.setStateValidationParameter(updatedAsset.ID, policy.getPolicy());
+        await setEndorsingOrgs(ctx, updatedAsset.ID, ctx.clientIdentity.getMSPID());
 
         ctx.stub.setEvent('UpdateAsset', updatedAssetBytes);
     }
@@ -156,13 +126,12 @@ export class AssetTransferContract extends Contract {
             throw new Error('Only owner can transfer assets');
         }
 
-        asset.Owner = newOwner;
+        asset.Owner = ownerIdentifier(newOwner, newOwnerOrg);
 
         const assetBytes = marshal(asset);
         await ctx.stub.putState(id, assetBytes);
 
-        const policy = newMemberPolicy(newOwnerOrg);
-        await ctx.stub.setStateValidationParameter(id, policy.getPolicy());
+        await setEndorsingOrgs(ctx, id, newOwnerOrg); // Subsequent updates must be endorsed by the new owning org
 
         ctx.stub.setEvent('TransferAsset', assetBytes);
     }
@@ -189,4 +158,58 @@ export class AssetTransferContract extends Contract {
 
         return marshal(assets).toString();
     }
+}
+
+function unmarshal(bytes: Uint8Array | string): object {
+    const json = typeof bytes === 'string' ? bytes : utf8Decoder.decode(bytes);
+    const parsed: unknown = JSON.parse(json);
+    if (parsed === null || typeof parsed !== 'object') {
+        throw new Error(`Invalid JSON type (${typeof parsed}): ${json}`);
+    }
+
+    return parsed;
+}
+
+function marshal(o: object): Buffer {
+    return Buffer.from(toJSON(o));
+}
+
+function toJSON(o: object): string {
+    // Insert data in alphabetic order using 'json-stringify-deterministic' and 'sort-keys-recursive'
+    return stringify(sortKeysRecursive(o));
+}
+
+function hasWritePermission(ctx: Context, owner: string): boolean {
+    return owner === clientIdentifier(ctx);
+}
+
+function clientIdentifier(ctx: Context): string {
+    const userName = clientCommonName(ctx);
+    const orgId = ctx.clientIdentity.getMSPID();
+    return ownerIdentifier(userName, orgId);
+}
+
+function clientCommonName(ctx: Context): string {
+    const clientCert = new X509Certificate(ctx.clientIdentity.getIDBytes());
+    const matches = clientCert.subject.match(/^CN=(.*)$/m); // [0] Matching string; [1] capture group
+    if (matches?.length !== 2) {
+        throw new Error(`Unable to identify client identity common name: ${clientCert.subject}`);
+    }
+
+    return matches[1];
+}
+
+function ownerIdentifier(userName: string, orgId: string): string {
+    return `${orgId}/${userName}`;
+}
+
+async function setEndorsingOrgs(ctx: Context, ledgerKey: string, ...orgs: string[]): Promise<void> {
+    const policy = newMemberPolicy(...orgs);
+    await ctx.stub.setStateValidationParameter(ledgerKey, policy.getPolicy());
+}
+
+function newMemberPolicy(...orgs: string[]): KeyEndorsementPolicy {
+    const policy = new KeyEndorsementPolicy();
+    policy.addOrgs('MEMBER', ...orgs);
+    return policy;
 }

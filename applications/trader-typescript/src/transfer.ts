@@ -11,8 +11,8 @@ import { assertDefined } from './utils';
 
 export default async function main(gateway: Gateway, args: string[]): Promise<void> {
     const assetId = assertDefined(args[0], 'Missing asset ID');
-    const newOwner = assertDefined(args[1], 'Missing new owner');
-    const newOwnerOrg = assertDefined(args[2], 'Missing new owner org');
+    const newOwner = assertDefined(args[1], 'Missing new owner name');
+    const newOwnerOrg = assertDefined(args[2], 'Missing new owner MSP ID');
 
     const network = gateway.getNetwork(channelName);
     const contract = network.getContract(chaincodeName);
