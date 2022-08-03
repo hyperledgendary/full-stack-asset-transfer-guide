@@ -1,29 +1,9 @@
 #!/usr/bin/env bash
-
+s
 set -o errexit
 set -o pipefail
 
-if [ -z $1 ]; then
-  HLF_VERSION=2.4.4
-else
-  HLF_VERSION=$1
-fi
-
-THIRDPARTY_IMAGE_VERSION=0.4.15
-
-if [ ${HLF_VERSION:0:4} = '2.3.' -o ${HLF_VERSION:0:4} = '2.4.' ]; then
-  CA_VERSION=1.5.2
-  SAMPLE_BRANCH=main
-  NODE_VERSION=14.18.0
-elif [ ${HLF_VERSION:0:4} = '2.0.' -o ${HLF_VERSION:0:4} = '2.1.' -o ${HLF_VERSION:0:4} = '2.2.' ]; then
-  CA_VERSION=1.5.2
-  SAMPLE_BRANCH=v${HLF_VERSION}
-  NODE_VERSION=12.14.0
-else
-  CA_VERSION=$HLF_VERSION
-  SAMPLE_BRANCH=v${HLF_VERSION}
-  NODE_VERSION=8.9.0
-fi
+NODE_VERSION=14.18.0
 
 # Install NVM
 export NVM_DIR="$HOME/.nvm"
@@ -37,4 +17,9 @@ nvm use ${NODE_VERSION}
 nvm alias default ${NODE_VERSION}
 echo "default" > $HOME/.nvmrc
 
-curl -sSL https://raw.githubusercontent.com/hyperledger-labs/weft/main/install.sh | bash
+set -x
+curl -sSL https://raw.githubusercontent.com/hyperledger-labs/weft/main/install.sh | bash  && true
+
+# curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh -o ./install-fabric.sh \
+#     && chmod +x install-fabric.sh \
+#     && ./install-fabric.sh binary

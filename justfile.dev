@@ -74,7 +74,7 @@ microfab: microfab-bye
     EOF
 
     echo
-    echo "To get an peer cli environment run:   source $CFG/org1admin_env' "
+    echo "To get an peer cli environment run:   source $CFG/org1admin.env' "
     
 devshell:
     docker run \

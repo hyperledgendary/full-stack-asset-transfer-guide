@@ -67,11 +67,12 @@ export class ConnectionHelper {
 
     static async newGrpcConnection(cp: ConnectionProfile): Promise<grpc.Client> {
         const peerEndpoint = cp.peers[Object.keys(cp.peers)[0]].url;
+        const address = new URL(peerEndpoint);
+        // const tlsRootCert = cp.peers[Object.keys(cp.peers)[0]].tlsCACerts.pem;
+        // const tlsCredentials = grpc.credentials.createSsl(Buffer.from(tlsRootCert));
 
-        const tlsRootCert = cp.peers[Object.keys(cp.peers)[0]].tlsCACerts.pem;
-        const tlsCredentials = grpc.credentials.createSsl(Buffer.from(tlsRootCert));
-
-        return new grpc.Client(peerEndpoint, tlsCredentials);
+        // return new grpc.Client(peerEndpoint, tlsCredentials);
+        return new grpc.Client(`${address.hostname}:${address.port}`, grpc.ChannelCredentials.createInsecure());
     }
 
 }

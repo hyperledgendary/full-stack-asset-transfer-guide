@@ -10,7 +10,7 @@ cd workshop
 export WORKSHOP=$(pwd)
 ```
 
-Let's dive straight into creating some code to manage an 'asset'
+Let's dive straight into creating some code to manage an 'asset'; best to have two windows open, one for running the Fabric network and one for the chaincode development
 
 ## Install and Build
 
@@ -40,13 +40,16 @@ Review the `metadata.json` and see the summary of the contract information, the 
 
 Startup the Fabric Infrastructure, we're using MicroFab here as it's a single container and fast to start. Plus it already has the configuration required within it to start external chaincodes.
 
+(do this in the Fabric dev window)
+
 ```bash
 just -f justfile.dev microfab
 ```
 
 A file  `org1admin.env` is written out that contains the environment variables needed to run applications etc _as the org1 admin_
+*ensure that you `source _cfg/uf/org1admin.env`*
 
-At this point you may wish to start a new console window and `docker logs -f microfab` to watch the activity.
+At this point you may wish to run `docker logs -f microfab` to watch the activity.
 
 ## Pacakge and deploy against Fabric
 
