@@ -4,7 +4,7 @@
 # Copyright the Hyperledger Fabric contributors. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 
-name: fabric-stack-asset-transfer-guide
+name: Fabric Dev Container
 
 on:
   pull_request:
