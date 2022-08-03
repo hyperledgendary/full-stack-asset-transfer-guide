@@ -36,20 +36,27 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_PAT }}
-      
-      - name: Build image and push to Docker Hub and GitHub Container Registry
+          username: ${{github.repository_owner}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Docker meta
+        id: fabgo
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/hyperledgendary/fabgo
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+      - name: build and push
         uses: docker/build-push-action@v2
         with:
-          # relative path to the place where source code with Dockerfile is located
           context: ./_bootstrap
-          # Note: tags has to be all lower-case
-          tags: |
-            hyperledgendary/fabgo:latest 
-            ghcr.io/hyperledgendary/fabgo:latest 
-          # build on feature branches, push only on main branch
-          push: ${{ github.ref == 'refs/heads/main' }}
-
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+          platforms: linux/amd64,linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.fabgo.outputs.tags }}
+          labels: ${{ steps.fabgo.outputs.labels }}
