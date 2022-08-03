@@ -29,7 +29,7 @@ set export
 CWDIR := justfile_directory()
 
 _default:
-  @just --list
+  @just -f {{justfile()}}  --list
 
 bootstrap:
     #!/bin/bash

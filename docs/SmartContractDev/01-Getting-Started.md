@@ -10,26 +10,6 @@ cd workshop
 export WORKSHOP=$(pwd)
 ```
 
-## Tools Used
-
-- weft
-```
-npm install -g @hyperledger-labs/weft
-
-# or if you don't want to authenticate to github packages
-
-curl -sSL https://raw.githubusercontent.com/hyperledger-labs/weft/main/install.sh | sh
-```
-
-- peer cli
-```
-curl -sSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh && chmod +x install-fabric.sh
-./install-fabric.sh binary
-
-export PATH=$(pwd)/bin:$PATH
-export FABRIC_CFG_PATH=$(pwd)/config
-```
-
 Let's dive straight into creating some code to manage an 'asset'
 
 ## Install and Build
@@ -61,31 +41,10 @@ Review the `metadata.json` and see the summary of the contract information, the 
 Startup the Fabric Infrastructure, we're using MicroFab here as it's a single container and fast to start. Plus it already has the configuration required within it to start external chaincodes.
 
 ```bash
-export MICROFAB_CONFIG='{
-    "endorsing_organizations":[
-        {
-            "name": "org1"
-        }
-    ],
-    "channels":[
-        {
-            "name": "mychannel",
-            "endorsing_organizations":[
-                "org1"
-            ]
-        }
-    ],
-    "capability_level":"V2_0"
-}'
-
-docker run --name microfab --network host --rm -d -p 8080:8080 -e MICROFAB_CONFIG="${MICROFAB_CONFIG}"  ibmcom/ibp-microfab
+just -f justfile.dev microfab
 ```
 
-The grab the peer and orderer endpoints, and default user ids for later use.
-
-```
-curl -s http://console.127-0-0-1.nip.io:8080/ak/api/v1/components | weft microfab -w $WORKSHOP/_cfg/_wallets -p $WORKSHOP/_cfg/_gateways -m $WORKSHOP/_cfg/_msp -f
-```
+A file  `org1admin.env` is written out that contains the environment variables needed to run applications etc _as the org1 admin_
 
 At this point you may wish to start a new console window and `docker logs -f microfab` to watch the activity.
 
@@ -112,9 +71,7 @@ export CHAINCODE_ID=asset-tx-ts:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83c
 We're going to use the peer cli to install the contracts
 
 ```
-export CORE_PEER_LOCALMSPID=org1MSP
-export CORE_PEER_MSPCONFIGPATH=/home/matthew/github.com/hyperledgendary/full-stack-asset-transfer-guide/_msp/org1/org1admin/msp
-export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
+source org1admin.env
 
 peer lifecycle chaincode install asset-tx-ts.tgz
 peer lifecycle chaincode approveformyorg --channelID mychannel --name asset-tx -v 0 --package-id $CHAINCODE_ID --sequence 1
@@ -144,8 +101,10 @@ peer chaincode query -C mychannel -n asset-tx -c '{"Args":["org.hyperledger.fabr
 ```
 
 
-- change chaincode 
+
+{ tbc - add more detail in here but it is a case of}
+- stopping the chaincode (ctrl-c)
+- change chaincode source
 - `npm run rebuild && npm run start:server-debug`
-- test
-- attach the debugger 
+- test / attach the debugger 
 - rinse & repeat
