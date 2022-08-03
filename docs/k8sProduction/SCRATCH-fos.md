@@ -89,39 +89,6 @@ peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledg
 
 
 
-
-
-### Gateway Application Sample 
-
-```shell
-cd applications/trader-typescript 
-npm install 
-```
-
-```shell
-export KEY_DIRECTORY_PATH=${SAMPLE_NETWORK_DIR}/temp/enrollments/org1/users/org1admin/msp/keystore/
-export CERT_PATH=${SAMPLE_NETWORK_DIR}/temp/enrollments/org1/users/org1admin/msp/signcerts/cert.pem
-export TLS_CERT_PATH=${SAMPLE_NETWORK_DIR}/temp/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
-export PEER_HOST_ALIAS=${NS}-org1-peer1-peer.localho.st
-export PEER_ENDPOINT=${NS}-org1-peer1-peer.localho.st:443
-```
-
-```shell
-npm start getAllAssets
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### Gateway Application Sample
 
 ```shell
@@ -129,9 +96,43 @@ cd applications/trader-typescript
 npm install 
 ```
 
+#### Register / enroll a new user with the org1 CA
+
+```shell
+USERNAME=org1admin 
+PASSWORD=org1adminpw
+
+
+
+  TEMP_DIR=${SAMPLE_NETWORK_DIR}/temp
+  ENROLLMENTS_DIR=${TEMP_DIR}/enrollments
+  CA_DIR=$TEMP_DIR/cas/org1-ca
+  CA_HOST=test-network-org1-ca-ca.localho.st:443
+  
+  
+  
+  FABRIC_CA_CLIENT_HOME=$ENROLLMENTS_DIR/org1/users/testuser \
+    fabric-ca-client enroll \
+      --url https://$USERNAME:$PASSWORD@$CA_HOST \
+      --tls.certfiles $CA_DIR/tls-cert.pem
+  
+  
+  
+```
+
+
+#### Transact as the user 
+
+
+
+
 ```shell
 export KEY_DIRECTORY_PATH=${SAMPLE_NETWORK_DIR}/temp/enrollments/org1/users/org1admin/msp/keystore/
 export CERT_PATH=${SAMPLE_NETWORK_DIR}/temp/enrollments/org1/users/org1admin/msp/signcerts/cert.pem
+
+
+
+
 export TLS_CERT_PATH=${SAMPLE_NETWORK_DIR}/temp/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
 export PEER_HOST_ALIAS=${NS}-org1-peer1-peer.localho.st
 export PEER_ENDPOINT=${NS}-org1-peer1-peer.localho.st:443
