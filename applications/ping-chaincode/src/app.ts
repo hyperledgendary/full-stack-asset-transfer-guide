@@ -19,7 +19,6 @@ const connectionProfile = envOrDefault('CONN_PROFILE','');
 const identityFile = envOrDefault('ID_FILE','')
 const identityDir = envOrDefault('ID_DIR','')
 
-
 const utf8Decoder = new TextDecoder();
 
 
