@@ -6,33 +6,19 @@
 - setup sample network asset-transfer-basic ccaas
 - todo: trader / basic with k8s builder package
 
+General env: 
 ```shell
 export SAMPLE_NETWORK_DIR=/Users/jkneubuh/github.com/jkneubuh/fabric-operator/sample-network
 export CHAINCODE_NAME=asset-tx-typescript
-
-
-export KEY_DIRECTORY_PATH=${SAMPLE_NETWORK_DIR}/temp/enrollments/org1/users/org1admin/msp/keystore/
-export CERT_PATH=${SAMPLE_NETWORK_DIR}/temp/enrollments/org1/users/org1admin/msp/signcerts/cert.pem
-export TLS_CERT_PATH=${SAMPLE_NETWORK_DIR}/temp/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
-export PEER_HOST_ALIAS=test-network-org1-peer1-peer.localho.st
-export PEER_ENDPOINT=test-network-org1-peer1-peer.localho.st:443
-```
-
-```shell
-npm start getAllAssets
-```
-
-### chaincode
-
-Get the chaincode packager script
-```shell
-curl -fsSL https://raw.githubusercontent.com/hyperledgendary/package-k8s-chaincode-action/main/pkgk8scc.sh -o pkgk8scc.sh && chmod u+x pkgk8scc.sh
-```
-
-Env setup for the test network org1msp
-```shell
 export NS=test-network
 export TEST_NETWORK_INGRESS_DOMAIN=localho.st
+```
+
+
+### Contract Installation 
+
+Env setup for the peer binary commands 
+```shell
 export FABRIC_CFG_PATH=${SAMPLE_NETWORK_DIR}/temp/config
 export CORE_PEER_LOCALMSPID=Org1MSP
 export CORE_PEER_ADDRESS=${NS}-org1-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN}:443
@@ -42,10 +28,10 @@ export CORE_PEER_TLS_ROOTCERT_FILE=${SAMPLE_NETWORK_DIR}/temp/channel-msp/peerOr
 
 ```
 
+Get the chaincode packager script
 ```shell
-export CC_NAME=asset-tx-typescript
+curl -fsSL https://raw.githubusercontent.com/hyperledgendary/package-k8s-chaincode-action/main/pkgk8scc.sh -o pkgk8scc.sh && chmod u+x pkgk8scc.sh
 ```
-
 
 Build a docker image, upload to a repo, and construct a cc package
 ```shell
@@ -58,10 +44,12 @@ IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' localhost:5000
 
 ```
 
+
 install the chaincode
 ```shell
 export VERSION=1
 export SEQUENCE=1
+
 ```
 
 ```shell
@@ -93,6 +81,43 @@ peer lifecycle \
 
 
 ```
+
+```shell
+peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}' | jq
+
+```
+
+
+
+
+
+### Gateway Application Sample 
+
+```shell
+cd applications/trader-typescript 
+npm install 
+```
+
+```shell
+export KEY_DIRECTORY_PATH=${SAMPLE_NETWORK_DIR}/temp/enrollments/org1/users/org1admin/msp/keystore/
+export CERT_PATH=${SAMPLE_NETWORK_DIR}/temp/enrollments/org1/users/org1admin/msp/signcerts/cert.pem
+export TLS_CERT_PATH=${SAMPLE_NETWORK_DIR}/temp/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
+export PEER_HOST_ALIAS=${NS}-org1-peer1-peer.localho.st
+export PEER_ENDPOINT=${NS}-org1-peer1-peer.localho.st:443
+```
+
+```shell
+npm start getAllAssets
+```
+
+
+
+
+
+
+
+
+
 
 
 
