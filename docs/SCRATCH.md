@@ -97,6 +97,30 @@ peer lifecycle \
 
 
 
+### Gateway Application Sample
+
+```shell
+cd applications/trader-typescript 
+npm install 
+```
+
+```shell
+export KEY_DIRECTORY_PATH=${SAMPLE_NETWORK_DIR}/temp/enrollments/org1/users/org1admin/msp/keystore/
+export CERT_PATH=${SAMPLE_NETWORK_DIR}/temp/enrollments/org1/users/org1admin/msp/signcerts/cert.pem
+export TLS_CERT_PATH=${SAMPLE_NETWORK_DIR}/temp/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
+export PEER_HOST_ALIAS=${NS}-org1-peer1-peer.localho.st
+export PEER_ENDPOINT=${NS}-org1-peer1-peer.localho.st:443
+```
+
+```shell
+npm start getAllAssets
+```
+
+
+
+
+
+
 
 
 ### SCRATCH
