@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+set -x
 set -o errexit
 set -o pipefail
 
@@ -42,8 +42,11 @@ echo \
 # Update package lists
 apt-get update
 
-# Install jq
-apt-get -y --no-upgrade install jq
+# Install docker
+apt-get -y --no-upgrade install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+# Install kubectl
+apt-get -y --no-upgrade install kubectl
+
 
 # Install yq
 YQ_VERSION=4.23.1
@@ -52,29 +55,6 @@ if [ ! -x "/usr/local/bin/yq" ]; then
   chmod 755 /usr/local/bin/yq
 fi
 
-# Install unzip
-apt-get -y --no-upgrade install unzip
-
-# Install java
-apt-get -y --no-upgrade install default-jdk
-
-# Install python 3.8
-# apt-get -y --no-upgrade install python3.8-minimal python3.8-venv python3.8-dev python3-pip
-
-# Install sponge
-apt-get -y --no-upgrade install moreutils
-
-# Install Git
-apt-get -y --no-upgrade install git
-
-# Install nvm dependencies
-apt-get -y --no-upgrade install build-essential libssl-dev
-
-# Ensure that CA certificates are installed
-apt-get -y --no-upgrade install apt-transport-https ca-certificates
-
-# Install docker
-apt-get -y --no-upgrade install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
 # Add user to docker group
 #usermod -aG docker vagrant
@@ -86,8 +66,6 @@ if [ ! -x "/usr/local/bin/compose-switch" ]; then
   update-alternatives --install /usr/local/bin/docker-compose docker-compose /usr/local/bin/compose-switch 99
 fi
 
-# Install kubectl
-apt-get -y --no-upgrade install kubectl
 
 # Install kind
 KIND_VERSION=0.14.0

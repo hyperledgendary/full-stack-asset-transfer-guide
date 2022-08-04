@@ -5,8 +5,6 @@
  */
 
 import { connect, Contract, Identity, Signer, signers } from '@hyperledger/fabric-gateway';
-import * as crypto from 'crypto';
-import { promises as fs } from 'fs';
 import * as path from 'path';
 import { TextDecoder } from 'util';
 import { ConnectionHelper } from './fabric-connection-profile';
@@ -16,31 +14,14 @@ import { dump } from 'js-yaml';
 
 const channelName = envOrDefault('CHANNEL_NAME', 'mychannel');
 const chaincodeName = envOrDefault('CHAINCODE_NAME', 'conga-nft-contract');
-const mspId = envOrDefault('MSP_ID', 'Org1MSP');
 
 const connectionProfile = envOrDefault('CONN_PROFILE','');
 const identityFile = envOrDefault('ID_FILE','')
 const identityDir = envOrDefault('ID_DIR','')
-// Path to crypto materials.
-const cryptoPath = envOrDefault('CRYPTO_PATH', path.resolve(__dirname, '..', '..', '..', 'test-network', 'organizations', 'peerOrganizations', 'org1.example.com'));
 
-// Path to user private key directory.
-const keyDirectoryPath = envOrDefault('KEY_DIRECTORY_PATH', path.resolve(cryptoPath, 'users', 'User1@org1.example.com', 'msp', 'keystore'));
-
-// Path to user certificate.
-const certPath = envOrDefault('CERT_PATH', path.resolve(cryptoPath, 'users', 'User1@org1.example.com', 'msp', 'signcerts', 'cert.pem'));
-
-// Path to peer tls certificate.
-const tlsCertPath = envOrDefault('TLS_CERT_PATH', path.resolve(cryptoPath, 'peers', 'peer0.org1.example.com', 'tls', 'ca.crt'));
-
-// Gateway peer endpoint.
-const peerEndpoint = envOrDefault('PEER_ENDPOINT', 'localhost:7051');
-
-// Gateway peer SSL host name override.
-const peerHostAlias = envOrDefault('PEER_HOST_ALIAS', 'peer0.org1.example.com');
 
 const utf8Decoder = new TextDecoder();
-const assetId = `asset${Date.now()}`;
+
 
 
 

@@ -7,8 +7,8 @@ FROM ubuntu:latest
 RUN apt-get update \
     && apt-get -y upgrade \
     && apt-get -y install build-essential gcc gzip \
-                  python3 python3-distutils libpython3-dev software-properties-common \   
-                  curl git jq
+    && apt-get -y install python3 python3-distutils libpython3-dev software-properties-common \   
+    && apt-get -y install curl git jq unzip moreutils 
 
 
 ADD provision-root.sh /config/provision-root.sh
@@ -21,10 +21,15 @@ RUN apt-get clean \
 
 RUN useradd -ms /bin/bash dev && usermod -g docker dev
 USER dev
-ADD provision-user.sh /home/dev/provision.sh
-RUN cat /home/dev/provision.sh | bash
+ADD provision-user.sh /home/dev/provision-user.sh
+RUN cat /home/dev/provision-user.sh | bash
+
+WORKDIR /home/dev
+RUN curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh | bash -s -- binary
 
 RUN mkdir -p /home/dev/workshop
-WORKDIR /home/dev/workshop
 
+WORKDIR /home/dev/workshop
+ENV PATH=/home/dev/bin:$PATH
+ENV FABRIC_CFG_PATH=/home/dev/config
 ENTRYPOINT ["bash"]

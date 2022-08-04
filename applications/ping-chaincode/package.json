@@ -2,8 +2,7 @@
     "name": "asset-transfer-basic",
     "version": "1.0.0",
     "description": "Asset Transfer Basic Application implemented in typeScript using fabric-gateway",
-    "main": "dist/index.js",
-    "typings": "dist/index.d.ts",
+    "main": "dist/app.js",
     "engines": {
         "node": ">=14"
     },
