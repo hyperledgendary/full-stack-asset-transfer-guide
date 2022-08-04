@@ -12,25 +12,28 @@ import JSONIDAdapter from './jsonid-adapter';
 
 import { dump } from 'js-yaml';
 
-const channelName = envOrDefault('CHANNEL_NAME', 'mychannel');
-const chaincodeName = envOrDefault('CHAINCODE_NAME', 'conga-nft-contract');
+import {config} from 'dotenv';
+config({path:'app.env'});
+import * as env from 'env-var'
 
-const connectionProfile = envOrDefault('CONN_PROFILE','');
-const identityFile = envOrDefault('ID_FILE','')
-const identityDir = envOrDefault('ID_DIR','')
+const channelName = env.get('CHANNEL_NAME').default('mychannel').asString();
+const chaincodeName = env.get('CHAINCODE_NAME').default('conga-nft-contract').asString();
+
+const connectionProfile = env.get('CONN_PROFILE_FILE').required().asString();
+const identityFile = env.get('ID_FILE').required().asString()
+const identityDir = env.get('ID_DIR').required().asString()
+const tls = env.get('TLS_ENABLED').default("false").asBool();
 
 const utf8Decoder = new TextDecoder();
-
-
 
 
 async function main(): Promise<void> {
 
     const cp = await ConnectionHelper.loadProfile(connectionProfile);
-    console.log(cp);
+    
 
     // The gRPC client connection should be shared by all Gateway connections to this endpoint.
-    const client = await ConnectionHelper.newGrpcConnection(cp);
+    const client = await ConnectionHelper.newGrpcConnection(cp,tls);
     console.log("Created GRPC Connection")
 
     const jsonAdapter: JSONIDAdapter = new JSONIDAdapter(path.resolve(identityDir),'Org1MSP');
@@ -92,10 +95,3 @@ async function ping(contract: Contract): Promise<void> {
     console.log(dump(result));
 }
 
-
-/**
- * envOrDefault() will return the value of an environment variable, or a default value if the variable is undefined.
- */
-function envOrDefault(key: string, defaultValue: string): string {
-    return process.env[key] || defaultValue;
-}

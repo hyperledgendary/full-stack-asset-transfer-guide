@@ -20,6 +20,8 @@
     "dependencies": {
         "@grpc/grpc-js": "~1.6.7",
         "@hyperledger/fabric-gateway": "^1.1.0",
+        "dotenv": "^16.0.1",
+        "env-var": "^7.1.1",
         "js-yaml": "^4.1.0"
     },
     "devDependencies": {
