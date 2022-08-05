@@ -55,6 +55,8 @@ unkind:
 review-config:
     #!/bin/bash
     mkdir -p _cfg
+    rm -rf _cfg/*  || true
+    
     cp ${CWDIR}/infrastructure/configuration/*.yml ${CWDIR}/_cfg
 
     echo ">> Fabric Operations Console Configuration"
@@ -135,15 +137,43 @@ sample-network:
         ofs-ansible:latest \
             ansible-playbook /playbooks/00-complete.yml
 
+build-chaincode:
+	#!/bin/bash
+	set -ex -o pipefail
+	pushd ${CWDIR}/contracts/asset-tx-typescript
+	DOCKER_BUILDKIT=1 docker build -t asset_tx . --target k8s
+	docker tag asset_tx localhost:5000/asset_tx
+	docker push localhost:5000/asset_tx
+	# note the double { } for escaping
+	export IMG_SHA=$(docker inspect --format='{{{{index .RepoDigests 0}}' localhost:5000/asset_tx | cut -d'@' -f2)
+	cat << IMAGEJSON-EOF > image.json
+	{
+	  "name": "localhost:5000/asset_tx",
+	  "digest": "${IMG_SHA}"
+	}
+	IMAGEJSON-EOF
+
+	tar -czf code.tar.gz image.json
+
+	cat << METADATAJSON-EOF > metadata.json
+	{
+	    "type": "k8s",
+	    "label": "asset-tx"
+	}
+	METADATAJSON-EOF
+	tar -czf ${CWDIR}/_cfg/asset-tx-k8s-contract.tgz metadata.json code.tar.gz
+	popd
+
 deploy-chaincode: 
     #!/bin/bash
     set -ex -o pipefail
 
+    cp ${CWDIR}/contracts/asset-tx-typescript/asset-tx-chaincode-vars.yml ${CWDIR}/_cfg
     docker run \
         --rm \
         -u $(id -u) \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
-        -v ${CWDIR}/infrastructure/chaincode_playbooks:/playbooks \
+        -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         ofs-ansible:latest \
@@ -153,7 +183,7 @@ deploy-chaincode:
         --rm \
         -u $(id -u) \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
-        -v ${CWDIR}/infrastructure/chaincode_playbooks:/playbooks \
+        -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         ofs-ansible:latest \
@@ -163,7 +193,7 @@ deploy-chaincode:
         --rm \
         -u $(id -u) \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
-        -v ${CWDIR}/infrastructure/chaincode_playbooks:/playbooks \
+        -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         ofs-ansible:latest \
