@@ -70,6 +70,12 @@ nodes:
       - containerPort: 443
         hostPort: 443
         protocol: TCP
+
+# create a cluster with the local registry enabled in containerd
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${reg_port}"]
+    endpoint = ["http://${reg_name}:${reg_port}"]
 EOF
 
   #
