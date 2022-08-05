@@ -59,7 +59,7 @@ We're going to start the chaincode separately from the peer, so it's easy to ite
 ```bash
 export CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999
 
-weft chaincode package caas --path . --label asset-tx-ts --address ${CHAINCODE_SERVER_ADDRESS} --quiet
+weft chaincode package caas --path . --label asset-tx-ts --address ${CHAINCODE_SERVER_ADDRESS} --archive asset-tx-ts.tgz--quiet
 asset-tx-ts:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e
 ```
 

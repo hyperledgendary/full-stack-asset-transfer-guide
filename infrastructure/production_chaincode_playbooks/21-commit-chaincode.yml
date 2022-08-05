@@ -6,11 +6,8 @@
   hosts: localhost
   vars:
     wallet: "/_cfg"
-    smart_contract_package: /_cfg/conga-nft-contract-v0.1.1.tgz
-    smart_contract_version: "1.0.0"
-    smart_contract_sequence: 1    
-    smart_contract_name: conga-nft-contract  
   vars_files:
+    - /_cfg/asset-tx-chaincode-vars.yml    
     - /_cfg/fabric-common-vars.yml
     - /_cfg/fabric-org1-vars.yml
     - /_cfg/auth-vars.yml    

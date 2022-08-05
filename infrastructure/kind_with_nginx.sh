@@ -50,6 +50,8 @@ function delete_cluster() {
 #
 function create_cluster() {
   local cluster_name=$1
+  local reg_port=5000
+  local reg_name=kind-registry
 
   local reg_name=kind-registry
   local reg_port=5000
