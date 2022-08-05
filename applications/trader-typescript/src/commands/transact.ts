@@ -6,9 +6,9 @@
 
 import { Gateway } from '@hyperledger/fabric-gateway';
 import * as crypto from 'crypto';
-import { chaincodeName, channelName } from './connect';
-import { AssetCreate, AssetTransfer } from './contract';
-import { allFulfilled, differentElement, randomElement, randomInt } from './utils';
+import { chaincodeName, channelName } from '../connect';
+import { AssetCreate, AssetTransfer } from '../contract';
+import { allFulfilled, differentElement, randomElement, randomInt } from '../utils';
 
 export default async function main(gateway: Gateway): Promise<void> {
     const network = gateway.getNetwork(channelName);
@@ -59,7 +59,7 @@ class TransactApp {
 
     #newAsset(): AssetCreate {
         return {
-            ID: crypto.randomUUID(),
+            ID: crypto.randomUUID().replaceAll('-', '').substring(0, 8),
             Color: randomElement(colors),
             Size: randomInt(maxInitialSize) + 1,
             AppraisedValue: randomInt(maxInitialValue) + 1,

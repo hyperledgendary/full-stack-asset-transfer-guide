@@ -61,6 +61,11 @@ export function printable<T extends object>(event: T): PrintView<T> {
     ) as PrintView<T>;
 }
 
+export function assertAllDefined<T>(values: T[], message: string): T[] {
+    values.forEach(value => assertDefined(value, message));
+    return values;
+}
+
 export function assertDefined<T>(value: T, message: string): T {
     if (value == undefined) {
         throw new Error(message);

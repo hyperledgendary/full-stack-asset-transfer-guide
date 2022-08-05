@@ -19,8 +19,8 @@ export interface Asset {
     AppraisedValue: number;
 }
 
-export type AssetCreate = Omit<Asset, 'Owner'>;
-export type AssetUpdate = Pick<Asset, 'ID'> & Partial<AssetCreate>;
+export type AssetCreate = Omit<Asset, 'Owner'> & Partial<Asset>;
+export type AssetUpdate = Pick<Asset, 'ID'> & Partial<Omit<Asset, 'Owner'>>;
 
 export class AssetTransfer {
     readonly #contract: Contract;
