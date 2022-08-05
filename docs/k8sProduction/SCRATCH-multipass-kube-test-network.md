@@ -1,5 +1,7 @@
 # Full stack with multipass and the Kubernetes Test Network 
 
+![Multipass VM with Kube Test Network](../images/multipass-test-network.png)
+
 ## Multipass VM 
 
 - scrub everything Fabric / k8s related on host os. 
