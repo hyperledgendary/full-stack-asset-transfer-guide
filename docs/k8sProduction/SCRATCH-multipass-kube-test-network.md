@@ -127,3 +127,33 @@ peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledg
 ```
 
 
+## Gateway Client Application:
+
+### Client Certificates 
+
+TODO:  Run an org client registration in the cluster, and enroll from the HOST OS to download certificates locally.
+
+(in multipass shell)
+```shell
+cd ~/
+
+cat fabric-samples/test-network-k8s/build/enrollments/org1/users/org1admin/msp/keystore/key.pem 
+
+cat fabric-samples/test-network-k8s/build/enrollments/org1/users/org1admin/msp/signcerts/cert.pem 
+
+cat fabric-samples/test-network-k8s/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem 
+```
+
+Write the above content to a local `keystore/key.pem`, `signcerts/cert.pem`, and `tlscacerts/tlsca-signcert.pem`.
+
+```shell
+cd applications/trader-typescript
+
+export CHAINCODE_NAME=asset-tx-typescript
+
+export KEY_DIRECTORY_PATH=/tmp/keystore
+export CERT_PATH=/tmp/signcerts/cert.pem
+export TLS_CERT_PATH=/tmp/tlscacerts/tlsca-signcert.pem
+export PEER_HOST_ALIAS=org1-peer1.192-168-205-6.nip.io
+export PEER_ENDPOINT=org1-peer1.192-168-205-6.nip.io:443
+```
