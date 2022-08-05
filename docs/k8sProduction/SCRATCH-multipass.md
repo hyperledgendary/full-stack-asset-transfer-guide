@@ -42,7 +42,9 @@ git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git
 (mp shell #1)
 ```shell
 cd ~/fabric-samples/test-network-k8s
+```
 
+```shell
 export PATH=$PWD:$PWD/bin:$PATH
 export SAMPLE_NETWORK_DIR=$PWD 
 export TEST_NETWORK_STAGE_DOCKER_IMAGES="false"
@@ -61,8 +63,10 @@ network channel create
 
 (mp shell #1 - reuses env from test network setup above)
 ```shell
-cd ~/full-stack-asset-transfer-guide/contracts/asset-tx-typescript 
+cd ~/full-stack-asset-transfer-guide/contracts/asset-tx-typescript
+```
 
+```shell
 export CHAINCODE_NAME=$(basename $PWD)
 export NS=test-network
 export TEST_NETWORK_INGRESS_DOMAIN=vcap.me 
@@ -72,34 +76,32 @@ export CORE_PEER_ADDRESS=org1-peer1.${TEST_NETWORK_INGRESS_DOMAIN}:443
 export CORE_PEER_TLS_ENABLED=true
 export CORE_PEER_MSPCONFIGPATH=${SAMPLE_NETWORK_DIR}/build/enrollments/org1/users/org1admin/msp
 export CORE_PEER_TLS_ROOTCERT_FILE=${SAMPLE_NETWORK_DIR}/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
-
-```
-
-Get the chaincode packager script
-```shell
-curl -fsSL https://raw.githubusercontent.com/hyperledgendary/package-k8s-chaincode-action/main/pkgk8scc.sh -o pkgk8scc.sh && chmod u+x pkgk8scc.sh
 ```
 
 Build a docker image, upload to a repo, and construct a cc package
 
-TODO: build in the vm is broken! 
+TODO: Run a single chaincode container with both CCaaS and k8s builders
+```shell
+git checkout 2440f55c65e5c560a6dbfb69494f2a4876cede20
+```
 
 ```shell
-# docker build -t localhost:5000/${CHAINCODE_NAME} .
+docker build -t localhost:5000/${CHAINCODE_NAME} .
 docker push localhost:5000/${CHAINCODE_NAME} 
 
 IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' localhost:5000/${CHAINCODE_NAME} | cut -d'@' -f2)
 
-./pkgk8scc.sh -l ${CHAINCODE_NAME} -n localhost:5000/${CHAINCODE_NAME} -d ${IMAGE_DIGEST} 
-
+../../infrastructure/pkgcc.sh -l ${CHAINCODE_NAME} -n localhost:5000/${CHAINCODE_NAME} -d ${IMAGE_DIGEST} 
 ```
 
+```shell
+git checkout main 
+```
 
 install the chaincode
 ```shell
 export VERSION=1
 export SEQUENCE=1
-
 ```
 
 ```shell
