@@ -80,6 +80,11 @@ export CORE_PEER_TLS_ROOTCERT_FILE=${SAMPLE_NETWORK_DIR}/build/channel-msp/peerO
 
 Build a docker image, upload to a repo, and construct a cc package
 
+TODO: Run a single chaincode container with both CCaaS and k8s builders
+```shell
+git checkout 2440f55c65e5c560a6dbfb69494f2a4876cede20
+```
+
 ```shell
 docker build -t localhost:5000/${CHAINCODE_NAME} .
 docker push localhost:5000/${CHAINCODE_NAME} 
@@ -87,6 +92,10 @@ docker push localhost:5000/${CHAINCODE_NAME}
 IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' localhost:5000/${CHAINCODE_NAME} | cut -d'@' -f2)
 
 ../../infrastructure/pkgcc.sh -l ${CHAINCODE_NAME} -n localhost:5000/${CHAINCODE_NAME} -d ${IMAGE_DIGEST} 
+```
+
+```shell
+git checkout main 
 ```
 
 install the chaincode
