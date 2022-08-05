@@ -19,9 +19,8 @@ export class AssetTransferContract extends Contract {
      */
     @Transaction()
     async CreateAsset(ctx: Context, assetJson: string): Promise<void> {
-        const state = Object.assign(unmarshal(assetJson), {
-            Owner: clientIdentifier(ctx),
-        });
+        const state: Partial<Asset> = unmarshal(assetJson);
+        state.Owner = toJSON(clientIdentifier(ctx, state.Owner));
         const asset = newAsset(state);
 
         const exists = await this.AssetExists(ctx, asset.ID);
@@ -69,11 +68,11 @@ export class AssetTransferContract extends Contract {
         const existingAssetBytes = await this.#readAsset(ctx, assetUpdate.ID);
         const existingAsset = newAsset(unmarshal(existingAssetBytes));
 
-        if (!hasWritePermission(ctx, existingAsset.Owner)) {
+        if (!hasWritePermission(ctx, existingAsset)) {
             throw new Error('Only owner can update assets');
         }
 
-        const updatedState = Object.assign(existingAsset, assetUpdate, {
+        const updatedState = Object.assign({}, existingAsset, assetUpdate, {
             Owner: existingAsset.Owner, // Must transfer to change owner
         });
         const updatedAsset = newAsset(updatedState);
@@ -95,7 +94,7 @@ export class AssetTransferContract extends Contract {
         const assetBytes = await this.#readAsset(ctx, id); // Throws if asset does not exist
         const asset = newAsset(unmarshal(assetBytes));
 
-        if (!hasWritePermission(ctx, asset.Owner)) {
+        if (!hasWritePermission(ctx, asset)) {
             throw new Error('Only owner can delete assets');
         }
 
@@ -122,11 +121,11 @@ export class AssetTransferContract extends Contract {
         const assetString = await this.#readAsset(ctx, id);
         const asset = newAsset(unmarshal(assetString));
 
-        if (!hasWritePermission(ctx, asset.Owner)) {
+        if (!hasWritePermission(ctx, asset)) {
             throw new Error('Only owner can transfer assets');
         }
 
-        asset.Owner = ownerIdentifier(newOwner, newOwnerOrg);
+        asset.Owner = toJSON(ownerIdentifier(newOwner, newOwnerOrg));
 
         const assetBytes = marshal(asset);
         await ctx.stub.putState(id, assetBytes);
@@ -179,14 +178,22 @@ function toJSON(o: object): string {
     return stringify(sortKeysRecursive(o));
 }
 
-function hasWritePermission(ctx: Context, owner: string): boolean {
-    return owner === clientIdentifier(ctx);
+interface OwnerIdentifier {
+    org: string;
+    user: string;
 }
 
-function clientIdentifier(ctx: Context): string {
-    const userName = clientCommonName(ctx);
-    const orgId = ctx.clientIdentity.getMSPID();
-    return ownerIdentifier(userName, orgId);
+function hasWritePermission(ctx: Context, asset: Asset): boolean {
+    const clientId = clientIdentifier(ctx);
+    const ownerId = unmarshal(asset.Owner) as OwnerIdentifier;
+    return clientId.org === ownerId.org;
+}
+
+function clientIdentifier(ctx: Context, user = clientCommonName(ctx)): OwnerIdentifier {
+    return {
+        org: ctx.clientIdentity.getMSPID(),
+        user,
+    };
 }
 
 function clientCommonName(ctx: Context): string {
@@ -199,8 +206,8 @@ function clientCommonName(ctx: Context): string {
     return matches[1];
 }
 
-function ownerIdentifier(userName: string, orgId: string): string {
-    return `${orgId}/${userName}`;
+function ownerIdentifier(user: string, org: string): OwnerIdentifier {
+    return { org, user };
 }
 
 async function setEndorsingOrgs(ctx: Context, ledgerKey: string, ...orgs: string[]): Promise<void> {

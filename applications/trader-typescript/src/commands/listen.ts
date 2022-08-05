@@ -6,9 +6,9 @@
 
 import { ChaincodeEvent, checkpointers, Gateway } from '@hyperledger/fabric-gateway';
 import * as path from 'path';
-import { chaincodeName, channelName } from './connect';
-import { ExpectedError } from './expectedError';
-import { printable } from './utils';
+import { chaincodeName, channelName } from '../connect';
+import { ExpectedError } from '../expectedError';
+import { printable } from '../utils';
 
 const checkpointFile = path.resolve(process.env.CHECKPOINT_FILE ?? 'checkpoint.json');
 const simulatedFailureCount = getSimulatedFailureCount();

@@ -4,28 +4,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { connect, Gateway } from '@hyperledger/fabric-gateway';
+import { connect } from '@hyperledger/fabric-gateway';
+import commands from './commands';
 import { newConnectOptions, newGrpcConnection } from './connect';
 import { ExpectedError } from './expectedError';
-import getAllAssets from './getAllAssets';
-import listen from './listen';
-import transact from './transact';
-import transfer from './transfer';
-import deleteCommand from './delete';
-
-const allCommands: Record<string, (gateway: Gateway, args: string[]) => Promise<void>> = {
-    getAllAssets,
-    transact,
-    listen,
-    transfer,
-    delete: deleteCommand,
-};
 
 async function main(): Promise<void> {
     const commandName = process.argv[2];
     const args = process.argv.slice(3);
 
-    const command = allCommands[commandName];
+    const command = commands[commandName];
     if (!command) {
         printUsage();
         throw new Error(`Unknown command: ${commandName}`);
@@ -47,7 +35,7 @@ async function main(): Promise<void> {
 
 function printUsage(): void {
     console.log('Arguments: <command> [<arg1> ...]');
-    console.log('Available commands:', Object.keys(allCommands).join(', '));
+    console.log('Available commands:', Object.keys(commands).join(', '));
 }
 
 main().catch(error => {

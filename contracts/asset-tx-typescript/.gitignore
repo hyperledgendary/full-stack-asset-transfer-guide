@@ -10,7 +10,7 @@ coverage
 node_modules/
 jspm_packages/
 package-lock.json
+npm-shrinkwrap.json
 
 # Compiled TypeScript files
 dist
-
