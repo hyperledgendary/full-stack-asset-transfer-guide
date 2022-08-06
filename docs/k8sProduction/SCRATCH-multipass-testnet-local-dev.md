@@ -159,27 +159,45 @@ peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledg
 
 ## Gateway Application Development 
 
-TODO:  do ... 
-
 ```shell
-export KEY_DIRECTORY_PATH=/tmp/keystore
-export CERT_PATH=/tmp/signcerts/cert.pem
-export TLS_CERT_PATH=/tmp/tlscacerts/tlsca-signcert.pem
-export PEER_HOST_ALIAS=org1-peer1.192-168-205-6.nip.io
-export PEER_ENDPOINT=org1-peer1.192-168-205-6.nip.io:443
+export USERNAME=org1admin 
+export PEER_HOST_ALIAS=org1-peer1.${TEST_NETWORK_DOMAIN} 
+export PEER_ENDPOINT=org1-peer1.${TEST_NETWORK_DOMAIN}:443
 
-cd applications/trader-typescript 
+export KEY_DIRECTORY_PATH=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/keystore/
+export CERT_PATH=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/signcerts/cert.pem
+export TLS_CERT_PATH=$PWD/config/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
 
-npm install 
 ```
 
 ```shell
-npm start getAllTransactions 
+pushd applications/trader-typescript 
+npm install
+```
+
+```shell
+npm start create banana bananaman yellow 
+
+npm start getAllAssets
+
+npm start transfer banana appleman Org1MSP 
+
+npm start getAllAssets 
+
+npm start transfer banana bananaman Org2MSP 
+
+npm start transfer banana bananaman Org1MSP 
+
 ```
 
 ## Teardown 
 
 ```shell
+popd 
+rm -rf config/build 
+
 multipass delete fabric-dev 
 multipass purge 
+
+
 ```
