@@ -186,8 +186,10 @@ npm install
 
 ```shell
 USERNAME=org1user 
-PASSWORD=org1userpw 
+PASSWORD=org1userpw
+```
 
+```shell
 fabric-ca-client  register \
   --id.name       ${USERNAME} \
   --id.secret     ${PASSWORD} \
