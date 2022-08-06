@@ -100,6 +100,8 @@ export CORE_PEER_ADDRESS=org1-peer1.${TEST_NETWORK_DOMAIN}:443
 export CORE_PEER_TLS_ENABLED=true
 export CORE_PEER_MSPCONFIGPATH=$PWD/config/build/enrollments/org1/users/org1admin/msp
 export CORE_PEER_TLS_ROOTCERT_FILE=$PWD/config/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
+export CORE_PEER_CLIENT_CONNTIMEOUT=10s
+export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=10s
 ```
 
 - Build a docker image, upload to the docker registry, and prepare a k8s chaincode package:
