@@ -83,6 +83,21 @@ k9s -n test-network
 ### Install the Chaincode 
 
 After the network has been set up in the multipass VM, all interaction will occur via the Ingress on port :443.
+
+To avoid the use of a public container registry, the multipass VM has been configured with an insecure Docker 
+registry at port :5000.  Before images can be uploaded to the cluster, the Docker engine must be configured with 
+the insecure registry URL and restarted.
+
+E.g. on OSX / Docker Desktop, add the following stanza to the Docker -> Preferences -> Docker Engine config, using 
+the `$TEST_NETWORK_DOMAIN` as allocated to the multipass VM: 
+```json
+{  
+  "insecure-registries": [
+    "192-168-205-6.nip.io:5000"
+  ]
+}
+```
+
 Open a new shell on the host OS: 
 
 ```shell
