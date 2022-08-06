@@ -174,14 +174,6 @@ peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledg
 
 ## Gateway Application Development 
 
-
-
-```shell
-pushd applications/trader-typescript 
-npm install
-```
-
-
 ### Register and enroll a new user at the org1 CA 
 
 ```shell
@@ -205,8 +197,6 @@ fabric-ca-client enroll \
   
 ```
 
-### Go Bananas 
-
 ```shell
 export PEER_HOST_ALIAS=org1-peer1.${TEST_NETWORK_DOMAIN} 
 export PEER_ENDPOINT=org1-peer1.${TEST_NETWORK_DOMAIN}:443
@@ -215,6 +205,13 @@ export KEY_DIRECTORY_PATH=$PWD/config/build/enrollments/org1/users/${USERNAME}/m
 export CERT_PATH=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/signcerts/cert.pem
 export TLS_CERT_PATH=$PWD/config/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
 
+```
+
+### Go Bananas 
+
+```shell
+pushd applications/trader-typescript 
+npm install
 ```
 
 ```shell
