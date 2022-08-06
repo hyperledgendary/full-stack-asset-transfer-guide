@@ -86,7 +86,10 @@ After the network has been set up in the multipass VM, all interaction will occu
 Open a new shell on the host OS: 
 
 ```shell
-export TEST_NETWORK_DOMAIN=$(multipass info fabric-dev --format json | jq -r .info.\"fabric-dev\".ipv4[0])
+export MULTIPASS_IP=$(multipass info fabric-dev --format json | jq -r .info.\"fabric-dev\".ipv4[0])
+export TEST_NETWORK_DOMAIN=$(echo $MULTIPASS_IP | tr -s '.' '-').nip.io
+
+echo "Connecting to Fabric domain $TEST_NETWORK_DOMAIN"
 ```
 
 - Set the peer context for the Org1 administrator: 
