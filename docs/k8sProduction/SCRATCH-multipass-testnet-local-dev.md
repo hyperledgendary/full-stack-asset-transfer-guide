@@ -174,8 +174,38 @@ peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledg
 
 ## Gateway Application Development 
 
+
+
 ```shell
-export USERNAME=org1admin 
+pushd applications/trader-typescript 
+npm install
+```
+
+
+### Register and enroll a new user at the org1 CA 
+
+```shell
+USERNAME=org1user 
+PASSWORD=org1userpw 
+
+fabric-ca-client  register \
+  --id.name       ${USERNAME} \
+  --id.secret     ${PASSWORD} \
+  --id.type       client \
+  --url           https://org1-ca.${TEST_NETWORK_DOMAIN} \
+  --tls.certfiles $PWD/config/build/cas/org1-ca/tlsca-cert.pem \
+  --mspdir        $PWD/config/build/enrollments/org1/users/rcaadmin/msp
+
+fabric-ca-client enroll \
+  --url           https://${USERNAME}:${PASSWORD}@org1-ca.${TEST_NETWORK_DOMAIN} \
+  --tls.certfiles $PWD/config/build/cas/org1-ca/tlsca-cert.pem \
+  --mspdir        $PWD/config/build/enrollments/org1/users/${USERNAME}/msp
+  
+```
+
+### Go Bananas 
+
+```shell
 export PEER_HOST_ALIAS=org1-peer1.${TEST_NETWORK_DOMAIN} 
 export PEER_ENDPOINT=org1-peer1.${TEST_NETWORK_DOMAIN}:443
 
@@ -183,11 +213,6 @@ export KEY_DIRECTORY_PATH=$PWD/config/build/enrollments/org1/users/${USERNAME}/m
 export CERT_PATH=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/signcerts/cert.pem
 export TLS_CERT_PATH=$PWD/config/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
 
-```
-
-```shell
-pushd applications/trader-typescript 
-npm install
 ```
 
 ```shell
