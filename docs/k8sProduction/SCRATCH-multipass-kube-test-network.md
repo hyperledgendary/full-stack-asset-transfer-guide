@@ -34,9 +34,9 @@ sudo su - dev
 ## Git stuff 
 
 ```shell
-# until PR #809 lands: 
+# until PR #811 lands: 
 # git clone https://github.com/hyperledger/fabric-samples.git
-git clone https://github.com/jkneubuh/fabric-samples.git -b feature/enroll-rcaadmin 
+git clone https://github.com/jkneubuh/fabric-samples.git -b feature/k8s-builder-v7
 
 git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git
 ```
@@ -48,9 +48,8 @@ cd ~/fabric-samples/test-network-k8s
 
 export PATH=$PWD:$PWD/bin:$PATH
 export SAMPLE_NETWORK_DIR=$PWD 
-export TEST_NETWORK_STAGE_DOCKER_IMAGES="false"
-export TEST_NETWORK_K8S_CHAINCODE_BUILDER_VERSION="v0.6.0"
-export TEST_NETWORK_CHAINCODE_BUILDER="k8s"
+export TEST_NETWORK_STAGE_DOCKER_IMAGES=false
+export TEST_NETWORK_LOCAL_REGISTRY_INTERFACE=0.0.0.0
 export TEST_NETWORK_DOMAIN=$(hostname -I  | cut -d ' ' -f 1 | tr -s '.' '-').nip.io 
 ```
 
@@ -68,7 +67,6 @@ cd ~/full-stack-asset-transfer-guide/contracts/asset-tx-typescript
 
 export CHAINCODE_NAME=$(basename $PWD)
 export NS=test-network
-#export TEST_NETWORK_DOMAIN=vcap.me
 export FABRIC_CFG_PATH=${SAMPLE_NETWORK_DIR}/config/org1
 export CORE_PEER_LOCALMSPID=Org1MSP
 export CORE_PEER_ADDRESS=org1-peer1.${TEST_NETWORK_DOMAIN}:443
