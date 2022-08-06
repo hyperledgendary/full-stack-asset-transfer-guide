@@ -64,18 +64,17 @@ export TEST_NETWORK_LOCAL_REGISTRY_INTERFACE=0.0.0.0
 ```
 
 ```shell
+# Set up the test network 
 ./network kind 
 ./network cluster init 
 ./network up
 ./network channel create 
-```
 
-- Transfer the network crypto material to the multipass volume mount 
-```shell
+# Copy the crypto material to the host OS via the multipass volume mount 
 cp -r build /mnt/config 
 ```
 
-- Watch the target namespace 
+- Observe the target Kubernetes namespace 
 ```shell
 k9s -n test-network 
 ```
