@@ -152,3 +152,30 @@ peer lifecycle \
 peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}' | jq
 
 ```
+
+## Gateway Application Development 
+
+TODO:  do ... 
+
+```shell
+export KEY_DIRECTORY_PATH=/tmp/keystore
+export CERT_PATH=/tmp/signcerts/cert.pem
+export TLS_CERT_PATH=/tmp/tlscacerts/tlsca-signcert.pem
+export PEER_HOST_ALIAS=org1-peer1.192-168-205-6.nip.io
+export PEER_ENDPOINT=org1-peer1.192-168-205-6.nip.io:443
+
+cd applications/trader-typescript 
+
+npm install 
+```
+
+```shell
+npm start getAllTransactions 
+```
+
+## Teardown 
+
+```shell
+multipass delete fabric-dev 
+multipass purge 
+```
