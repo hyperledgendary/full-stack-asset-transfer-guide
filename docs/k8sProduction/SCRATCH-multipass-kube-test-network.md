@@ -50,6 +50,7 @@ export PATH=$PWD:$PWD/bin:$PATH
 export SAMPLE_NETWORK_DIR=$PWD 
 export TEST_NETWORK_STAGE_DOCKER_IMAGES=false
 export TEST_NETWORK_LOCAL_REGISTRY_INTERFACE=0.0.0.0
+export TEST_NETWORK_CHAINCODE_BUILDER=k8s
 export TEST_NETWORK_DOMAIN=$(hostname -I  | cut -d ' ' -f 1 | tr -s '.' '-').nip.io 
 ```
 
