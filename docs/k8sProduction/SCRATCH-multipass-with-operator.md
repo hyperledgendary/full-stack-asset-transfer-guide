@@ -52,8 +52,7 @@ sudo su - dev
 
 - Create a KIND cluster and install the operator
 ```shell
-#git clone https://github.com/hyperledger-labs/fabric-operator.git
-git clone https://github.com/jkneubuh/fabric-operator.git -b feature/bootstrap-ca-registration
+git clone https://github.com/hyperledger-labs/fabric-operator.git
 
 ```
 
