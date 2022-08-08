@@ -20,6 +20,7 @@ multipass       launch \
   --cpus        8 \
   --mem         8G \
   --cloud-init  infrastructure/multipass-cloud-config.yaml
+  
 ```
 
 - Open mp shell #1: 
@@ -34,11 +35,9 @@ sudo su - dev
 ## Git stuff 
 
 ```shell
-# until PR #811 lands: 
-# git clone https://github.com/hyperledger/fabric-samples.git
-git clone https://github.com/jkneubuh/fabric-samples.git -b feature/k8s-builder-v7
-
+git clone https://github.com/hyperledger/fabric-samples.git
 git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git
+
 ```
 
 ## Test network 
@@ -51,14 +50,16 @@ export SAMPLE_NETWORK_DIR=$PWD
 export TEST_NETWORK_STAGE_DOCKER_IMAGES=false
 export TEST_NETWORK_LOCAL_REGISTRY_INTERFACE=0.0.0.0
 export TEST_NETWORK_CHAINCODE_BUILDER=k8s
-export TEST_NETWORK_DOMAIN=$(hostname -I  | cut -d ' ' -f 1 | tr -s '.' '-').nip.io 
+export TEST_NETWORK_DOMAIN=$(hostname -I  | cut -d ' ' -f 1 | tr -s '.' '-').nip.io
+ 
 ```
 
 ```shell
 network kind 
 network cluster init 
 network up
-network channel create 
+network channel create
+ 
 ```
 
 ## Install asset-tx chaincode
@@ -74,6 +75,7 @@ export CORE_PEER_ADDRESS=org1-peer1.${TEST_NETWORK_DOMAIN}:443
 export CORE_PEER_TLS_ENABLED=true
 export CORE_PEER_MSPCONFIGPATH=${SAMPLE_NETWORK_DIR}/build/enrollments/org1/users/org1admin/msp
 export CORE_PEER_TLS_ROOTCERT_FILE=${SAMPLE_NETWORK_DIR}/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
+
 ```
 
 Build a docker image, upload to a repo, and construct a cc package
@@ -83,13 +85,17 @@ docker push localhost:5000/${CHAINCODE_NAME}
 
 IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' localhost:5000/${CHAINCODE_NAME} | cut -d'@' -f2)
 
-../../infrastructure/pkgcc.sh -l ${CHAINCODE_NAME} -n localhost:5000/${CHAINCODE_NAME} -d ${IMAGE_DIGEST} 
+../../infrastructure/pkgcc.sh -l ${CHAINCODE_NAME} -n localhost:5000/${CHAINCODE_NAME} -d ${IMAGE_DIGEST}
+
+echo "Created chainocde package ${CHAINCODE_NAME}.tgz for image digest ${IMAGE_DIGEST}"
+ 
 ```
 
 install the chaincode
 ```shell
 export VERSION=1
 export SEQUENCE=1
+
 ```
 
 ```shell
@@ -117,8 +123,6 @@ peer lifecycle \
 	--orderer       org0-orderer1.${TEST_NETWORK_DOMAIN}:443 \
 	--tls --cafile  ${SAMPLE_NETWORK_DIR}/build/channel-msp/ordererOrganizations/org0/orderers/org0-orderer1/tls/signcerts/tls-cert.pem \
 	--connTimeout   15s
-
-
 
 ```
 
