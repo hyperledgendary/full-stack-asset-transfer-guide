@@ -45,7 +45,8 @@ fi
 
 # Install just
 JUST_VERSION=1.2.0
-if [ ! -x "/usr/local/bin/just" ]; then
+if ! command -v just &> /dev/null
+then
   echo "${WARN} Please install just; suggested install commands:"
   echo "curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --tag ${JUST_VERSION} --to /usr/local/bin"
 else 
