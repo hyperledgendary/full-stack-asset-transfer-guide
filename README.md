@@ -2,7 +2,7 @@
 
 **AIM:** To show a full end-to-end development of a solution on the Hyperledger Fabric Platform
 
-Fabric can be used to represent many types of assets from 'marbles/pineapples/classic cars/monetary products' and track their 
+Fabric can be used to represent many types of assets from 'marbles/pineapples/classic cars/monetary products/fine art' and track their 
 exchange, provenance and lifecycle.
 
 **OBJECTIVES:** 
@@ -23,7 +23,7 @@ exchange, provenance and lifecycle.
 
 **Please ensure you've the [required tools](./SETUP.md) on your local machine**
 
-**If you wish to use a VM on your machine there is a [Vagrant configuration](./docs/vagrant.md)**
+**To check, run `./check.sh`**
 
 ---
 
@@ -42,6 +42,18 @@ But there are limited number of different types of cards, and one card can't be 
     - Owner Organizations
 		- 3 organizations that people can belong too
 		
+		
+## Before you begin....
+
+Fabric is a multi-server node distributed system, so it can be quite complex to configure. Even the simplest smart contract needs a running Fabric Infrastructure and one size does not fit all.
+
+There are configurations that can run Fabric either as local binaries, in a single docker container, 
+in multiple containers, or in K8S.  This workshop will show some of the approaches that be used for developing applications and contracts, and how a production deployment can be achieved. There are other ways
+of deploying Fabric produced by the community - these are equally valid and useful. Feel free to try the others, once you got a graps of the basic concepts to find what works best for you.
+
+At a high-level remember that a solution using Fabric has (a) client application to send in transaction requrests (b) Fabric infrastructure to service those requests (c) Smart Contract to action the transactions.
+The nature of (b) the fabric infrastructure will change depending on your scenario; start simple and build up. The smart contracts and client application's code will remain the same no matter the way Fabric is provisioned.  
+There will be minor variations in deployment (eg local docker container vs remote K8S cluster) but fundamentally the process is the same.
 
 ## Running the workshop
 
@@ -51,15 +63,11 @@ But there are limited number of different types of cards, and one card can't be 
   - One for running chaincode in dev mode
   - One for running the fabric infrastructure and optionally one for monitoring it
   - One for client applications
-		
-## Running a Fabric Infrastrucure
 
-Even the simplest smart contract needs a running Fabric Infrastructure; one size does not fit all
-so there are configurations that can run Fabric either as local binaries, in a single docker container, 
-in multiple containers, or in K8S. 
+- Work through the sections below in order, initially using the supplied scripts and resources
+- There are suggested changes highlighted in each section; this lets you expriment with different stages of development.
 
-{tbc}
-
+--- 
 ## Smart Contract Developing
 
 - [Introduction to Smart Contract Developing](./docs/SmartContractDev/00-Introduction.md)
