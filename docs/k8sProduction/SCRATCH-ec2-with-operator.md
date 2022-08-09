@@ -100,6 +100,7 @@ Open a new shell on the host OS:
 ```shell
 # This will be different for each instance.  Use the public IPv4 assigned by AWS: 
 export EC2_INSTANCE_IP=107.20.49.98
+export EC2_INSTANCE_KEY=~/Downloads/ec2-key.pem
 ```
 
 ```shell
@@ -112,13 +113,11 @@ echo "Connecting to Fabric domain $TEST_NETWORK_DOMAIN"
 
 - Extract the crypto material from the instance, copying to a local folder: 
 ```shell
-ssh -i ~/Downloads/ec2-key.pem ubuntu@$TEST_NETWORK_DOMAIN \
-  tar cvf - -C fabric-operator/sample-network temp \
-  | tar xvf - 
-mv temp config/build
+ssh -i $EC2_INSTANCE_KEY ubuntu@$TEST_NETWORK_DOMAIN \
+  tar cf - -C fabric-operator/sample-network temp \
+  | tar xvf - -C config 
 
 ```
-
 
 
 - Set the peer context for the Org1 administrator:
@@ -127,13 +126,13 @@ export FABRIC_CFG_PATH=$PWD/config
 export CORE_PEER_LOCALMSPID=Org1MSP
 export CORE_PEER_ADDRESS=${TEST_NETWORK_NS}-org1-peer1-peer.${TEST_NETWORK_DOMAIN}:443
 export CORE_PEER_TLS_ENABLED=true
-export CORE_PEER_MSPCONFIGPATH=$PWD/config/build/enrollments/org1/users/org1admin/msp
-export CORE_PEER_TLS_ROOTCERT_FILE=$PWD/config/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
+export CORE_PEER_MSPCONFIGPATH=$PWD/config/temp/enrollments/org1/users/org1admin/msp
+export CORE_PEER_TLS_ROOTCERT_FILE=$PWD/config/temp/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
 export CORE_PEER_CLIENT_CONNTIMEOUT=10s
 export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=10s
 
 export ORDERER_ENDPOINT=${TEST_NETWORK_NS}-org0-orderersnode1-orderer.${TEST_NETWORK_DOMAIN}:443
-export ORDERER_TLS_CERT=${PWD}/config/build/channel-msp/ordererOrganizations/org0/orderers/org0-orderersnode1/tls/signcerts/tls-cert.pem
+export ORDERER_TLS_CERT=${PWD}/config/temp/channel-msp/ordererOrganizations/org0/orderers/org0-orderersnode1/tls/signcerts/tls-cert.pem
 export CHANNEL_NAME=mychannel
 ```
 
@@ -207,13 +206,13 @@ fabric-ca-client  register \
   --id.secret     ${PASSWORD} \
   --id.type       client \
   --url           https://${TEST_NETWORK_NS}-org1-ca-ca.${TEST_NETWORK_DOMAIN} \
-  --tls.certfiles $PWD/config/build/cas/org1-ca/tls-cert.pem \
-  --mspdir        $PWD/config/build/enrollments/org1/users/rcaadmin/msp
+  --tls.certfiles $PWD/config/temp/cas/org1-ca/tls-cert.pem \
+  --mspdir        $PWD/config/temp/enrollments/org1/users/rcaadmin/msp
 
 fabric-ca-client enroll \
   --url           https://${USERNAME}:${PASSWORD}@${TEST_NETWORK_NS}-org1-ca-ca.${TEST_NETWORK_DOMAIN} \
-  --tls.certfiles $PWD/config/build/cas/org1-ca/tls-cert.pem \
-  --mspdir        $PWD/config/build/enrollments/org1/users/${USERNAME}/msp
+  --tls.certfiles $PWD/config/temp/cas/org1-ca/tls-cert.pem \
+  --mspdir        $PWD/config/temp/enrollments/org1/users/${USERNAME}/msp
   
 ```
 
@@ -221,9 +220,9 @@ fabric-ca-client enroll \
 export PEER_HOST_ALIAS=${TEST_NETWORK_NS}-org1-peer1-peer.${TEST_NETWORK_DOMAIN} 
 export PEER_ENDPOINT=${TEST_NETWORK_NS}-org1-peer1-peer.${TEST_NETWORK_DOMAIN}:443
 
-export KEY_DIRECTORY_PATH=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/keystore/
-export CERT_PATH=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/signcerts/cert.pem
-export TLS_CERT_PATH=$PWD/config/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
+export KEY_DIRECTORY_PATH=$PWD/config/temp/enrollments/org1/users/${USERNAME}/msp/keystore/
+export CERT_PATH=$PWD/config/temp/enrollments/org1/users/${USERNAME}/msp/signcerts/cert.pem
+export TLS_CERT_PATH=$PWD/config/temp/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
 
 ```
 
