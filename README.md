@@ -21,9 +21,7 @@ exchange, provenance and lifecycle.
 
 ---
 
-**Please ensure you've the [required tools](./SETUP.md) on your local machine**
-
-**To check, run `./check.sh`**
+**Please ensure you've the [required tools](./SETUP.md) on your local machine  -- To check, run `./check.sh`**
 
 ---
 		
