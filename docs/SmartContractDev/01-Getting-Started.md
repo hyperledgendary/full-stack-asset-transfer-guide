@@ -1,8 +1,8 @@
 # Getting Started with a Smart Contract
 
-Build, Package, and Test a Smart Contract
+[PREVIOUS - Introduction](./00-Introduction.md) <==>  [NEXT Create a Blank Contract](./02-Creating-Blank-Contract.md)
 
-[PREVIOUS - Introduction](./00-Introduction.md)  ==  [NEXT Create a Blank Contract](./02-Creating-Blank-Contract.md) 
+---
 
 ```
 git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git workshop
