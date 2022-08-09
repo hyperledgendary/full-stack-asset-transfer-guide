@@ -26,22 +26,6 @@ exchange, provenance and lifecycle.
 **To check, run `./check.sh`**
 
 ---
-
-## Scenario
-
-As a real-world example, lets assuming a 'game/trading card'. Each card represents a comic book character, with their attributes such as strength.
-These can be passed between people, with some cards having more 'value' due to rarity or having notable attibutes.  
-
-In token terms, these cards have aspects of Fungible tokens in that a card for say "Mr Blockchain" is equally exchangable for another "Mr Blockchain card"
-But there are limited number of different types of cards, and one card can't be subdivided. So have more in common with non-fungible tokens.
-
-- Asset transfer - move cards between people
-- Organizations: 
-    - Escrow (as endorsing org) and the original holder of all the cards
-    - Regulator (as ordering org) to ensure fair play
-    - Owner Organizations
-		- 3 organizations that people can belong too
-		
 		
 ## Before you begin....
 
@@ -68,6 +52,22 @@ There will be minor variations in deployment (eg local docker container vs remot
 - There are suggested changes highlighted in each section; this lets you expriment with different stages of development.
 
 --- 
+## Scenario
+
+As a real-world example, lets assuming a 'game/trading card'. Each card represents a comic book character, with their attributes such as strength.
+These can be passed between people, with some cards having more 'value' due to rarity or having notable attibutes.  
+
+In token terms, these cards have aspects of Fungible tokens in that a card for say "Mr Blockchain" is equally exchangable for another "Mr Blockchain card"
+But there are limited number of different types of cards, and one card can't be subdivided. So have more in common with non-fungible tokens.
+
+- Asset transfer - move cards between people
+- Organizations: 
+    - Escrow (as endorsing org) and the original holder of all the cards
+    - Regulator (as ordering org) to ensure fair play
+    - Owner Organizations
+		- 3 organizations that people can belong too
+		
+
 ## Smart Contract Developing
 
 - [Introduction to Smart Contract Developing](./docs/SmartContractDev/00-Introduction.md)
