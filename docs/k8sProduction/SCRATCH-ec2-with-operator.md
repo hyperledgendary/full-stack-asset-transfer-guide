@@ -56,9 +56,6 @@ export TEST_NETWORK_PEER_IMAGE=ghcr.io/hyperledger-labs/k8s-fabric-peer
 export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
 export TEST_NETWORK_STAGE_DOCKER_IMAGES=false
 
-```
-
-```shell
 ./network kind 
 ./network cluster init
 ./network up
