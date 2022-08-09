@@ -31,28 +31,27 @@ export PATH=$PWD/bin:$PATH
 
 ```shell
 export EC2_INSTANCE_IP=107.20.49.98
+export EC2_INSTANCE_KEY=~/Downloads/ec2-key.pem
 ```
 
 ## Operator Sample Network
 
-- open ssh shell to the VM instance:
+- open a shell to the instance: 
 ```shell
-ssh -i ~/Downloads/ec2-key.pem ubuntu@${EC2_INSTANCE_IP}
+ssh -i $EC2_INSTANCE_KEY ubuntu@${EC2_INSTANCE_IP}
 ```
 
-- Create a KIND cluster and install the operator
 ```shell
 git clone https://github.com/hyperledger-labs/fabric-operator.git
 
 ```
 
+- Install the sample network on a KIND kubernetes cluster: 
 ```shell
 cd ~/fabric-operator/sample-network 
 
-export TEST_NETWORK_DOMAIN=$(curl http://checkip.amazonaws.com | cut -d ' ' -f 1 | tr -s '.' '-').nip.io 
-export TEST_NETWORK_INGRESS_DOMAIN=${TEST_NETWORK_DOMAIN}
+export TEST_NETWORK_INGRESS_DOMAIN=$(curl http://checkip.amazonaws.com | cut -d ' ' -f 1 | tr -s '.' '-').nip.io 
 export TEST_NETWORK_LOCAL_REGISTRY_INTERFACE=0.0.0.0
-
 export TEST_NETWORK_PEER_IMAGE=ghcr.io/hyperledger-labs/k8s-fabric-peer
 export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
 
@@ -61,11 +60,6 @@ export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
 ```shell
 ./network kind 
 ./network cluster init
-
-```
-
-- Create a network by applying CRDs to the K8s API controller.  Create `mychannel`
-```shell
 ./network up
 ./network channel create 
 
@@ -91,7 +85,7 @@ the `$TEST_NETWORK_DOMAIN` as allocated to the multipass VM:
 ```json
 {  
   "insecure-registries": [
-    "192-168-205-6.nip.io:5000"
+    "107-20-49-98.nip.io:5000"
   ]
 }
 ```
@@ -101,13 +95,9 @@ Open a new shell on the host OS:
 # This will be different for each instance.  Use the public IPv4 assigned by AWS: 
 export EC2_INSTANCE_IP=107.20.49.98
 export EC2_INSTANCE_KEY=~/Downloads/ec2-key.pem
-```
-
-```shell
 export TEST_NETWORK_DOMAIN=$(echo $EC2_INSTANCE_IP | tr -s '.' '-').nip.io
-export TEST_NETWORK_NS=test-network
 
-echo "Connecting to Fabric domain $TEST_NETWORK_DOMAIN"
+echo "Fabric domain: $TEST_NETWORK_DOMAIN"
 
 ```
 
@@ -118,7 +108,6 @@ ssh -i $EC2_INSTANCE_KEY ubuntu@$TEST_NETWORK_DOMAIN \
   | tar xvf - -C config 
 
 ```
-
 
 - Set the peer context for the Org1 administrator:
 ```shell
