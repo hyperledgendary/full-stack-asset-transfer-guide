@@ -66,7 +66,7 @@ microfab: microfab-bye
     echo
     echo "Stating microfab...."
     docker run --name microfab --network host --rm -d -e MICROFAB_CONFIG="${MICROFAB_CONFIG}"  ibmcom/ibp-microfab    
-    sleep 3s
+    sleep 3
     curl -s http://console.127-0-0-1.nip.io:8080/ak/api/v1/components | weft microfab -w $CFG/_wallets -p $CFG/_gateways -m $CFG/_cfg/_msp -f
     cat << EOF > $CFG/org1admin.env
     export CORE_PEER_LOCALMSPID=org1MSP
