@@ -56,10 +56,10 @@ export TEST_NETWORK_PEER_IMAGE=ghcr.io/hyperledger-labs/k8s-fabric-peer
 export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
 export TEST_NETWORK_STAGE_DOCKER_IMAGES=false
 
-./network kind 
-./network cluster init
-./network up
-./network channel create 
+time ./network kind 
+time ./network cluster init
+time ./network up
+time ./network channel create 
 
 ```
 
