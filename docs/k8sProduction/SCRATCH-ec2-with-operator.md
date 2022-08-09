@@ -237,12 +237,11 @@ npm start transfer banana bananaman Org1MSP
 
 ## Teardown
 
+- Delete crypto material: 
 ```shell
 popd 
 rm -rf config/build 
 
-multipass delete fabric-dev 
-multipass purge 
-
-
 ```
+
+- Terminate EC2 Instance 
