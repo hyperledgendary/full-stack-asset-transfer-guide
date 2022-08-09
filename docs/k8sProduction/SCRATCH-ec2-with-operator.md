@@ -51,7 +51,6 @@ cd ~/fabric-operator/sample-network
 
 export TEST_NETWORK_DOMAIN=$(curl http://checkip.amazonaws.com | cut -d ' ' -f 1 | tr -s '.' '-').nip.io 
 export TEST_NETWORK_INGRESS_DOMAIN=${TEST_NETWORK_DOMAIN}
-#export TEST_NETWORK_STAGE_DOCKER_IMAGES=false
 export TEST_NETWORK_LOCAL_REGISTRY_INTERFACE=0.0.0.0
 
 export TEST_NETWORK_PEER_IMAGE=ghcr.io/hyperledger-labs/k8s-fabric-peer
