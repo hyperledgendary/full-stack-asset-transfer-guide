@@ -50,7 +50,7 @@ git clone https://github.com/hyperledger-labs/fabric-operator.git
 ```shell
 cd ~/fabric-operator/sample-network 
 
-export TEST_NETWORK_INGRESS_DOMAIN=$(curl http://checkip.amazonaws.com | cut -d ' ' -f 1 | tr -s '.' '-').nip.io 
+export TEST_NETWORK_INGRESS_DOMAIN=$(curl -s http://checkip.amazonaws.com | cut -d ' ' -f 1 | tr -s '.' '-').nip.io 
 export TEST_NETWORK_LOCAL_REGISTRY_INTERFACE=0.0.0.0
 export TEST_NETWORK_PEER_IMAGE=ghcr.io/hyperledger-labs/k8s-fabric-peer
 export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
