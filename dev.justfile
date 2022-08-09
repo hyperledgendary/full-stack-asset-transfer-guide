@@ -30,14 +30,14 @@ CWDIR := justfile_directory()
 _default:
   @just -f {{justfile()}} --list 
 
-bootstrap:
-    #!/bin/bash
-    set -ex -o pipefail
+check:
+  ${CWDIR}/check.sh
 
 microfab-bye:
     #!/bin/bash
     set -e -o pipefail
-    docker kill microfab 1>&2 1>/dev/null || true
+    echo "Removing Microfab container if already running..."
+    docker kill microfab >/dev/null || true
 
 # Launch a micro fab instance and create configuration in _cfg/uf
 microfab: microfab-bye
@@ -63,19 +63,59 @@ microfab: microfab-bye
     }'
     
     mkdir -p $CFG
-
-    docker run --name microfab --network host --rm -d -p 8080:8080 -e MICROFAB_CONFIG="${MICROFAB_CONFIG}"  ibmcom/ibp-microfab    
-    sleep 5s
+    echo
+    echo "Stating microfab...."
+    docker run --name microfab --network host --rm -d -e MICROFAB_CONFIG="${MICROFAB_CONFIG}"  ibmcom/ibp-microfab    
+    sleep 3s
     curl -s http://console.127-0-0-1.nip.io:8080/ak/api/v1/components | weft microfab -w $CFG/_wallets -p $CFG/_gateways -m $CFG/_cfg/_msp -f
     cat << EOF > $CFG/org1admin.env
-    CORE_PEER_LOCALMSPID=org1MSP
-    CORE_PEER_MSPCONFIGPATH=$CFG/_cfg/_msp/org1/org1admin/msp
-    CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
+    export CORE_PEER_LOCALMSPID=org1MSP
+    export CORE_PEER_MSPCONFIGPATH=$CFG/_cfg/_msp/org1/org1admin/msp
+    export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
+    export FABRIC_CFG_PATH=$CWDIR/config
+    export PATH="${CWDIR}/bin:$PATH"
     EOF
 
     echo
-    echo "To get an peer cli environment run:   source $CFG/org1admin.env' "
+    echo "To get an peer cli environment run:"
+    echo
+    echo '   source $WORKSHOP/_cfg/uf/org1admin.env' 
     
+debugcc:
+    #!/bin/bash
+    set -e -o pipefail
+
+    export CFG=$CWDIR/_cfg/uf
+
+    pushd $CWDIR/contracts/asset-tx-typescript
+
+    export CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999
+    export CHAINCODE_ID=$(weft chaincode package caas --path . --label asset-tx-ts --address ${CHAINCODE_SERVER_ADDRESS} --archive asset-tx-ts.tgz --quiet)
+    export CORE_PEER_LOCALMSPID=org1MSP
+    export CORE_PEER_MSPCONFIGPATH=$CFG/_cfg/_msp/org1/org1admin/msp
+    export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
+
+    echo "CHAINCODE_ID=${CHAINCODE_ID}"
+
+    set -x && peer lifecycle chaincode install asset-tx-ts.tgz &&     { set +x; } 2>/dev/null
+    echo
+    set -x && peer lifecycle chaincode approveformyorg --channelID mychannel --name asset-tx -v 0 --package-id $CHAINCODE_ID --sequence 1 && { set +x; } 2>/dev/null
+    echo
+    set -x && peer lifecycle chaincode commit --channelID mychannel --name asset-tx -v 0 --sequence 1 && { set +x; } 2>/dev/null
+    echo
+    set -x && peer lifecycle chaincode querycommitted --channelID=mychannel && { set +x; } 2>/dev/null
+    echo
+    popd
+
+    cat << CC_EOF >> $CFG/org1admin.env
+    export CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999
+    export CHAINCODE_ID=${CHAINCODE_ID}
+    CC_EOF
+
+    echo "Added CHAINCODE_ID and CHAINCODE_SERVER_ADDRESS to org1admin.env"
+    echo
+    echo '   source $WORKSHOP/_cfg/uf/org1admin.env' 
+
 devshell:
     docker run \
         --rm \
