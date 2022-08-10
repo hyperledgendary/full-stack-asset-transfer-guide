@@ -19,7 +19,11 @@ todo: break this into two sections / guides:
 ```shell
 cd fabric-operator/sample-network
 
+export TEST_NETWORK_PEER_IMAGE=ghcr.io/hyperledger-labs/k8s-fabric-peer
+export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
+
 ./network up
+./network channel create 
 ```
 
 
