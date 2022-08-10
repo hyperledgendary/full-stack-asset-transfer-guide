@@ -51,16 +51,30 @@ k9s -n test-network
 
 ## Chaincode as a Service 
 
-(Host OS shell):
+### SSH reverse proxy
+
+<host OS>:9999 <<-- <VM>:9999
+
 ```shell
 export MULTIPASS_IP=$(multipass info fabric-dev --format json | jq -r .info.\"fabric-dev\".ipv4[0])
 export TEST_NETWORK_DOMAIN=$(echo $MULTIPASS_IP | tr -s '.' '-').nip.io
 
 ```
 
-- Build a docker container for the chaincode 
+### 
+
+Open a second shell on the host OS. 
+
+```shell
+export MULTIPASS_IP=$(multipass info fabric-dev --format json | jq -r .info.\"fabric-dev\".ipv4[0])
+export TEST_NETWORK_DOMAIN=$(echo $MULTIPASS_IP | tr -s '.' '-').nip.io
+
+```
+
+- Build a chaincode docker image (optional: may just be launched / debugged as a native process)
 ```shell
 export CHAINCODE_NAME=asset-tx-typescript
+export CHAINCODE_LABEL=basic
 export CONTAINER_REGISTRY=$TEST_NETWORK_DOMAIN:5000
 export CHAINCODE_IMAGE=$CONTAINER_REGISTRY/$CHAINCODE_NAME
 
@@ -68,10 +82,30 @@ docker build -t $CHAINCODE_IMAGE contracts/$CHAINCODE_NAME
 
 ```
 
+- Prepare a chaincode as a service package.  The address for the chaincode will reference a port forward 
+  within the Virtual Machine, tunneling traffic back to the CCaaS endpoint running on the Host OS:
+```shell
+cat << EOF > connection.json
+{
+  "address": "${MULTIPASS_IP}:9999",
+  "dial_timeout": "10s",
+  "tls_required": false
+}
+EOF
 
+cat << EOF > metadata.json
+{
+  "type": "ccaas",
+  "label": "${CHAINCODE_LABEL}"
+}
+EOF
 
+tar -zcf code.tar.gz connection.json
+tar -zcf ${CHAINCODE_NAME}-ccaas.tgz code.tar.gz metadata.json
 
+rm code.tar.gz metadata.json connection.json 
 
+```
 
 - Set the `peer` env context:
 ```shell
