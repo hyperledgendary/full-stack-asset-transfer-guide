@@ -33,8 +33,6 @@ kubectl -> k8s
 kubectl cluster-info 
 ```
 
-Ingress domain is set 
-
 Ingress is ... ingressing: 
 ```shell
 curl localho.st
