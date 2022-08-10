@@ -53,7 +53,9 @@ k9s -n test-network
 
 ### SSH reverse proxy
 
-<host OS>:9999 <<-- <VM>:9999
+Open a reverse-tunnel / proxy, directing traffic from the VM's port :9999 to the host OS :9999.
+When the peer initiates a handshake to the CCaaS endpoint, traffic will be directed to a process 
+running locally on the host OS. 
 
 ```shell
 export MULTIPASS_IP=$(multipass info fabric-dev --format json | jq -r .info.\"fabric-dev\".ipv4[0])
@@ -61,7 +63,12 @@ export TEST_NETWORK_DOMAIN=$(echo $MULTIPASS_IP | tr -s '.' '-').nip.io
 
 ```
 
-### 
+```shell
+todo: 
+```
+
+
+### Launch Chaincode as a Service 
 
 Open a second shell on the host OS. 
 
@@ -77,6 +84,7 @@ export CHAINCODE_NAME=asset-tx-typescript
 export CHAINCODE_LABEL=basic
 export CONTAINER_REGISTRY=$TEST_NETWORK_DOMAIN:5000
 export CHAINCODE_IMAGE=$CONTAINER_REGISTRY/$CHAINCODE_NAME
+export CHAINCODE_PACKAGE=$CHAINCODE_NAME-ccaas.tgz 
 
 docker build -t $CHAINCODE_IMAGE contracts/$CHAINCODE_NAME 
 
@@ -101,11 +109,31 @@ cat << EOF > metadata.json
 EOF
 
 tar -zcf code.tar.gz connection.json
-tar -zcf ${CHAINCODE_NAME}-ccaas.tgz code.tar.gz metadata.json
+tar -zcf ${CHAINCODE_PACKAGE} code.tar.gz metadata.json
 
 rm code.tar.gz metadata.json connection.json 
 
 ```
+
+- Launch the chaincode as a service: 
+```shell
+export CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999
+export CHAINCODE_ID=$CHAINCODE_LABEL:$(shasum -a 256 ${CHAINCODE_PACKAGE} | tr -s ' ' | cut -d ' ' -f 1)
+
+docker run \
+  --rm \
+  --name $CHAINCODE_NAME \
+  -p 9999:9999 \
+  -e CHAINCODE_SERVER_ADDRESS \
+  -e CHAINCODE_ID \
+  $CHAINCODE_IMAGE
+    
+```
+
+
+### Install the contract 
+
+- start a new shell on the host 
 
 - Set the `peer` env context:
 ```shell
@@ -118,5 +146,45 @@ export CORE_PEER_TLS_ROOTCERT_FILE=$PWD/config/build/channel-msp/peerOrganizatio
 
 ```
 
+- Install the chaincode
+
+```shell
+export VERSION=1
+export SEQUENCE=1
+
+```
+
+```shell
+peer lifecycle chaincode install ${CHAINCODE_NAME}.tgz 
+
+export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid ${CHAINCODE_NAME}.tgz) && echo $PACKAGE_ID
+
+peer lifecycle \
+	chaincode approveformyorg \
+	--channelID     mychannel \
+	--name          ${CHAINCODE_NAME} \
+	--version       ${VERSION} \
+	--package-id    ${PACKAGE_ID} \
+	--sequence      ${SEQUENCE} \
+	--orderer       org0-orderer1.${TEST_NETWORK_DOMAIN}:443 \
+	--tls --cafile  ${SAMPLE_NETWORK_DIR}/build/channel-msp/ordererOrganizations/org0/orderers/org0-orderer1/tls/signcerts/tls-cert.pem \
+	--connTimeout   15s
+
+peer lifecycle \
+	chaincode commit \
+	--channelID     mychannel \
+	--name          ${CHAINCODE_NAME} \
+	--version       ${VERSION} \
+	--sequence      ${SEQUENCE} \
+	--orderer       org0-orderer1.${TEST_NETWORK_DOMAIN}:443 \
+	--tls --cafile  ${SAMPLE_NETWORK_DIR}/build/channel-msp/ordererOrganizations/org0/orderers/org0-orderer1/tls/signcerts/tls-cert.pem \
+	--connTimeout   15s
+
+```
+
+```shell
+peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}' | jq
+
+```
 
 
