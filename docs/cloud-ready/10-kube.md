@@ -9,7 +9,9 @@ Runtime                              | Description                      | Limita
 [EC2 VM](13-kube-ec2.md)             | Virtual Machine at Amazon EC2    | Pre-created for workshop 
 
 
-Previous : [00 Setup](00-setup.md) Setup      Next : [20 Deploy Fabric](20-fabric.md)
+Prev: [00 Setup](00-setup.md)
+
+Next: [20 Deploy Fabric](20-fabric.md)
 
 
 TODO: 
