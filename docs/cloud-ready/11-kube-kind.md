@@ -12,21 +12,22 @@
 ## Cluster set up  
 
 ```shell
+# Set a wildcard DNS domain to bind *.localho.st -> 127.0.0.1
 export TEST_NETWORK_INGRESS_DOMAIN=localho.st
-```
 
-Create a Kubernetes cluster in Docker, nginx ingress, and local docker registry:
-```shell
+# Create a Kubernetes cluster in Docker, nginx ingress, and local docker registry:
 just -f cloud.justfile kind 
-```
 
-Install fabric-operator CRDs:
-```shell
+# install fabric-operator custom resource definitions 
 kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
 ```
 
 
 ## Checks: 
+
+```shell
+kind get clusters
+```
 
 kubectl -> k8s 
 ```shell
