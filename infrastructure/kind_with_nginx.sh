@@ -20,12 +20,18 @@
 set -eo pipefail
 set -x
 
+KIND_CLUSTER_NAME=kind
+KIND_API_SERVER_ADDRESS=${KIND_API_SERVER_ADDRESS:-127.0.0.1}
+KIND_API_SERVER_PORT=${KIND_API_SERVER_PORT:-8888}
+CONTAINER_REGISTRY_NAME=${CONTAINER_REGISTRY_NAME:-kind-registry}
+CONTAINER_REGISTRY_ADDRESS=${CONTAINER_REGISTRY_ADDRESS:-127.0.0.1}
+CONTAINER_REGISTRY_PORT=${CONTAINER_REGISTRY_PORT:-5000}
+
 function kind_with_nginx() {
-  local cluster_name=$1
 
-  delete_cluster $cluster_name
+  delete_cluster
 
-  create_cluster $cluster_name
+  create_cluster
 
   start_nginx
 
@@ -34,29 +40,18 @@ function kind_with_nginx() {
   launch_docker_registry
 }
 
-
 #
 # Delete a kind cluster if it exists
 #
 function delete_cluster() {
-  local cluster_name=$1
-
-  kind delete cluster --name $cluster_name
+  kind delete cluster --name $KIND_CLUSTER_NAME
 }
-
 
 #
 # Create a local KIND cluster
 #
 function create_cluster() {
-  local cluster_name=$1
-  local reg_port=5000
-  local reg_name=kind-registry
-
-  local reg_name=kind-registry
-  local reg_port=5000
-
-  cat << EOF | kind create cluster --name $cluster_name --config=-
+  cat << EOF | kind create cluster --name $KIND_CLUSTER_NAME --config=-
 ---
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
@@ -76,14 +71,14 @@ nodes:
         hostPort: 443
         protocol: TCP
 networking:
-  apiServerAddress: 192.168.205.6
-  apiServerPort: 6000
+  apiServerAddress: ${KIND_API_SERVER_ADDRESS}
+  apiServerPort: ${KIND_API_SERVER_PORT}
 
 # create a cluster with the local registry enabled in containerd
 containerdConfigPatches:
 - |-
-  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${reg_port}"]
-    endpoint = ["http://${reg_name}:${reg_port}"]
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${CONTAINER_REGISTRY_PORT}"]
+    endpoint = ["http://${KIND_CLUSTER_NAME}:${CONTAINER_REGISTRY_PORT}"]
 EOF
 
   #
@@ -94,7 +89,6 @@ EOF
       docker exec "$node" sysctl net.ipv4.conf.all.route_localnet=1;
   done
 }
-
 
 #
 # Install an Nginx ingress controller bound to port 80 and 443.
@@ -110,7 +104,6 @@ function start_nginx() {
       --selector=app.kubernetes.io/component=controller \
       --timeout=2m
 }
-
 
 #
 # Override Core DNS with a wildcard matcher for the "*.localho.st" domain, binding to the
@@ -163,19 +156,19 @@ EOF
 function launch_docker_registry() {
   
   # create registry container unless it already exists
-  local reg_name=kind-registry
-  local reg_port=5000
-
   running="$(docker inspect -f '{{.State.Running}}' "${reg_name}" 2>/dev/null || true)"
   if [ "${running}" != 'true' ]; then
-    docker run \
-      -d --restart=always -p "127.0.0.1:${reg_port}:5000" --name "${reg_name}" \
+    docker run  \
+      --detach  \
+      --restart always \
+      --name    "${CONTAINER_REGISTRY_NAME}" \
+      --publish "${CONTAINER_REGISTRY_ADDRESS}:${CONTAINER_REGISTRY_PORT}:${CONTAINER_REGISTRY_PORT}" \
       registry:2
   fi
 
   # connect the registry to the cluster network
   # (the network may already be connected)
-  docker network connect "kind" "${reg_name}" || true
+  docker network connect "kind" "${CONTAINER_REGISTRY_NAME}" || true
 
   # Document the local registry
   # https://github.com/kubernetes/enhancements/tree/master/keps/sig-cluster-lifecycle/generic/1755-communicating-a-local-registry
@@ -188,11 +181,10 @@ metadata:
   namespace: kube-public
 data:
   localRegistryHosting.v1: |
-    host: "localhost:${reg_port}"
+    host: "localhost:${CONTAINER_REGISTRY_PORT}"
     help: "https://kind.sigs.k8s.io/docs/user/local-registry/"
 EOF
-
   
 }
 
-kind_with_nginx $1
+kind_with_nginx
