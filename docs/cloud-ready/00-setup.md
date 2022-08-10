@@ -1,14 +1,12 @@
 # Setup
 
-
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
-- [jq](https://stedolan.github.io/jq/)
 
-todo: 
 ```shell
-infrastructure/check.sh
+./cloud-check.sh
 ```
 
+todo: test for kubectl >= 1.24.  There are issues for older revs. 
 
 
 - Next: [10](10-kube.md) Select a Kube
