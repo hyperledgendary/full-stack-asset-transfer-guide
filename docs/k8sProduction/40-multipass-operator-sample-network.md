@@ -53,9 +53,9 @@ sudo su - dev
 - Create a KIND cluster and install the operator
 ```shell
 git clone https://github.com/hyperledger-labs/fabric-operator.git
-
 ```
 
+- Apply CRDs to the K8s API controller: 
 ```shell
 cd ~/fabric-operator/sample-network 
 
@@ -63,20 +63,11 @@ export TEST_NETWORK_DOMAIN=$(hostname -I  | cut -d ' ' -f 1 | tr -s '.' '-').nip
 export TEST_NETWORK_INGRESS_DOMAIN=${TEST_NETWORK_DOMAIN}
 export TEST_NETWORK_STAGE_DOCKER_IMAGES=true
 export TEST_NETWORK_LOCAL_REGISTRY_INTERFACE=0.0.0.0
-
 export TEST_NETWORK_PEER_IMAGE=ghcr.io/hyperledger-labs/k8s-fabric-peer
 export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
 
-```
-
-```shell
 ./network kind 
 ./network cluster init
-
-```
-
-- Create a network by applying CRDs to the K8s API controller.  Create `mychannel`
-```shell
 ./network up
 ./network channel create 
  
