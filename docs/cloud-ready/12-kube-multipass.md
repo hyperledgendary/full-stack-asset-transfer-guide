@@ -29,7 +29,7 @@ sudo su - dev
 
 ```shell
 git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git
-cd ~/full-stack-asset-transfer 
+cd ~/full-stack-asset-transfer-guide 
 
 # export TEST_NETWORK_INGRESS_DOMAIN=$(hostname -I  | cut -d ' ' -f 1 | tr -s '.' '-').nip.io
 
