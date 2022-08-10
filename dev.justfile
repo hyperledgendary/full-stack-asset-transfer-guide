@@ -65,14 +65,18 @@ microfab: microfab-bye
     mkdir -p $CFG
     echo
     echo "Stating microfab...."
-    docker run --name microfab --network host --rm -d -e MICROFAB_CONFIG="${MICROFAB_CONFIG}"  ibmcom/ibp-microfab    
-    sleep 3
+
+    docker run --name microfab -p 8080:8080 --add-host host.docker.internal:host-gateway --rm -d -e MICROFAB_CONFIG="${MICROFAB_CONFIG}"  ibmcom/ibp-microfab    
+    sleep 5
+
     curl -s http://console.127-0-0-1.nip.io:8080/ak/api/v1/components | weft microfab -w $CFG/_wallets -p $CFG/_gateways -m $CFG/_cfg/_msp -f
     cat << EOF > $CFG/org1admin.env
     export CORE_PEER_LOCALMSPID=org1MSP
     export CORE_PEER_MSPCONFIGPATH=$CFG/_cfg/_msp/org1/org1admin/msp
     export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
     export FABRIC_CFG_PATH=$CWDIR/config
+    export CORE_PEER_CLIENT_CONNTIMEOUT=10s
+    export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=10s
     export PATH="${CWDIR}/bin:$PATH"
     EOF
 
@@ -89,7 +93,9 @@ debugcc:
 
     pushd $CWDIR/contracts/asset-tx-typescript
 
-    export CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999
+    # this is the ip address the peer will use to talk to the CHAINCODE_ID
+    # remember this is relative from where the peer is running.
+    export CHAINCODE_SERVER_ADDRESS=host.docker.internal:9999
     export CHAINCODE_ID=$(weft chaincode package caas --path . --label asset-tx-ts --address ${CHAINCODE_SERVER_ADDRESS} --archive asset-tx-ts.tgz --quiet)
     export CORE_PEER_LOCALMSPID=org1MSP
     export CORE_PEER_MSPCONFIGPATH=$CFG/_cfg/_msp/org1/org1admin/msp
@@ -99,9 +105,9 @@ debugcc:
 
     set -x && peer lifecycle chaincode install asset-tx-ts.tgz &&     { set +x; } 2>/dev/null
     echo
-    set -x && peer lifecycle chaincode approveformyorg --channelID mychannel --name asset-tx -v 0 --package-id $CHAINCODE_ID --sequence 1 && { set +x; } 2>/dev/null
+    set -x && peer lifecycle chaincode approveformyorg --channelID mychannel --name asset-tx -v 0 --package-id $CHAINCODE_ID --sequence 1 --connTimeout 10s && { set +x; } 2>/dev/null
     echo
-    set -x && peer lifecycle chaincode commit --channelID mychannel --name asset-tx -v 0 --sequence 1 && { set +x; } 2>/dev/null
+    set -x && peer lifecycle chaincode commit --channelID mychannel --name asset-tx -v 0 --sequence 1  --connTimeout 10s && { set +x; } 2>/dev/null
     echo
     set -x && peer lifecycle chaincode querycommitted --channelID=mychannel && { set +x; } 2>/dev/null
     echo
