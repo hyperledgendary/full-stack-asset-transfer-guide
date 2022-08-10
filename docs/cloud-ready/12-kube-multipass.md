@@ -1,13 +1,56 @@
 # Kubernetes on a Multipass VM 
 
+## Prerequisites 
+
+- multipass 
+- kubectl 
+- k9s
+
+## Provision a Multipass VM
+
+```shell
+multipass launch \
+  --name        fabric-dev \
+  --disk        80G \
+  --cpus        8 \
+  --mem         8G \
+  --cloud-init  infrastructure/multipass-cloud-config.yaml
+
+multipass mount $PWD/config fabric-dev:/mnt/config
+
+```
+
+## Cluster Setup 
+
+```shell
+multipass shell fabric-dev
+sudo su - dev 
+```
+
+```shell
+git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git
+cd ~/full-stack-asset-transfer 
+
+# export TEST_NETWORK_INGRESS_DOMAIN=$(hostname -I  | cut -d ' ' -f 1 | tr -s '.' '-').nip.io
+
+# Create a Kubernetes cluster in Docker, nginx ingress, and local docker registry:
+just -f cloud.justfile kind
+
+# install fabric-operator custom resource definitions 
+kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
+
+```
+
+```shell
+k9s -n test-network 
+```
+
+
+## Connect to the Kube API Controller 
 
 
 
-
-
-
-
-
+### Guide 
 
 Up : [Select a Kube](10-kube.md)
 
