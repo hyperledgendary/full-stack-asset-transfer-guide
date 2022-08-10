@@ -63,6 +63,8 @@ export TEST_NETWORK_DOMAIN=$(echo $MULTIPASS_IP | tr -s '.' '-').nip.io
 
 ```
 
+- Add your ~/.ssh/id_rsa.pub public key to the multipass `dev` user's ~/.ssh/authorized_keys
+
 ```shell
 todo: 
 ```
