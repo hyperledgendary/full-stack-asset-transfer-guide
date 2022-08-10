@@ -16,5 +16,8 @@ export default async function main(gateway: Gateway, args: string[]): Promise<vo
     const contract = network.getContract(chaincodeName);
 
     const smartContract = new AssetTransfer(contract);
-    await smartContract.deleteAsset(assetId);
+    const asset = await smartContract.readAsset(assetId);
+
+    const assetsJson = JSON.stringify(asset, undefined, 2);
+    console.log(assetsJson);
 }

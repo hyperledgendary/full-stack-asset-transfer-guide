@@ -9,16 +9,18 @@ import create from './create';
 import deleteCommand from './delete';
 import getAllAssets from './getAllAssets';
 import listen from './listen';
+import read from './read';
 import transact from './transact';
 import transfer from './transfer';
 
-const commands: Record<string, (gateway: Gateway, args: string[]) => Promise<void>> = {
+export type Command = (gateway: Gateway, args: string[]) => Promise<void>;
+
+export const commands: Record<string, Command> = {
     create,
     delete: deleteCommand,
     getAllAssets,
     listen,
+    read,
     transact,
     transfer,
 };
-
-export default commands;

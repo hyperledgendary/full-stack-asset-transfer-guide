@@ -22,6 +22,11 @@ export interface Asset {
 export type AssetCreate = Omit<Asset, 'Owner'> & Partial<Asset>;
 export type AssetUpdate = Pick<Asset, 'ID'> & Partial<Omit<Asset, 'Owner'>>;
 
+/**
+ * AssetTransfer presents the smart contract in a form appropriate to the business application. Internally it uses the
+ * Fabric Gateway client API to invoke transaction functions, and deals with the translation between the business
+ * application and API representation of parameters and return values.
+ */
 export class AssetTransfer {
     readonly #contract: Contract;
 
@@ -30,9 +35,18 @@ export class AssetTransfer {
     }
 
     async createAsset(asset: AssetCreate): Promise<void> {
-        await submitWithRetry(() => this.#contract.submit('CreateAsset', {
+        await this.#contract.submit('CreateAsset', {
             arguments: [JSON.stringify(asset)],
-        }));
+        });
+    }
+
+    async getAllAssets(): Promise<Asset[]> {
+        const result = await this.#contract.evaluate('GetAllAssets');
+        if (result.length === 0) {
+            return [];
+        }
+
+        return JSON.parse(utf8Decoder.decode(result)) as Asset[];
     }
 
     async readAsset(id: string): Promise<Asset> {
@@ -62,18 +76,7 @@ export class AssetTransfer {
     }
 
     async transferAsset(id: string, newOwner: string, newOwnerOrg: string): Promise<void> {
-        await submitWithRetry(() => this.#contract.submit('TransferAsset', {
-            arguments: [id, newOwner, newOwnerOrg],
-        }));
-    }
-
-    async getAllAssets(): Promise<Asset[]> {
-        const result = await this.#contract.evaluate('GetAllAssets');
-        if (result.length === 0) {
-            return [];
-        }
-
-        return JSON.parse(utf8Decoder.decode(result)) as Asset[];
+        // TODO: Implement me!
     }
 }
 
@@ -85,8 +88,11 @@ async function submitWithRetry<T>(submit: () => Promise<T>): Promise<T> {
             return await submit();
         } catch (err: unknown) {
             lastError = err;
-            if (err instanceof CommitError && err.code === StatusCode.MVCC_READ_CONFLICT) {
-                continue; // Retry
+            if (err instanceof CommitError) {
+                // Transaction failed validation and did not update the ledger. Handle specific transaction validation codes.
+                if (err.code === StatusCode.MVCC_READ_CONFLICT) {
+                    continue; // Retry
+                }
             }
             break; // Failure -- don't retry
         }
