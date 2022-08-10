@@ -10,13 +10,17 @@ cd workshop
 export WORKSHOP=$(pwd)
 ```
 
-Let's dive straight into creating some code to manage an 'asset'; best to have two windows open, one for running the Fabric network and one for the chaincode development
+First please check you've got the tools you need. docker/just/weft/nodejs/peer. To double check run the `check.sh` script
+
+```
+${WORKSHOP}/check.sh
+```
+
+Let's dive straight into creating some code to manage an 'asset'; best to have two windows open, one for running the 'FabricNetwork' and one for 'ChaincodeDev'. You may wish to open a third to watch the logs of rhte running Fabric Network. 
 
 ## Start the Fabric Infrastructure
 
 Startup the Fabric Infrastructure, we're using MicroFab here as it's a single container and fast to start. Plus it already has the configuration required within it to start external chaincodes.
-
-(do this in the Fabric dev window)
 
 ```bash
 just -f dev.justfile microfab
@@ -25,7 +29,7 @@ just -f dev.justfile microfab
 A file  `org1admin.env` is written out that contains the environment variables needed to run applications etc _as the org1 admin_
 *ensure that you `source _cfg/uf/org1admin.env`*
 
-At this point you may wish to run `docker logs -f microfab` to watch the activity.
+At this point you may wish to run `docker logs -f microfab` in a separate window to watch the activity - you don't need to setup anything specific here.
 
 ## Pacakge and deploy against Fabric
 
@@ -43,7 +47,7 @@ You can skip to the next step 'Iterative Development and Test'.
 To run the commands manually:
 
 ```bash
-export CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999
+export CHAINCODE_SERVER_ADDRESS=host.docker.internal:9999
 
 weft chaincode package caas --path . --label asset-tx-ts --address ${CHAINCODE_SERVER_ADDRESS} --archive asset-tx-ts.tgz --quiet
 asset-tx-ts:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e
