@@ -83,8 +83,8 @@ But there are limited number of different types of cards, and one card can't be 
 
 ## Cloud Ready 
 
-- [00](./docs/todo) Prerequisites  
-- [01](./docs/todo) Select a target Kubernetes cluster
+- [00](./docs/todo) Setup  
+- [01](./docs/todo) Select a Kubernetes
 - [02](./docs/todo) Deploy a Fabric Network 
 - [03](./docs/todo) Install smart contracts 
 - [04](./docs/todo) Go Bananas 
