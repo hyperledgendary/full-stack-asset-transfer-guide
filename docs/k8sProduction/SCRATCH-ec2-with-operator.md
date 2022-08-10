@@ -7,7 +7,7 @@ Chaincode may be run on the host OS "as a service", or the image can be uploaded
 in the cluster using the [k8s chaincode builder](https://github.com/hyperledger-labs/fabric-builder-k8s).
 
 Gateway applications run locally on the HOST OS, connecting to the Fabric network endpoints via Nginx ingress.
-![EC2 VM with Fabric Operator](../images/todo.png)
+![EC2 VM with Fabric Operator](../images/ec2-with-operator-network.png)
 
 
 ## Prerequisites
@@ -24,9 +24,9 @@ export PATH=$PWD/bin:$PATH
 
 ## Create an EC2 Virtual Machine
 
-- Use `t2.xlarge` profile
+- Use `t2.xlarge` profile (4 CPU / 8 GRAM)
 - copy/paste `infrastructure/ec2-cloud-config.yaml` as the instance user-data 
-- Create / reference an ssh key pair for remote login.  Save locally as `ec2-key.pem`
+- Create / reference an ssh key pair for remote login.  Save locally as `~/Downloads/ec2-key.pem`
 - After the instance is up, identify the PUBLIC IPV4 address.  This will be used extensively for all access to the cluster: 
 
 ```shell
