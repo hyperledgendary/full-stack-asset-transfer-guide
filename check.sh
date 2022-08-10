@@ -1,19 +1,22 @@
 #!/usr/bin/env bash
 
 SUCCESS="✅"
-WARN="⚠️"
+WARN="⚠️ "
+EXIT=0
 
 if ! command -v docker &> /dev/null
 then
     echo "${WARN} Please install Docker; suggested install commands:"
-else  
+    EXIT=1
+else
     echo "${SUCCESS} Docker found"
 fi
 
 if ! command -v kubectl &> /dev/null
 then
     echo "${WARN} Please install kubectl if you want to use k8s; suggested install commands:"
-else  
+    EXIT=1
+else
     echo "${SUCCESS} kubectl found"
 fi
 
@@ -25,7 +28,8 @@ then
   echo "sudo curl --fail --silent --show-error -L https://kind.sigs.k8s.io/dl/v${KIND_VERSION}/kind-linux-amd64 -o /usr/local/bin/kind"
   echo "sudo chmod 755 /usr/local/bin/kind"
   echo
-else  
+  EXIT=1
+else
     echo "${SUCCESS} kind found"  
 fi
 
@@ -39,7 +43,8 @@ then
   echo "sudo chown root:root /usr/local/bin/k9s"
   echo "sudo chmod 755 /usr/local/bin/k9s"
   echo
-else 
+  EXIT=1
+else
   echo "${SUCCESS} k9s found"
 fi
 
@@ -49,7 +54,8 @@ if ! command -v just &> /dev/null
 then
   echo "${WARN} Please install just; suggested install commands:"
   echo "curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --tag ${JUST_VERSION} --to /usr/local/bin"
-else 
+  EXIT=1
+else
   echo "${SUCCESS} Just found"
 fi
 
@@ -59,12 +65,16 @@ then
   echo "curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh | bash -s -- binary"
   echo 'export PATH=$(pwd)/bin:$PATH'
   echo 'export FABRIC_CFG_PATH=$(pwd)/config'
-else 
+  EXIT=1
+else
   echo "${SUCCESS} peer found"
 fi
  
 if [[ ! -z "${FABRIC_CFG_PATH}" && -d "${FABRIC_CFG_PATH}" ]]; then
   echo "${SUCCESS} FABRIC_CFG_PATH set" 
+  EXIT=1
 else
   echo "${WARN}  FABRIC_CFG_PATH must be set"
 fi
+
+exit $EXIT
