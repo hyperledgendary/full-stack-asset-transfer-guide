@@ -17,7 +17,7 @@ todo: set up KIND from just file? or from operator sample network?
 export TEST_NETWORK_INGRESS_DOMAIN=localho.st
 ```
 
-- Create a Kubernetes cluster in Docker 
+- Create a Kubernetes cluster in Docker, nginx ingress, and local docker registry:
 ```shell
 just -f cloud.justfile kind 
 ```
