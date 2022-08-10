@@ -12,9 +12,9 @@ Runtime                              | Description                       | Limit
 [IKS](16-kube-iks.md)                | IBM Cloud Kubernetes Service      | TODO! 
 
 
-Prev: [00 Setup](00-setup.md)
+Prev: [Setup](00-setup.md)
 
-Next: [20 Deploy Fabric](20-fabric.md)
+Next: [Deploy Fabric](20-fabric.md)
 
 
 
