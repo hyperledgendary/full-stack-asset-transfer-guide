@@ -5,9 +5,9 @@ TODO:  talk a little bit about which one to use in which context.  All will work
 Runtime      | Description                      | Pros                 | Cons
 -------------|----------------------------------|----------------------|------------------------
 KIND         | Kubernetes in Docker             |                      |
-multipass    | Multipass VM                     |                      | 
-EC2 VM       | Amazon EC2 Instance              |                      | 
-IBM Cloud VM | IBM Cloud Virtual Machine        |                      | 
+multipass    | Virtual Machine on localhost     |                      |
+EC2 VM       | Virtual Machine at Amazon EC2    |                      | 
+IBM Cloud VM | Virtual Machine at IBM Cloud     |                      | 
 
 
 todo:
