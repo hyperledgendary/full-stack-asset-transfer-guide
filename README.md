@@ -81,12 +81,23 @@ But there are limited number of different types of cards, and one card can't be 
 - client sdks for both parties working with assets
 - how these can be written and debugged
 
-## Deploy to production-grade
 
-- [Introduction to Deploying onto k8s clusters](./docs/k8sProduction/00-Introduction.md)
-- [Locally using KIND](./docs/k8sProduction/01-KINDOpenSourcFabricStack.md)
+## Cloud Ready 
 
-- Create network
+- [00](./docs/cloud-ready/00-setup.md) Setup  
+- [10](./docs/cloud-ready/10-kube.md) Select a Kube
+- [20](./docs/cloud-ready/20-fabric.md) Deploy a Fabric Network
+- [30](./docs/cloud-ready/30-chaincode.md) Install Chaincode
+- [40](./docs/cloud-ready/40-bananas.md) Go Bananas 
+
+
+: [Setup](00-setup.md) 
+: [Select a Kube](10-kube.md)
+: [Deploy a Fabric Network](20-fabric.md)
+: [Install Chaincode](30-chaincode.md)
+: [Go Bananas](40-bananas.md)
+
+
 
 ## Operate
 

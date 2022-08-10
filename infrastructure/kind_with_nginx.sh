@@ -75,6 +75,9 @@ nodes:
       - containerPort: 443
         hostPort: 443
         protocol: TCP
+networking:
+  apiServerAddress: 192.168.205.6
+  apiServerPort: 6000
 
 # create a cluster with the local registry enabled in containerd
 containerdConfigPatches:
