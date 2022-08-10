@@ -5,5 +5,5 @@
 
 
 
-- Previous : [00](./docs/cloud-ready/00-setup.md) Setup
-- Next : [20](./docs/cloud-ready/20-fabric.md) Deploy a Fabric Network
+- Previous : [00](00-setup.md) Setup
+- Next : [20](20-fabric.md) Deploy a Fabric Network

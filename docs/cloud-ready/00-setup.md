@@ -10,4 +10,4 @@
 
 
 
-- Next: [10](./docs/cloud-ready/10-kube.md) Select a Kube
+- Next: [10](10-kube.md) Select a Kube
