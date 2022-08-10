@@ -1,12 +1,13 @@
 # Setup
 
 
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- [jq](https://stedolan.github.io/jq/)
 
-
-
-
-
-
+todo: 
+```shell
+infrastructure/check.sh
+```
 
 
 
