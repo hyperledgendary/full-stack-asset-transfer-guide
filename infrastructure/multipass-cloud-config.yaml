@@ -95,6 +95,14 @@ write_files:
       chmod 755 /usr/local/bin/ccmetadata
     fi
 
+    # Install just
+    JUST_VERSION=1.2.0
+    if [ ! -x "/usr/local/bin/just" ]; then
+      curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --tag ${JUST_VERSION} --to /usr/local/bin
+      chown root:root /usr/local/bin/just
+      chmod 755 /usr/local/bin/just
+    fi
+
 - path: /config/provision-user.sh
   permissions: '0777'
   owner: dev:dev
@@ -112,9 +120,8 @@ runcmd:
   - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
   - add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   - apt-get update -y
-  - apt-get install -y docker-ce docker-ce-cli containerd.io
-  - systemctl start docker
-  - systemctl enable docker
+  - apt-get install -y docker.io
+  - usermod -a -G docker ubuntu
   - /config/provision-root.sh
   - su -c /config/provision-user.sh dev
 

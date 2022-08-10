@@ -24,7 +24,6 @@ multipass mount $PWD/config fabric-dev:/mnt/config
 
 ```shell
 multipass shell fabric-dev
-sudo su - dev 
 ```
 
 ```shell
