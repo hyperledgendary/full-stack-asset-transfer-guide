@@ -4,7 +4,7 @@
 
 - multipass 
 - kubectl 
-- k9s
+
 
 ## Provision a Multipass VM
 
