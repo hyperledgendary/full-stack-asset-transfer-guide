@@ -27,8 +27,21 @@ multipass shell fabric-dev
 sudo su - dev 
 ```
 
+todo: 
+- override TEST_NETWORK_INGRESS_DOMAIN 
+- set multipass IP 
+- override kind config to expose api controller on a public interface: 
+```yaml
+networking: 
+  apiServerAddress: ${multipass_ip}
+  apiServerPort: 6000
+```
+- copy ~dev/.kube/config out to host OS.  This will allow kubectl to run on the host OS, connecting to the k8s API controller exposed on the VM
+- reg port 0.0.0.0
+
+
 ```shell
-git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git
+git clone https://github.com/jkneubuh/full-stack-asset-transfer-guide.git -b feature/puff
 cd ~/full-stack-asset-transfer-guide 
 
 # export TEST_NETWORK_INGRESS_DOMAIN=$(hostname -I  | cut -d ' ' -f 1 | tr -s '.' '-').nip.io
