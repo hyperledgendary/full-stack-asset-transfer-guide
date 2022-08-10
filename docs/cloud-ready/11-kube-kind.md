@@ -11,8 +11,6 @@
 
 ## Cluster set up  
 
-todo: set up KIND from just file? or from operator sample network?
-
 ```shell
 export TEST_NETWORK_INGRESS_DOMAIN=localho.st
 ```
