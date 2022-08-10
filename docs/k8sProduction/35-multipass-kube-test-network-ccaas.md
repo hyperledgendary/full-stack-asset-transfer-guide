@@ -171,7 +171,7 @@ peer lifecycle \
 	--package-id    ${PACKAGE_ID} \
 	--sequence      ${SEQUENCE} \
 	--orderer       org0-orderer1.${TEST_NETWORK_DOMAIN}:443 \
-	--tls --cafile  ${SAMPLE_NETWORK_DIR}/build/channel-msp/ordererOrganizations/org0/orderers/org0-orderer1/tls/signcerts/tls-cert.pem \
+	--tls --cafile  ${PWD}/config/build/channel-msp/ordererOrganizations/org0/orderers/org0-orderer1/tls/signcerts/tls-cert.pem \
 	--connTimeout   15s
 
 peer lifecycle \
@@ -181,7 +181,7 @@ peer lifecycle \
 	--version       ${VERSION} \
 	--sequence      ${SEQUENCE} \
 	--orderer       org0-orderer1.${TEST_NETWORK_DOMAIN}:443 \
-	--tls --cafile  ${SAMPLE_NETWORK_DIR}/build/channel-msp/ordererOrganizations/org0/orderers/org0-orderer1/tls/signcerts/tls-cert.pem \
+	--tls --cafile  ${PWD}/config/build/channel-msp/ordererOrganizations/org0/orderers/org0-orderer1/tls/signcerts/tls-cert.pem \
 	--connTimeout   15s
 
 ```
