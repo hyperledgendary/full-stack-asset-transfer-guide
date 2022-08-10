@@ -66,10 +66,10 @@ export TEST_NETWORK_LOCAL_REGISTRY_INTERFACE=0.0.0.0
 export TEST_NETWORK_PEER_IMAGE=ghcr.io/hyperledger-labs/k8s-fabric-peer
 export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
 
-./network kind 
-./network cluster init
-./network up
-./network channel create 
+time ./network kind 
+time ./network cluster init
+time ./network up
+time ./network channel create 
  
 # Copy the crypto material to the host OS via the multipass volume mount 
 mkdir -p /mnt/config/build && cp -r temp/* /mnt/config/build
