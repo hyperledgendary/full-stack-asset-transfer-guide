@@ -147,8 +147,10 @@ export CORE_PEER_TLS_ROOTCERT_FILE=$PWD/config/build/channel-msp/peerOrganizatio
 ```
 
 - Install the chaincode
-
 ```shell
+export CHAINCODE_NAME=asset-tx-typescript
+export CHAINCODE_PACKAGE=$CHAINCODE_NAME-ccaas.tgz 
+
 export VERSION=1
 export SEQUENCE=1
 
