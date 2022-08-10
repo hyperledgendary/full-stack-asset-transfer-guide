@@ -3,7 +3,9 @@
 Remeber to clone this repository!
 
 ```shell
-git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git  fabric-workshop
+git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git workshop
+cd workshop
+export WORKSHOP=$(pwd)
 ```
 
 > to check the tools you already have  `./check.sh`
@@ -45,10 +47,11 @@ You will need a set of tools to work with development along with an editor and t
 - [docker engine](https://docs.docker.com/engine/install/)
 - [just](https://github.com/casey/just#installation) to run all the comamnds here directly
 
-- weft  (not yet published to npmjs, github packages does have it, but that needs authentication).
+- [weft ](https://www.npmjs.com/package/@hyperledger-labs/weft)  Hyperledger-Labs cli to work with identities and chaincode packages
 ```
-curl -sSL https://raw.githubusercontent.com/hyperledger-labs/weft/main/install.sh | sh
+npm install -g @hyperledger-labs/weft
 ```
+
 - peer cli
 ```
 curl -sSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh && chmod +x install-fabric.sh
