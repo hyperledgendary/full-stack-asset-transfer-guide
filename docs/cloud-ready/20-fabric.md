@@ -29,3 +29,14 @@ cd fabric-operator/sample-network
 ```shell
 curl --cacert temp/cas/org1-ca/tls-cert.pem https://test-network-org1-ca-ca.$TEST_NETWORK_INGRESS_DOMAIN/cainfo
 ```
+
+
+
+
+
+#### Guide
+
+Prev : [Select a Kube](10-kube.md)
+
+Next : [Install Chaincode](30-chaincode.md)
+
