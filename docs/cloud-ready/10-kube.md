@@ -2,11 +2,11 @@
 
 TODO:  talk a little bit about which one to use in which context.  All will work.
 
-Runtime                           | Description                      | Limitations
-----------------------------------|----------------------------------|------------------------------
-[KIND](11-kube-kind.md)           | Kubernetes in Docker             | >= 8 CPU + 8 GRAM 
-[multipass](12-kube-multipass.md) | Virtual Machine on localhost     | 
-[EC2](13-kube-ec2.md)             | Virtual Machine at Amazon EC2    | Pre-created for workshop 
+Runtime                              | Description                      | Limitations
+-------------------------------------|----------------------------------|------------------------------
+[KIND](11-kube-kind.md)              | Kubernetes in Docker             | >= 8 CPU + 8 GRAM 
+[Multipass VM](12-kube-multipass.md) | Virtual Machine on localhost     | 
+[EC2 VM](13-kube-ec2.md)             | Virtual Machine at Amazon EC2    | Pre-created for workshop 
 
 
 Previous : [00 Setup](00-setup.md) Setup      Next : [20 Deploy Fabric](20-fabric.md)
