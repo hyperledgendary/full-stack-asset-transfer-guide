@@ -190,9 +190,7 @@ peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledg
 ```shell
 USERNAME=org1user 
 PASSWORD=org1userpw
-```
 
-```shell
 fabric-ca-client  register \
   --id.name       ${USERNAME} \
   --id.secret     ${PASSWORD} \
@@ -206,9 +204,6 @@ fabric-ca-client enroll \
   --tls.certfiles $PWD/config/build/cas/org1-ca/tls-cert.pem \
   --mspdir        $PWD/config/build/enrollments/org1/users/${USERNAME}/msp
   
-```
-
-```shell
 export PEER_HOST_ALIAS=${TEST_NETWORK_NS}-org1-peer1-peer.${TEST_NETWORK_DOMAIN} 
 export PEER_ENDPOINT=${TEST_NETWORK_NS}-org1-peer1-peer.${TEST_NETWORK_DOMAIN}:443
 
