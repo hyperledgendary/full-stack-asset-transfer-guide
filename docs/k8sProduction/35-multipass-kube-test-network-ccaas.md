@@ -137,12 +137,14 @@ docker run \
 
 - Set the `peer` env context:
 ```shell
-export FABRIC_CFG_PATH=$PWD/config/org1
+export FABRIC_CFG_PATH=$PWD/config
 export CORE_PEER_LOCALMSPID=Org1MSP
 export CORE_PEER_ADDRESS=org1-peer1.${TEST_NETWORK_DOMAIN}:443
 export CORE_PEER_TLS_ENABLED=true
 export CORE_PEER_MSPCONFIGPATH=$PWD/config/build/enrollments/org1/users/org1admin/msp
 export CORE_PEER_TLS_ROOTCERT_FILE=$PWD/config/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
+export CORE_PEER_CLIENT_CONNTIMEOUT=10s
+export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=10s
 
 ```
 
