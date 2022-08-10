@@ -4,7 +4,8 @@
 
 - docker
 - `TEST_NETWORK_INGRESS_DOMAIN` 
-- operator sample network constructed 
+- operator sample network
+- `mychannel`
 
 
 ## Docker Engine Configuration 
