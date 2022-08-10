@@ -1,7 +1,5 @@
 # Select a Kubernetes Cluster
 
-TODO:  talk a little bit about which one to use in which context.  All will work.
-
 Runtime                              | Description                       | Limitations
 -------------------------------------|-----------------------------------|------------------------------
 [KIND](11-kube-kind.md)              | Kubernetes in Docker              | >= 8 CPU + 8 GRAM 
