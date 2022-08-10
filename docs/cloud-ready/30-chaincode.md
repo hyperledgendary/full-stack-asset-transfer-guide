@@ -51,13 +51,13 @@ infrastructure/pkgcc.sh -l $CHAINCODE_NAME -n localhost:5000/$CHAINCODE_NAME -d 
 # Set the org1-peer1 CLI context: 
 export FABRIC_CFG_PATH=$PWD/config
 export CORE_PEER_LOCALMSPID=Org1MSP
-export CORE_PEER_ADDRESS=${TEST_NETWORK_NS}-org1-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN}:443
+export CORE_PEER_ADDRESS=test-network-org1-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN}:443
 export CORE_PEER_TLS_ENABLED=true
 export CORE_PEER_MSPCONFIGPATH=$PWD/config/build/enrollments/org1/users/org1admin/msp
 export CORE_PEER_TLS_ROOTCERT_FILE=$PWD/config/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
 export CORE_PEER_CLIENT_CONNTIMEOUT=10s
 export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=10s
-export ORDERER_ENDPOINT=${TEST_NETWORK_NS}-org0-orderersnode1-orderer.${TEST_NETWORK_INGRESS_DOMAIN}:443
+export ORDERER_ENDPOINT=test-network-org0-orderersnode1-orderer.${TEST_NETWORK_INGRESS_DOMAIN}:443
 export ORDERER_TLS_CERT=${PWD}/config/build/channel-msp/ordererOrganizations/org0/orderers/org0-orderersnode1/tls/signcerts/tls-cert.pem
 
 ```
