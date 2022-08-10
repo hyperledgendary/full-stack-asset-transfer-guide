@@ -2,6 +2,7 @@
 
 ## Prerequisites 
 
+- docker
 - `TEST_NETWORK_INGRESS_DOMAIN` 
 - operator sample network constructed 
 
