@@ -81,13 +81,14 @@ But there are limited number of different types of cards, and one card can't be 
 - client sdks for both parties working with assets
 - how these can be written and debugged
 
+
 ## Cloud Ready 
 
 - [00](./docs/todo) Setup  
-- [01](./docs/todo) Select a Kubernetes
-- [02](./docs/todo) Deploy a Fabric Network 
-- [03](./docs/todo) Install smart contracts 
-- [04](./docs/todo) Go Bananas 
+- [10](./docs/todo) Select a Kube
+- [20](./docs/todo) Deploy a Fabric Network
+- [30](./docs/todo) Install Chaincode
+- [40](./docs/todo) Go Bananas 
 
 
 ## Operate
