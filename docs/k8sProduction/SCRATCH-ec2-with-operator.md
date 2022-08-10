@@ -7,7 +7,7 @@ Chaincode may be run on the host OS "as a service", or the image can be uploaded
 in the cluster using the [k8s chaincode builder](https://github.com/hyperledger-labs/fabric-builder-k8s).
 
 Gateway applications run locally on the HOST OS, connecting to the Fabric network endpoints via Nginx ingress.
-![EC2 VM with Fabric Operator](../images/ec2-with-operator-network.png)
+![EC2 VM with Fabric Operator](../images/cloud-vm-with-operator-network.png)
 
 
 ## Prerequisites
