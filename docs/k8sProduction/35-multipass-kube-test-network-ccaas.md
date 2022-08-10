@@ -17,17 +17,14 @@ multipass mount $PWD/config fabric-dev:/mnt/config
 
 ```
 
-- Open mp shell #1:
-```shell
-multipass shell fabric-dev
-```
-
-```shell
-sudo su - dev 
-```
-
 
 ## Fabric Test Network 
+
+```shell
+multipass shell fabric-dev
+
+sudo su - dev 
+```
 
 ```shell
 git clone https://github.com/hyperledger/fabric-samples.git
