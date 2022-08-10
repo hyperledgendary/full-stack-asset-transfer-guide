@@ -2,9 +2,9 @@
 
 TODO:  talk a little bit about which one to use in which context.  All will work.
 
-Runtime                           | Description                      | Limitations and assumptions
+Runtime                           | Description                      | Limitations
 ----------------------------------|----------------------------------|------------------------------
-[KIND](11-kube-kind.md)           | Kubernetes in Docker             | Requires >= 8 CPU + 8 GRAM 
+[KIND](11-kube-kind.md)           | Kubernetes in Docker             | >= 8 CPU + 8 GRAM 
 [multipass](12-kube-multipass.md) | Virtual Machine on localhost     | 
 [EC2](13-kube-ec2.md)             | Virtual Machine at Amazon EC2    | Pre-created for workshop 
 
