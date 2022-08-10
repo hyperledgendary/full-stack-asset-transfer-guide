@@ -17,8 +17,14 @@ todo: set up KIND from just file? or from operator sample network?
 export TEST_NETWORK_INGRESS_DOMAIN=localho.st
 ```
 
+- Create a Kubernetes cluster in Docker 
 ```shell
 just -f cloud.justfile kind 
+```
+
+- Install fabric-operator CRDs:
+```shell
+kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
 ```
 
 
@@ -42,10 +48,13 @@ curl --insecure https://localho.st
 
 - Container registry is running: 
 ```shell
-docker run hello-world 
+docker pull hello-world 
 docker tag hello-world localho.st:5000/hello-world 
 docker push localho.st:5000/hello-world
+docker run --rm localho.st:5000/hello-world 
 ```
+
+- fabric-operator CRDs are available:
 
 
 Up : [Select a Kube](10-kube.md)
