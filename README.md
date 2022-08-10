@@ -91,6 +91,14 @@ But there are limited number of different types of cards, and one card can't be 
 - [40](./docs/cloud-ready/40-bananas.md) Go Bananas 
 
 
+: [Setup](00-setup.md) 
+: [Select a Kube](10-kube.md)
+: [Deploy a Fabric Network](20-fabric.md)
+: [Install Chaincode](30-chaincode.md)
+: [Go Bananas](40-bananas.md)
+
+
+
 ## Operate
 
 - Deploy Contracts
