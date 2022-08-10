@@ -57,6 +57,11 @@ docker run --rm localho.st:5000/hello-world
 kubectl get crd
 ```
 
+- Open a new shell and observe the target namespace:
+```shell
+k9s -n test-network 
+```
+
 
 Up : [Select a Kube](10-kube.md)
 

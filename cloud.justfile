@@ -37,9 +37,6 @@ bootstrap:
 
 cluster_name := "kind"
 
-
-doit: kind review-config operator console sample-network
-
 # Starts a local KIND Kubernetes cluster
 # Installs Nginx ingress controller
 # Adds a DNS override in kube DNS for *.localho.st -> Nginx LB IP
