@@ -1,12 +1,6 @@
 # Kubernetes on a Multipass VM 
 
-## Prerequisites 
-
-- multipass 
-- kubectl 
-
-
-## Provision a Multipass VM
+## Provision a VM
 
 ```shell
 multipass launch \
