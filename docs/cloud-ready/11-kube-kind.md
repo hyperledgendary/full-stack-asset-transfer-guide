@@ -15,12 +15,12 @@
 export TEST_NETWORK_INGRESS_DOMAIN=localho.st
 ```
 
-- Create a Kubernetes cluster in Docker, nginx ingress, and local docker registry:
+Create a Kubernetes cluster in Docker, nginx ingress, and local docker registry:
 ```shell
 just -f cloud.justfile kind 
 ```
 
-- Install fabric-operator CRDs:
+Install fabric-operator CRDs:
 ```shell
 kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
 ```
@@ -28,14 +28,14 @@ kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/
 
 ## Checks: 
 
-- kubectl -> k8s 
+kubectl -> k8s 
 ```shell
 kubectl cluster-info 
 ```
 
-- Ingress domain is set 
+Ingress domain is set 
 
-- Ingress is ... ingressing: 
+Ingress is ... ingressing: 
 ```shell
 curl localho.st
 ```
@@ -44,7 +44,7 @@ curl localho.st
 curl --insecure https://localho.st
 ```
 
-- Container registry is running: 
+Container registry: 
 ```shell
 docker pull hello-world 
 docker tag hello-world localho.st:5000/hello-world 
@@ -53,6 +53,9 @@ docker run --rm localho.st:5000/hello-world
 ```
 
 - fabric-operator CRDs are available:
+```shell
+kubectl get crd
+```
 
 
 Up : [Select a Kube](10-kube.md)
