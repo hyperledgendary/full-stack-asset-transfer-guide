@@ -161,7 +161,7 @@ export SEQUENCE=1
 ```shell
 peer lifecycle chaincode install ${CHAINCODE_PACKAGE}
 
-export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid ${CHAINCODE_NAME}.tgz) && echo $PACKAGE_ID
+export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid ${CHAINCODE_PACKAGE}) && echo $PACKAGE_ID
 
 peer lifecycle \
 	chaincode approveformyorg \
