@@ -1,5 +1,6 @@
 # Setup
 
+- [jq](https://stedolan.github.io/jq/download/)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
 
 ```shell
