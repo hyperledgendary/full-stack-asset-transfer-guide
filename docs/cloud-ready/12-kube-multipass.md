@@ -59,6 +59,8 @@ cp config/multipass-kube-config.yaml ~/.kube/config
 
 kubectl cluster-info
 
+echo "Connecting to Fabric network domain $TEST_NETWORK_INGRESS_DOMAIN"
+
 ```
 
 
