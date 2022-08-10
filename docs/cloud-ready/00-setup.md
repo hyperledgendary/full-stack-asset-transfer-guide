@@ -10,4 +10,6 @@
 todo: test for kubectl >= 1.24.  There are issues for older revs. 
 
 
+### Guide
+
 Next: [Select a Kube](10-kube.md)

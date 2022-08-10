@@ -34,7 +34,7 @@ curl --cacert temp/cas/org1-ca/tls-cert.pem https://test-network-org1-ca-ca.$TES
 
 
 
-#### Guide
+### Guide
 
 Prev : [Select a Kube](10-kube.md)
 
