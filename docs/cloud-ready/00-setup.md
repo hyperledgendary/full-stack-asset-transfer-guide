@@ -1,6 +1,7 @@
 # Setup
 
 [NEXT - Select a Kube](./10-kube.md)
+
 ---
 
 ## Design the assets and contracts
