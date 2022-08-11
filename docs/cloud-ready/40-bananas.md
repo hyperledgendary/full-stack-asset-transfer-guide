@@ -14,17 +14,17 @@ fabric-ca-client  register \
   --id.name       ${USERNAME} \
   --id.secret     ${PASSWORD} \
   --id.type       client \
-  --url           https://${TEST_NETWORK_NS}-org1-ca-ca.${TEST_NETWORK_DOMAIN} \
+  --url           https://test-network-org1-ca-ca.${TEST_NETWORK_INGRESS_DOMAIN} \
   --tls.certfiles $PWD/config/build/cas/org1-ca/tls-cert.pem \
   --mspdir        $PWD/config/build/enrollments/org1/users/rcaadmin/msp
 
 fabric-ca-client enroll \
-  --url           https://${USERNAME}:${PASSWORD}@${TEST_NETWORK_NS}-org1-ca-ca.${TEST_NETWORK_DOMAIN} \
+  --url           https://${USERNAME}:${PASSWORD}@test-network-org1-ca-ca.${TEST_NETWORK_INGRESS_DOMAIN} \
   --tls.certfiles $PWD/config/build/cas/org1-ca/tls-cert.pem \
   --mspdir        $PWD/config/build/enrollments/org1/users/${USERNAME}/msp
   
-export PEER_HOST_ALIAS=${TEST_NETWORK_NS}-org1-peer1-peer.${TEST_NETWORK_DOMAIN} 
-export PEER_ENDPOINT=${TEST_NETWORK_NS}-org1-peer1-peer.${TEST_NETWORK_DOMAIN}:443
+export PEER_HOST_ALIAS=test-network-org1-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN} 
+export PEER_ENDPOINT=test-network-org1-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN}:443
 
 export KEY_DIRECTORY_PATH=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/keystore/
 export CERT_PATH=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/signcerts/cert.pem
