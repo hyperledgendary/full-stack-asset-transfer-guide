@@ -1,6 +1,8 @@
 # Select a Kubernetes Cluster
 
-[PREVIOUS - Setup](00-setup.md) <==> [NEXT - Deploy Fabric](20-fabric.md)
+<div style="text-align: left">[PREVIOUS - Setup](00-setup.md)</div> 
+<div style="text-align: right">[NEXT - Deploy Fabric](20-fabric.md)</div>
+
 
 ---
 
