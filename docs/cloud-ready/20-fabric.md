@@ -27,13 +27,13 @@ export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
 ```
 
 
-
 ## Post Checks 
 
 ```shell
 curl --cacert temp/cas/org1-ca/tls-cert.pem https://test-network-org1-ca-ca.$TEST_NETWORK_INGRESS_DOMAIN/cainfo
 ```
 
+todo: explicit test for crypto material in the full-stack-asset-transfer-guide/config/build folder 
 
 
 
