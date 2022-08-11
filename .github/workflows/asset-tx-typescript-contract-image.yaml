@@ -21,5 +21,4 @@ jobs:
     with:
       imagename: full-stack-asset-transfer-guide/contracts/asset-tx-typescript
       path: contracts/asset-tx-typescript
-      label: asset-tx-typescript
-      chaincode: true
+      chaincode-label: asset-tx-typescript
