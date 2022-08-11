@@ -28,3 +28,4 @@ function assertHasValue<T>(value: T | undefined | null, message: string): T {
 
     return value;
 }
+
