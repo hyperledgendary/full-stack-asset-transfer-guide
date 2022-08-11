@@ -51,6 +51,8 @@ kind:
 unkind:
     #!/bin/bash
     kind delete cluster --name {{cluster_name}}
+    docker kill kind-registry
+    docker rm kind-registry
 
 review-config:
     #!/bin/bash

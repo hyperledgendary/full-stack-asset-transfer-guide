@@ -12,13 +12,11 @@ multipass launch \
 
 multipass mount $PWD/config fabric-dev:/mnt/config
 
+multipass shell fabric-dev
+
 ```
 
 ## Cluster Setup 
-
-```shell
-multipass shell fabric-dev
-```
 
 ```shell
 git clone https://github.com/jkneubuh/full-stack-asset-transfer-guide.git -b feature/puff
