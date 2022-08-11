@@ -1,5 +1,9 @@
 # Select a Kubernetes Cluster
 
+[PREVIOUS - Setup](00-setup.md) <==> [NEXT - Deploy Fabric](20-fabric.md)
+
+---
+
 Runtime                              | Description                       | Limitations
 -------------------------------------|-----------------------------------|------------------------------
 [KIND](11-kube-kind.md)              | Kubernetes in Docker              | >= 8 CPU + 8 GRAM 
@@ -9,12 +13,6 @@ Runtime                              | Description                       | Limit
 [EKS](15-kube-eks.md)                | Amazon Elastic Kubernetes Service | TODO! 
 [IKS](16-kube-iks.md)                | IBM Cloud Kubernetes Service      | TODO! 
 
-
-### Guide
-
-Prev: [Setup](00-setup.md)
-
-Next: [Deploy Fabric](20-fabric.md)
 
 
 
