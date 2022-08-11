@@ -8,7 +8,7 @@ RUN apt-get update \
     && apt-get -y upgrade \
     && apt-get -y install build-essential gcc gzip \
     && apt-get -y install python3 python3-distutils libpython3-dev software-properties-common \   
-    && apt-get -y install curl git jq unzip moreutils 
+    && apt-get -y install curl git jq unzip moreutils apt-transport-https gnupg
 
 
 ADD provision-root.sh /config/provision-root.sh

@@ -138,31 +138,19 @@ sample-network:
             ansible-playbook /playbooks/00-complete.yml
 
 build-chaincode:
-	#!/bin/bash
-	set -ex -o pipefail
-	pushd ${CWDIR}/contracts/asset-tx-typescript
-	DOCKER_BUILDKIT=1 docker build -t asset_tx . --target k8s
-	docker tag asset_tx localhost:5000/asset_tx
-	docker push localhost:5000/asset_tx
-	# note the double { } for escaping
-	export IMG_SHA=$(docker inspect --format='{{{{index .RepoDigests 0}}' localhost:5000/asset_tx | cut -d'@' -f2)
-	cat << IMAGEJSON-EOF > image.json
-	{
-	  "name": "localhost:5000/asset_tx",
-	  "digest": "${IMG_SHA}"
-	}
-	IMAGEJSON-EOF
+    #!/bin/bash
+    set -ex -o pipefail
+    pushd ${CWDIR}/contracts/asset-tx-typescript
 
-	tar -czf code.tar.gz image.json
+    export IMG_NAME=localhost:5000/asset_tx
+    DOCKER_BUILDKIT=1 docker build -t ${IMAGE_NAME} . --target k8s
+    docker push ${IMG_NAME}
 
-	cat << METADATAJSON-EOF > metadata.json
-	{
-	    "type": "k8s",
-	    "label": "asset-tx"
-	}
-	METADATAJSON-EOF
-	tar -czf ${CWDIR}/_cfg/asset-tx-k8s-contract.tgz metadata.json code.tar.gz
-	popd
+    # note the double { } for escaping
+    export IMG_SHA=$(docker inspect --format='{{{{index .RepoDigests 0}}' localhost:5000/asset_tx | cut -d'@' -f2)
+    weft chaincode package k8s --name ${IMG_NAME} --digest ${IMG_SHA}
+
+    popd
 
 deploy-chaincode: 
     #!/bin/bash

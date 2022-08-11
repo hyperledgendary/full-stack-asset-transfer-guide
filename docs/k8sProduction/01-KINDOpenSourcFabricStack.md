@@ -1,6 +1,6 @@
 # Production Style Deployment
 
-> NOTE to Early Users Please ensure that you clone and build the docker image for the ansible-collection
+> NOTE to Early Users Please ensure that you [clone and build the docker image for the ansible-collection](../../SETUP.md)
 
 ## Orchestration of System to provision
 
@@ -34,7 +34,8 @@ This will deploy the Fabric Operator and the Fabric Operations console via two A
 - Creation of the operator: `ansible-playbook ./infrastructure/01-operator-install.yml`
 - Creation of the console:  `ansible-playbook ./infrastructure/02-console-install.yml`
 
-The configuration file is `operator-console-vars.yml`
+The configuration file is `operator-console-vars.yml` - default values here are for a local KIND cluster; the basic concepts are the same for other clusters. But there are variations.
+For details please read [K8S Cloud Deployment](./02-K8S-Cloud-Deployment.md).
 
 ```yaml
 # The type of K8S cluster this is using
@@ -86,6 +87,10 @@ curl -X POST https://fabricinfra-hlf-console-console.localho.st:443/ak/api/v2/pe
 This producces json, that the script will parse into a auth-vars.yml for ansible to use in step 3.
 
 
+
+
+
+
 ### 3. Create Two org network within the console  *AS-IS*
 
 This is the standard Ansible Collection network.
@@ -112,4 +117,5 @@ Each of these needs to be run to create the resources required
 ```bash
 ansible-playbook ....
 ```
+
 
