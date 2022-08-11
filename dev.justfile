@@ -28,7 +28,7 @@ set export
 CWDIR := justfile_directory()
 
 _default:
-  @just -f {{justfile()}} --list 
+  @just -f {{justfile()}} --list
 
 check:
   ${CWDIR}/check.sh
@@ -61,12 +61,12 @@ microfab: microfab-bye
         ],
         "capability_level":"V2_0"
     }'
-    
+
     mkdir -p $CFG
     echo
     echo "Stating microfab...."
 
-    docker run --name microfab -p 8080:8080 --add-host host.docker.internal:host-gateway --rm -d -e MICROFAB_CONFIG="${MICROFAB_CONFIG}"  ibmcom/ibp-microfab    
+    docker run --name microfab -p 8080:8080 --add-host host.docker.internal:host-gateway --rm -d -e MICROFAB_CONFIG="${MICROFAB_CONFIG}"  ibmcom/ibp-microfab
     sleep 5
 
     curl -s http://console.127-0-0-1.nip.io:8080/ak/api/v1/components | weft microfab -w $CFG/_wallets -p $CFG/_gateways -m $CFG/_cfg/_msp -f
@@ -75,16 +75,16 @@ microfab: microfab-bye
     export CORE_PEER_MSPCONFIGPATH=$CFG/_cfg/_msp/org1/org1admin/msp
     export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
     export FABRIC_CFG_PATH=$CWDIR/config
-    export CORE_PEER_CLIENT_CONNTIMEOUT=10s
-    export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=10s
+    export CORE_PEER_CLIENT_CONNTIMEOUT=15s
+    export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
     export PATH="${CWDIR}/bin:$PATH"
     EOF
 
     echo
     echo "To get an peer cli environment run:"
     echo
-    echo '   source $WORKSHOP/_cfg/uf/org1admin.env' 
-    
+    echo '   source $WORKSHOP/_cfg/uf/org1admin.env'
+
 debugcc:
     #!/bin/bash
     set -e -o pipefail
@@ -105,9 +105,9 @@ debugcc:
 
     set -x && peer lifecycle chaincode install asset-tx-ts.tgz &&     { set +x; } 2>/dev/null
     echo
-    set -x && peer lifecycle chaincode approveformyorg --channelID mychannel --name asset-tx -v 0 --package-id $CHAINCODE_ID --sequence 1 --connTimeout 10s && { set +x; } 2>/dev/null
+    set -x && peer lifecycle chaincode approveformyorg --channelID mychannel --name asset-tx -v 0 --package-id $CHAINCODE_ID --sequence 1 --connTimeout 15s && { set +x; } 2>/dev/null
     echo
-    set -x && peer lifecycle chaincode commit --channelID mychannel --name asset-tx -v 0 --sequence 1  --connTimeout 10s && { set +x; } 2>/dev/null
+    set -x && peer lifecycle chaincode commit --channelID mychannel --name asset-tx -v 0 --sequence 1  --connTimeout 15s && { set +x; } 2>/dev/null
     echo
     set -x && peer lifecycle chaincode querycommitted --channelID=mychannel && { set +x; } 2>/dev/null
     echo
@@ -120,7 +120,7 @@ debugcc:
 
     echo "Added CHAINCODE_ID and CHAINCODE_SERVER_ADDRESS to org1admin.env"
     echo
-    echo '   source $WORKSHOP/_cfg/uf/org1admin.env' 
+    echo '   source $WORKSHOP/_cfg/uf/org1admin.env'
 
 devshell:
     docker run \

@@ -126,6 +126,7 @@ export CHANNEL_NAME=mychannel
 - Build a docker image, upload to the docker registry, and prepare a k8s chaincode package:
 ```shell
 export CHAINCODE_NAME=asset-tx-typescript
+export CHAINCODE_PACKAGE=$CHAINCODE_NAME.tgz
 export CONTAINER_REGISTRY=$TEST_NETWORK_DOMAIN:5000
 export CHAINCODE_IMAGE=$CONTAINER_REGISTRY/$CHAINCODE_NAME
 
@@ -146,9 +147,9 @@ export SEQUENCE=1
 ```
 
 ```shell
-peer lifecycle chaincode install ${CHAINCODE_NAME}.tgz 
+peer lifecycle chaincode install ${CHAINCODE_PACKAGE}
 
-export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid ${CHAINCODE_NAME}.tgz) && echo $PACKAGE_ID
+export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid ${CHAINCODE_PACKAGE}) && echo $PACKAGE_ID
 
 peer lifecycle \
 	chaincode       approveformyorg \

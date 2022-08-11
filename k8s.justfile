@@ -35,14 +35,15 @@ bootstrap:
     #!/bin/bash
 
 
-cluster_name := "kind"
-
+cluster_name   := env_var_or_default("TEST_NETWORK_CLUSTER_NAME",   "kind")
+namespace      := env_var_or_default("TEST_NETWORK_NS",             "fabricinfra")
+ingress_domain := env_var_or_default("TEST_NETWORK_INGRESS_DOMAIN", "localho.st")
 
 doit: kind review-config operator console sample-network
 
 # Starts a local KIND Kubernetes cluster
 # Installs Nginx ingress controller
-# Adds a DNS override in kube DNS for *.localho.st -> Nginx LB IP
+# Adds a DNS override in kube DNS for *.{{ ingress_domain }} -> Nginx LB IP
 kind:
     infrastructure/kind_with_nginx.sh {{cluster_name}}
     ls -lart ~/.kube/config
@@ -92,7 +93,7 @@ operator:
         -v ${CWDIR}/_cfg:/_cfg \
         -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
         --network=host \
-        ofs-ansible:latest \
+        ghcr.io/ibm-blockchain/ofs-ansibe:main \
             ansible-playbook /playbooks/01-operator-install.yml
 
 
@@ -107,10 +108,10 @@ console:
         -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ofs-ansible:latest \
+        ghcr.io/ibm-blockchain/ofs-ansibe:main \
             ansible-playbook /playbooks/02-console-install.yml
 
-    AUTH=$(curl -X POST https://fabricinfra-hlf-console-console.localho.st:443/ak/api/v2/permissions/keys -u admin:password -k -H 'Content-Type: application/json' -d '{"roles": ["writer", "manager"],"description": "newkey"}')
+    AUTH=$(curl -X POST https://{{ namespace }}-hlf-console-console.{{ ingress_domain }}:443/ak/api/v2/permissions/keys -u admin:password -k -H 'Content-Type: application/json' -d '{"roles": ["writer", "manager"],"description": "newkey"}')
     KEY=$(echo $AUTH | jq .api_key | tr -d '"')
     SECRET=$(echo $AUTH | jq .api_secret | tr -d '"')
 
@@ -118,7 +119,7 @@ console:
     mkdir -p _cfg
     cat << EOF > $CWDIR/_cfg/auth-vars.yml
     api_key: $KEY
-    api_endpoint: http://fabricinfra-hlf-console-console.localho.st/
+    api_endpoint: http://{{ namespace }}-hlf-console-console.{{ ingress_domain }}/
     api_authtype: basic
     api_secret: $SECRET
     EOF
@@ -136,7 +137,7 @@ sample-network:
         -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ofs-ansible:latest \
+        ghcr.io/ibm-blockchain/ofs-ansibe:main \
             ansible-playbook /playbooks/00-complete.yml
 
 build-chaincode:
@@ -178,7 +179,7 @@ deploy-chaincode:
         -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ofs-ansible:latest \
+        ghcr.io/ibm-blockchain/ofs-ansibe:main \
             ansible-playbook /playbooks/19-install-and-approve-chaincode.yml 
 
     docker run \
@@ -188,7 +189,7 @@ deploy-chaincode:
         -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ofs-ansible:latest \
+        ghcr.io/ibm-blockchain/ofs-ansibe:main \
             ansible-playbook /playbooks/20-install-and-approve-chaincode.yml 
 
     docker run \
@@ -198,7 +199,7 @@ deploy-chaincode:
         -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ofs-ansible:latest \
+        ghcr.io/ibm-blockchain/ofs-ansibe:main \
             ansible-playbook /playbooks/21-commit-chaincode.yml 
 
 # register-application: 
@@ -212,5 +213,5 @@ deploy-chaincode:
 #         -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks \
 #         -v ${CWDIR}/_cfg:/_cfg \
 #         --network=host \
-#         ofs-ansible:latest \
+#         ghcr.io/ibm-blockchain/ofs-ansibe:main \
 #             ansible-playbook /playbooks/22-register-application.yml           
