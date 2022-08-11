@@ -1,5 +1,9 @@
 # Kubernetes in Docker 
 
+[PREV: Setup](00-setup.md) <==> [NEXT: Deploy a Fabric Network](20-fabric.md) ^^^ [UP: Select a Kube](10-kube.md) 
+
+---
+
 ## Prerequisites 
 
 - docker 
@@ -61,12 +65,4 @@ kubectl get crd
 k9s -n test-network 
 ```
 
-
-### Guide 
-
-Up : [Select a Kube](10-kube.md)
-
-Prev : [Setup](00-setup.md)
-
-Next : [Deploy a Fabric Network](20-fabric.md)
 

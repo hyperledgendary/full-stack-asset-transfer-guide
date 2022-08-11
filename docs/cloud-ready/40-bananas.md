@@ -1,5 +1,9 @@
 # Gateway Client Application 
 
+[PREV: Install Chaincode](30-chaincode.md) <==> [NEXT: Teardown](90-teardown.md)
+
+---
+
 ## Prerequisites 
 
 - node 
@@ -53,9 +57,3 @@ npm start transfer banana bananaman Org2MSP
 npm start transfer banana bananaman Org1MSP 
 
 ```
-
-## Guide 
-
-Prev : [Install Chaincode](30-chaincode.md)
-
-Next : [Teardown](90-teardown.md)

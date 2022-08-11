@@ -1,5 +1,11 @@
 # Chaincode 
 
+[PREV: Deploy a Fabric Network](20-fabric.md) <==> [NEXT: Go Bananas](40-bananas.md)
+
+---
+
+
+
 ## Prerequisites 
 
 - docker
@@ -102,9 +108,3 @@ peer lifecycle \
 peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}' | jq
 
 ```
-
-### Guide
-
-Prev : [Deploy a Fabric Network](20-fabric.md)
-
-Next : [Go Bananas](40-bananas.md)
