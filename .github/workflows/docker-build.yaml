@@ -11,6 +11,11 @@ on:
         description: 'A path containing a Dockerfile passed from the caller workflow'
         required: true
         type: string
+      label:
+        description: 'A chaincode package label passed from the caller workflow'
+        required: false
+        default: ${{ inputs.imagename }}
+        type: string
       chaincode:
         description: 'A boolean indicating whether to create a chaincode package passed from the caller workflow'
         required: false
@@ -61,8 +66,7 @@ jobs:
       - name: Create package
         uses: hyperledgendary/package-k8s-chaincode-action@ba10aea43e3d4f7991116527faf96e3c2b07abc7
         with:
-          # chaincode-label: ${{ inputs.imagename }}
-          chaincode-label: asset-tx-label
+          chaincode-label: ${{ inputs.label }}
           chaincode-image: ghcr.io/hyperledgendary/${{ inputs.imagename }}
           chaincode-digest: ${{ needs.build.outputs.image_digest }}
 
