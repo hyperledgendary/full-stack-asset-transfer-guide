@@ -78,7 +78,7 @@ networking:
 containerdConfigPatches:
 - |-
   [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${CONTAINER_REGISTRY_PORT}"]
-    endpoint = ["http://${KIND_CLUSTER_NAME}:${CONTAINER_REGISTRY_PORT}"]
+    endpoint = ["http://${CONTAINER_REGISTRY_NAME}:${CONTAINER_REGISTRY_PORT}"]
 EOF
 
   #
