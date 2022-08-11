@@ -1,5 +1,9 @@
 # Kubernetes on a Multipass VM 
 
+[PREV: Setup](00-setup.md) <==> [NEXT: Deploy a Fabric Network](20-fabric.md) ^^^ [UP: Select a Kube](10-kube.md)
+
+---
+
 ## Provision a VM
 
 ```shell
@@ -60,13 +64,3 @@ kubectl cluster-info
 echo "Connecting to Fabric network domain $TEST_NETWORK_INGRESS_DOMAIN"
 
 ```
-
-
-### Guide 
-
-Up : [Select a Kube](10-kube.md)
-
-Prev : [Setup](00-setup.md)
-
-Next : [Deploy a Fabric Network](20-fabric.md)
-
