@@ -61,7 +61,8 @@ jobs:
       - name: Create package
         uses: hyperledgendary/package-k8s-chaincode-action@ba10aea43e3d4f7991116527faf96e3c2b07abc7
         with:
-          chaincode-label: ${{ inputs.imagename }}
+          # chaincode-label: ${{ inputs.imagename }}
+          chaincode-label: asset-tx-label
           chaincode-image: ghcr.io/hyperledgendary/${{ inputs.imagename }}
           chaincode-digest: ${{ needs.build.outputs.image_digest }}
 
