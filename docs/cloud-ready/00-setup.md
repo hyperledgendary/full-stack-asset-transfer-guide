@@ -1,6 +1,6 @@
 # Setup
 
-[NEXT - Select a Kube](./10-kube.md)
+==> [NEXT: Select a Kube](./10-kube.md)
 
 ---
 
