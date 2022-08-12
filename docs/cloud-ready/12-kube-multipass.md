@@ -23,10 +23,9 @@ multipass shell fabric-dev
 ## Cluster Setup 
 
 ```shell
-git clone https://github.com/jkneubuh/full-stack-asset-transfer-guide.git -b feature/puff
+git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git
 cd ~/full-stack-asset-transfer-guide 
 
-# export TEST_NETWORK_INGRESS_DOMAIN=$(hostname -I  | cut -d ' ' -f 1 | tr -s '.' '-').nip.io
 export MULTIPASS_IP=$(hostname -I | cut -d ' ' -f 1) 
 export CONTAINER_REGISTRY_ADDRESS=0.0.0.0
 export KIND_API_SERVER_ADDRESS=$MULTIPASS_IP
