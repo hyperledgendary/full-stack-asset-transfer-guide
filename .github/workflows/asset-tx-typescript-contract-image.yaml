@@ -7,18 +7,18 @@ on:
     tags:
       - 'v*'
     paths:
-      - 'contracts/asset-tx-typescript/**'
+      - 'contracts/asset-transfer-typescript/**'
   pull_request:
     branches:
       - 'main'
     paths:
-      - 'contracts/asset-tx-typescript/**'
+      - 'contracts/asset-transfer-typescript/**'
 
 jobs:
   docker_build:
     name: Docker build
     uses: ./.github/workflows/docker-build.yaml
     with:
-      imagename: full-stack-asset-transfer-guide/contracts/asset-tx-typescript
-      path: contracts/asset-tx-typescript
-      chaincode-label: asset-tx-typescript
+      imagename: full-stack-asset-transfer-guide/contracts/asset-transfer-typescript
+      path: contracts/asset-transfer-typescript
+      chaincode-label: asset-transfer-typescript

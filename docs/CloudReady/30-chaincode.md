@@ -1,4 +1,4 @@
-# Chaincode 
+# Chaincode
 
 [PREV: Deploy a Fabric Network](20-fabric.md) <==> [NEXT: Go Bananas](40-bananas.md)
 
@@ -6,20 +6,20 @@
 
 
 
-## Prerequisites 
+## Prerequisites
 
 - docker
-- `TEST_NETWORK_INGRESS_DOMAIN` 
+- `TEST_NETWORK_INGRESS_DOMAIN`
 - operator sample network
 - `mychannel`
 
 
-## Docker Engine Configuration 
+## Docker Engine Configuration
 
-Configure the docker engine with the insecure container registry: 
+Configure the docker engine with the insecure container registry:
 
 ```json
-{  
+{
   "insecure-registries": [
     "192-168-205-6.nip.io:5000"
   ]
@@ -27,25 +27,25 @@ Configure the docker engine with the insecure container registry:
 ```
 
 
-## Prepare the Chaincode Image 
+## Prepare the Chaincode Image
 
 ```shell
-export CHAINCODE_NAME=asset-tx-typescript
+export CHAINCODE_NAME=asset-transfer-typescript
 export CHAINCODE_PACKAGE=${CHAINCODE_NAME}.tgz
-export CHANNEL_NAME=mychannel 
+export CHANNEL_NAME=mychannel
 export CONTAINER_REGISTRY=$TEST_NETWORK_INGRESS_DOMAIN:5000
 export CHAINCODE_IMAGE=$CONTAINER_REGISTRY/$CHAINCODE_NAME
 
-# Build the chaincode image 
+# Build the chaincode image
 docker build -t $CHAINCODE_IMAGE contracts/$CHAINCODE_NAME
 
-# Push the image to the insecure container registry 
+# Push the image to the insecure container registry
 docker push $CHAINCODE_IMAGE
 
 ```
 
 
-## Prepare a Chaincode Package 
+## Prepare a Chaincode Package
 
 ```shell
 IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $CHAINCODE_IMAGE | cut -d'@' -f2)
@@ -54,10 +54,10 @@ infrastructure/pkgcc.sh -l $CHAINCODE_NAME -n localhost:5000/$CHAINCODE_NAME -d 
 
 ```
 
-## Install the Chaincode 
+## Install the Chaincode
 
 ```shell
-# Set the org1-peer1 CLI context: 
+# Set the org1-peer1 CLI context:
 export FABRIC_CFG_PATH=$PWD/config
 export CORE_PEER_LOCALMSPID=Org1MSP
 export CORE_PEER_ADDRESS=test-network-org1-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN}:443

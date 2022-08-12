@@ -1,18 +1,18 @@
-# Full stack with multipass and the Kubernetes Test Network 
+# Full stack with multipass and the Kubernetes Test Network
 
 ![Multipass VM with Kube Test Network](../images/multipass-test-network.png)
 
-## Multipass VM 
+## Multipass VM
 
-- scrub everything Fabric / k8s related on host os. 
-- stop docker desktop 
+- scrub everything Fabric / k8s related on host os.
+- stop docker desktop
 
-- install multipass 
+- install multipass
 ```shell
 brew install --cask multipass
 ```
 
-- create vm : 
+- create vm :
 ```shell
 multipass       launch \
   --name        fabric-dev \
@@ -20,19 +20,19 @@ multipass       launch \
   --cpus        8 \
   --mem         8G \
   --cloud-init  infrastructure/multipass-cloud-config.yaml
-  
+
 ```
 
-- Open mp shell #1: 
+- Open mp shell #1:
 ```shell
 multipass shell fabric-dev
 ```
 
 ```shell
-sudo su - dev 
+sudo su - dev
 ```
 
-## Git stuff 
+## Git stuff
 
 ```shell
 git clone https://github.com/hyperledger/fabric-samples.git
@@ -40,32 +40,32 @@ git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git
 
 ```
 
-## Test network 
+## Test network
 
 ```shell
 cd ~/fabric-samples/test-network-k8s
 
 export PATH=$PWD:$PWD/bin:$PATH
-export SAMPLE_NETWORK_DIR=$PWD 
+export SAMPLE_NETWORK_DIR=$PWD
 export TEST_NETWORK_STAGE_DOCKER_IMAGES=false
 export TEST_NETWORK_LOCAL_REGISTRY_INTERFACE=0.0.0.0
 export TEST_NETWORK_CHAINCODE_BUILDER=k8s
 export TEST_NETWORK_DOMAIN=$(hostname -I  | cut -d ' ' -f 1 | tr -s '.' '-').nip.io
- 
+
 ```
 
 ```shell
-network kind 
-network cluster init 
+network kind
+network cluster init
 network up
 network channel create
- 
+
 ```
 
-## Install asset-tx chaincode
+## Install asset-transfer chaincode
 
 ```shell
-cd ~/full-stack-asset-transfer-guide/contracts/asset-tx-typescript
+cd ~/full-stack-asset-transfer-guide/contracts/asset-transfer-typescript
 
 export CHAINCODE_NAME=$(basename $PWD)
 export NS=test-network
@@ -81,14 +81,14 @@ export CORE_PEER_TLS_ROOTCERT_FILE=${SAMPLE_NETWORK_DIR}/build/channel-msp/peerO
 Build a docker image, upload to a repo, and construct a cc package
 ```shell
 docker build -t localhost:5000/${CHAINCODE_NAME} .
-docker push localhost:5000/${CHAINCODE_NAME} 
+docker push localhost:5000/${CHAINCODE_NAME}
 
 IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' localhost:5000/${CHAINCODE_NAME} | cut -d'@' -f2)
 
 ../../infrastructure/pkgcc.sh -l ${CHAINCODE_NAME} -n localhost:5000/${CHAINCODE_NAME} -d ${IMAGE_DIGEST}
 
 echo "Created chainocde package ${CHAINCODE_NAME}.tgz for image digest ${IMAGE_DIGEST}"
- 
+
 ```
 
 install the chaincode
@@ -99,7 +99,7 @@ export SEQUENCE=1
 ```
 
 ```shell
-peer lifecycle chaincode install ${CHAINCODE_NAME}.tgz 
+peer lifecycle chaincode install ${CHAINCODE_NAME}.tgz
 
 export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid ${CHAINCODE_NAME}.tgz) && echo $PACKAGE_ID
 
@@ -134,7 +134,7 @@ peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledg
 
 ## Gateway Client Application:
 
-### Client Certificates 
+### Client Certificates
 
 TODO:  Run an org client registration in the cluster, and enroll from the HOST OS to download certificates locally.
 
@@ -142,11 +142,11 @@ TODO:  Run an org client registration in the cluster, and enroll from the HOST O
 ```shell
 cd ~/
 
-cat fabric-samples/test-network-k8s/build/enrollments/org1/users/org1admin/msp/keystore/key.pem 
+cat fabric-samples/test-network-k8s/build/enrollments/org1/users/org1admin/msp/keystore/key.pem
 
-cat fabric-samples/test-network-k8s/build/enrollments/org1/users/org1admin/msp/signcerts/cert.pem 
+cat fabric-samples/test-network-k8s/build/enrollments/org1/users/org1admin/msp/signcerts/cert.pem
 
-cat fabric-samples/test-network-k8s/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem 
+cat fabric-samples/test-network-k8s/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
 ```
 
 Write the above content to a local `keystore/key.pem`, `signcerts/cert.pem`, and `tlscacerts/tlsca-signcert.pem`.
@@ -154,7 +154,7 @@ Write the above content to a local `keystore/key.pem`, `signcerts/cert.pem`, and
 ```shell
 cd applications/trader-typescript
 
-export CHAINCODE_NAME=asset-tx-typescript
+export CHAINCODE_NAME=asset-transfer-typescript
 
 export KEY_DIRECTORY_PATH=/tmp/keystore
 export CERT_PATH=/tmp/signcerts/cert.pem

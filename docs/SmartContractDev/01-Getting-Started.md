@@ -32,7 +32,7 @@ Start the MicroFab container by running the `just` recipe:
 just -f dev.justfile microfab
 ```
 
-This will start the docker container, and also write out some configuration/data files. 
+This will start the docker container, and also write out some configuration/data files.
 ```bash
 ls -1 _cfg/uf
 
@@ -79,7 +79,7 @@ _wallets
     └── org2caadmin.id
 ```
 
-There are identities here with admin permissions for the Certificate Authorities (used to create more identities) and id to use with the Peers. 
+There are identities here with admin permissions for the Certificate Authorities (used to create more identities) and id to use with the Peers.
 Note the Certificate Authority created the admin ids, when Microfab started.
 
 Pick one if the id files and look at the contents (it's json format)
@@ -114,7 +114,7 @@ But we still need to tell the peer where the chaincode is running. We do this by
 just -f ${WORKSHOP}/dev.justfile debugcc
 ```
 
-You will see the chaincode id and deployment steps returned; 
+You will see the chaincode id and deployment steps returned;
 
 ### Details of this packaging and deployment
 
@@ -131,7 +131,7 @@ Create the `metadata.json` first, this tells the Peer the type of chaincode and 
 cat << METADATAJSON-EOF > metadata.json
 {
     "type": "ccaas",
-    "label": "asset-tx-ts
+    "label": "asset-transfer
 }
 METADATAJSON-EOF
 ```
@@ -164,28 +164,28 @@ We're going to use the peer CLI commands to install and deploy the chaincode. Ch
 ```
 source _cfg/uf/org1admin.env
 
-peer lifecycle chaincode install asset-tx-ts.tgz
+peer lifecycle chaincode install asset-transfer.tgz
 ```
 
 The ChaincodeID that is returned from this install command needs to be save, typically this is best as an environment variable
 ```bash
-export CHAINCODE_ID=asset-tx-ts:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e
+export CHAINCODE_ID=asset-transfer:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e
 
-peer lifecycle chaincode approveformyorg --channelID mychannel --name asset-tx -v 0 --package-id $CHAINCODE_ID --sequence 1 --connTimeout 15s
-peer lifecycle chaincode commit --channelID mychannel --name asset-tx -v 0 --sequence 1 --connTimeout 15s
+peer lifecycle chaincode approveformyorg --channelID mychannel --name asset-transfer -v 0 --package-id $CHAINCODE_ID --sequence 1 --connTimeout 15s
+peer lifecycle chaincode commit --channelID mychannel --name asset-transfer -v 0 --sequence 1 --connTimeout 15s
 
 ```
 
 ## Run the chaincode locally
 
-We'll use the example typescript contract already written in `$WORKSHOP/contracts/asset-tx-typescript`. Feel free to take a look at the contract code in `contracts/asset-tx-typescript/src/assetTransfer`.
+We'll use the example typescript contract already written in `$WORKSHOP/contracts/asset-transfer-typescript`. Feel free to take a look at the contract code in `contracts/asset-transfer-typescript/src/assetTransfer`.
 
 As with any typescript module we need to run `npm install` to manage the dependencies and then build (compile) the typescript to javascript.
 
 Use another terminal window for the chaincode:
 
 ```
-cd contracts/asset-tx-typescript
+cd contracts/asset-transfer-typescript
 
 npm install
 
@@ -210,11 +210,11 @@ Review the `metadata.json` and see the summary of the contract information, the 
 
 From your chaincode terminal window lets start the Smart Contract node module. Remember that the `CHAINCODE_ID` and the `CHAINCODE_SERVER_ADDRESS` are the only pieces of information needed.
 
-Note: Use your specific CHAINCODE_ID from earlier; the `CHAINCODE_SERVER_ADDRESS` is different - this is because in this case it is telling the chaincode where to listen to for incoming connections from the Peer. Therefore is needs to find to `0.0.0.0`  
+Note: Use your specific CHAINCODE_ID from earlier; the `CHAINCODE_SERVER_ADDRESS` is different - this is because in this case it is telling the chaincode where to listen to for incoming connections from the Peer. Therefore is needs to find to `0.0.0.0`
 
 ```
 export CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999
-export CHAINCODE_ID=asset-tx-ts:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e
+export CHAINCODE_ID=asset-transfer:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e
 
 # or if you ran the short cut above...
 # source ${WORKSHOP}/_cfg/uf/org1admin.env
@@ -236,20 +236,20 @@ source ${WORKSHOP}/_cfg/uf/org1admin.env
 Use the peer CLI to issue basic query commands against the contract. For example check the metadata for the contract (if you have jq, it's easier to read if you pipe the results into jq). Use one of these commands:
 
 ```
-peer chaincode query -C mychannel -n asset-tx -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}'
-peer chaincode query -C mychannel -n asset-tx -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}' | jq
+peer chaincode query -C mychannel -n asset-transfer -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}'
+peer chaincode query -C mychannel -n asset-transfer -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}' | jq
 ```
 
 Let's create an asset with ID=001:
 
 ```
-peer chaincode invoke -C mychannel -n asset-tx -c '{"Args":["CreateAsset","{\"ID\":\"001\", \"Color\":\"Red\",\"Size\":52,\"Owner\":\"Fred\",\"AppraisedValue\":234234}"]}' --connTimeout 15s
+peer chaincode invoke -C mychannel -n asset-transfer -c '{"Args":["CreateAsset","{\"ID\":\"001\", \"Color\":\"Red\",\"Size\":52,\"Owner\":\"Fred\",\"AppraisedValue\":234234}"]}' --connTimeout 15s
 ```
 
 And read back that asset:
 
 ```
-peer chaincode query -C mychannel -n asset-tx -c '{"Args":["ReadAsset","001"]}'
+peer chaincode query -C mychannel -n asset-transfer -c '{"Args":["ReadAsset","001"]}'
 ```
 
 You'll see the asset returned:
@@ -263,7 +263,7 @@ You'll see the asset returned:
 If we invoke a query command on a asset that does not exist, for example 002, we'll get back an error:
 
 ```
-peer chaincode query -C mychannel -n asset-tx -c '{"Args":["ReadAsset","002"]}'
+peer chaincode query -C mychannel -n asset-transfer -c '{"Args":["ReadAsset","002"]}'
 ```
 
 returns error:
@@ -289,15 +289,15 @@ npm run start:server-debug
 And run the same query, and see the updated error message:
 
 ```
-peer chaincode query -C mychannel -n asset-tx -c '{"Args":["ReadAsset","002"]}'
+peer chaincode query -C mychannel -n asset-transfer -c '{"Args":["ReadAsset","002"]}'
 ```
 
 ## Debugging
 
 As the chaincode was started with the Node.js debug setting, you can connect a node.js debugger. For example VSCode has a good
-typescript/node.js debugging in built. 
+typescript/node.js debugging in built.
 
-If you select the debug tab, and open the debug configurations, add a "Attach to a node.js process" configuration. VSCode will prompt you 
+If you select the debug tab, and open the debug configurations, add a "Attach to a node.js process" configuration. VSCode will prompt you
 with the template. The default port should be sufficient here.  You can then start the 'attached to process' debug, and pick the process to debug into.
 
 Remember to set a breakpoint at the start of the transaction function you want to debug.
