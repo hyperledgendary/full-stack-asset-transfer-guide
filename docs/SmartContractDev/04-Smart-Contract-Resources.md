@@ -1,6 +1,6 @@
 # Creating a blank template
 
-Using 'copier' we can create a sample contract - (this is Typescript, so ensure you have Node 16 installed)
+Using 'copier' we can create a sample contract - (this is a Typescript, so ensure you have Node 16 installed)
 
 [PREVIOUS - Getting Started](./01-Getting-Started.md) == [NEXT - Test and Debug in detail](./03-Test-And-Debug.md)
 

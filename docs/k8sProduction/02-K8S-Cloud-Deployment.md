@@ -35,9 +35,24 @@ Suggest that you copy the two playbooks and vars file to a temporary directory; 
 - Update the `./infrastructure/configuration/operator-console-vars.yml` as per the notes below
 ### IKS
 
-In the operator-console-vars.yml update the following:
+1) In the operator-console-vars.yml update the following:
 
 ```
-console_domain: <copy 'Ingress subdomain from the cluster overview page  >
-storage_class: default | ibm_file_gold
+storage_class: ibmc_file_gold
 ```
+
+2) Then create the operator
+
+3) We need to set the `CONSOLE_DOMAIN` 
+
+```
+export INGRESS_IPADDR=$(kubectl -n ingress-nginx get svc/ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[0].ip')
+export CONSOLE_DOMAIN=fabricinfra-hlf-console-console.$(echo $INGRESS_IPADDR | tr -s '.' '-')
+echo $CONSOLE_DOMAIN
+```
+
+Note - I've no idea why the ingress subdomain indicated by the IKS dashboard doesn't work.. it used to....
+
+Then update the `console_domain` in the `operator-console-vars.yml` to the value of `CONSOLE_DOMAIN`
+
+4) start the console
