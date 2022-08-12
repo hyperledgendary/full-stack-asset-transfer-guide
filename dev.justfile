@@ -82,22 +82,20 @@ microfab: microfab-bye
     curl -s http://console.127-0-0-1.nip.io:8080/ak/api/v1/components | weft microfab -w $CFG/_wallets -p $CFG/_gateways -m $CFG/_msp -f
     cat << EOF > $CFG/org1admin.env
     export CORE_PEER_LOCALMSPID=org1MSP
-    export CORE_PEER_MSPCONFIGPATH=$CFG/_cfg/_msp/org1/org1admin/msp
+    export CORE_PEER_MSPCONFIGPATH=$CFG/_msp/org1/org1admin/msp
     export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
     export FABRIC_CFG_PATH=$CWDIR/config
     export CORE_PEER_CLIENT_CONNTIMEOUT=15s
     export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
-    export PATH="${CWDIR}/bin:$PATH"
     EOF
 
     cat << EOF > $CFG/org2admin.env
     export CORE_PEER_LOCALMSPID=org2MSP
-    export CORE_PEER_MSPCONFIGPATH=$CFG/_cfg/_msp/org2/org2admin/msp
+    export CORE_PEER_MSPCONFIGPATH=$CFG/_msp/org2/org2admin/msp
     export CORE_PEER_ADDRESS=org2peer-api.127-0-0-1.nip.io:8080
     export FABRIC_CFG_PATH=$CWDIR/config
     export CORE_PEER_CLIENT_CONNTIMEOUT=15s
     export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
-    export PATH="${CWDIR}/bin:$PATH"
     EOF
 
     echo
@@ -118,7 +116,7 @@ debugcc:
     export CHAINCODE_SERVER_ADDRESS=host.docker.internal:9999
     export CHAINCODE_ID=$(weft chaincode package caas --path . --label asset-tx-ts --address ${CHAINCODE_SERVER_ADDRESS} --archive asset-tx-ts.tgz --quiet)
     export CORE_PEER_LOCALMSPID=org1MSP
-    export CORE_PEER_MSPCONFIGPATH=$CFG/_cfg/_msp/org1/org1admin/msp
+    export CORE_PEER_MSPCONFIGPATH=$CFG/_msp/org1/org1admin/msp
     export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
 
     echo "CHAINCODE_ID=${CHAINCODE_ID}"
