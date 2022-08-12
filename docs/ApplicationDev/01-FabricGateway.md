@@ -2,20 +2,20 @@
 
 From Fabric v2.4 onwards, the [Fabric Gateway client API](https://hyperledger.github.io/fabric-gateway/) is the recommended API for building client applications. There are implementations in Go, Node (TypeScript / JavaScript) and Java, each providing identical capability and behavior. The client API makes use of a Fabric Gateway service embedded within Fabric v2.4+ peers. This topic describes the Fabric Gateway model and considerations for production deployment.
 
-The concepts described here map directly to methods provided by the client API, and will help you to understand the client API behavior.
+The concepts described here map directly to methods provided by the client API, and will help you to understand the client API behavior. Provided you have a clear understanding of the Fabric transaction flow, you can treat this topic as reference material.
 
 ## Background
 
-To understand how Fabric Gateway works, it is necessary to understand the Fabric transaction submit (and evaluate) flow. This section provides a brief recap of the transaction flow from the perspective of the client.
+To understand how Fabric Gateway works, it is necessary to understand the Fabric transaction submit (and evaluate) flow. This section provides a brief recap of the Fabric transaction flow from the perspective of the client.
 
 ### Transaction submit flow
 
-Submit represents a ledger update. In the following diagram, orange lines represent interactions between the client and network nodes, while green lines represent interactions between network nodes.
+Submit represents a ledger update. In the following diagram, solid orange lines represent interactions between the client and network nodes, while dashed green lines represent interactions between network nodes.
 
 ![Transaction submit flow](../images/ApplicationDev/transaction-submit-flow.png)
 
 1. **Endorse:** client sends transaction proposal to peers for endorsement.
-    - The peer executes the transaction against its *current* ledger state to produce a read/write set and a return value for the transaction.
+    - The peer executes the smart contract's transaction function against its *current* ledger state to produce a read/write set and a return value for the transaction.
     - Successful endorsments must be gathered from sufficient organizations to meet the endorsement requirements, which may need to consider chaincode and state-based endorsement policies, chaincode-to-chaincode calls, and private data collections accessed by the transaction function; otherwise the transaction will fail *validation* later in the flow.
 1. **Submit:** client sends endorsed transaction to an orderer to be committed into a block.
 1. Orderers distribute committed blocks to all network peers, which validate the transactions against their *current* ledger state.
@@ -35,7 +35,7 @@ Evaluate represents a query and is essentially just the *endorse* step of the tr
 
 ## Legacy client SDKs
 
-The following diagram demonstrates how the transaction submit flow is executed for a client using one of the legacy SDKs. Orange lines represent interactions between the client and network nodes, which must cross the firewall at the boundary of the network deployment. Green lines represent interactions between network nodes.
+The following diagram demonstrates how the transaction submit flow is executed for a client using one of the legacy SDKs. Solid orange lines represent interactions between the client and network nodes, which must cross the firewall at the boundary of the network deployment. Dashed green lines represent interactions between network nodes.
 
 Notice that the client potentially needs to interact directly with any or all of the network nodes.
 
@@ -48,7 +48,7 @@ In order for the client application to operate effectively, it must make use of 
 
 ## Fabric Gateway client API
 
-The following diagram demonstrates for the transaction subsmit flow is executed for a client using the Fabric Gateway client API. Orange lines represent interactions between the client and a Gateway peer, which must cross the firewall at the boundary of the network deployment. Green lines represent interactions between network nodes.
+The following diagram demonstrates for the transaction subsmit flow is executed for a client using the Fabric Gateway client API. Solid orange lines represent interactions between the client and a Gateway peer, which must cross the firewall at the boundary of the network deployment. Dashed green lines represent interactions between network nodes.
 
 Notice that the client only needs to interact directly with the Gateway peer. The Gateway peer operates as a client driving the transaction submit flow from within the network deployment on behalf of the client application.
 

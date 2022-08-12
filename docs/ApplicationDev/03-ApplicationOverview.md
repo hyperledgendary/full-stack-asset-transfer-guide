@@ -9,7 +9,7 @@ Connection to the Gateway service is driven by the **runCommand()** function in 
 1. **Create gRPC connection to Gateway endpoint** - this is done in the **newGrpcConnection()** function in [connect.ts](../../applications/trader-typescript/src/connect.ts):
     ```typescript
     const tlsCredentials = grpc.credentials.createSsl(tlsRootCert);
-    return new grpc.Client(gatewayEndpoint, tlsCredentials, newGrpcClientOptions());
+    return new grpc.Client(gatewayEndpoint, tlsCredentials);
     ```
     The gRPC client connection is established using the [gRPC API](https://grpc.io/docs/) and is managed by the client application. The application can use the same gRPC connection to transact on behalf of many client identities.
 
@@ -34,11 +34,11 @@ Connection to the Gateway service is driven by the **runCommand()** function in 
         },
     });
     ```
-    The **Gateway** connection is established by calling the [connect()](https://hyperledger.github.io/fabric-gateway/main/api/node/functions/connect.html) factory function with a client identity (user's X.509 certificate) and signing implementation (user's private key). It allows a specific user to interact with a Fabric network using the previously created gRPC connection. Optional configuration can also be supplied, and it is strongly recommended to include default timeouts for operations.
+    The **Gateway** connection is established by calling the [connect()](https://hyperledger.github.io/fabric-gateway/main/api/node/functions/connect.html) factory function with a client [identity](https://hyperledger.github.io/fabric-gateway/main/api/node/interfaces/Identity.html) (user's X.509 certificate) and [signing implementation](https://hyperledger.github.io/fabric-gateway/main/api/node/functions/signers.newPrivateKeySigner.html) (user's private key). It allows a specific user to interact with a Fabric network using the previously created gRPC connection. Optional configuration can also be supplied, and it is strongly recommended to include default timeouts for operations.
 
 ## Application CLI commands
 
-All the CLI command implementations are located within the [command](../../applications/trader-typescript/src/commands/) directory. Commands are exposed to [app.ts](../../applications/trader-typescript/src/app.ts) by [command/index.ts](../../applications/trader-typescript/src/commands/index.ts).
+All the CLI command implementations are located within the [commands](../../applications/trader-typescript/src/commands/) directory. Commands are exposed to [app.ts](../../applications/trader-typescript/src/app.ts) by [commands/index.ts](../../applications/trader-typescript/src/commands/index.ts).
 
 When invoked, the command is passed the **Gateway** instance it should use to interact with the Fabric network. To do useful work, command implementations typically performs these steps:
 
@@ -75,12 +75,52 @@ When invoked, the command is passed the **Gateway** instance it should use to in
 
 ## Gateway API calls
 
-TODO
+The **AssetTransfer** class in [contract.ts](../../applications/trader-typescript/src/contract.ts) presents the smart contract in a form appropriate to the business application. Internally it uses the Fabric Gateway client API to invoke transaction functions, and deals with the translation between the business application and API representation of parameters and return values.
 
-The Fabric Gateway client API
- in [contract.ts](../../applications/trader-typescript/src/contract.ts)
-    - Submit: createAsset()
-    - Evaluate: getAllAssets()
-    - Retry: submitWithRetry()
-    - Mention fine-grained flow (see API docs)
+Refer to the [Contract API documentation](https://hyperledger.github.io/fabric-gateway/main/api/node/interfaces/Contract.html) for more details on the available calls.
 
+### Transaction submit
+
+An example of transaction submit is in the **createAsset()** method:
+
+```typescript
+await this.#contract.submit('CreateAsset', {
+    arguments: [JSON.stringify(asset)],
+});
+```
+
+### Transaction evaluate
+
+An example of evaluating a transaction is in the **getAllAssets()** method:
+```typescript
+const result = await this.#contract.evaluate('GetAllAssets');
+```
+
+## Retry of transaction submit
+
+The nature of the transaction submit flow in Fabric means that failures can occur at different points in the flow. To aid client handling off failures, the Gateway API produces errors of specific types to indicate the point in the flow a failure occured. The **submitWithRetry()** function in [contract.ts](../../applications/trader-typescript/src/contract.ts) retries transactions that fail to commit successfully:
+
+```typescript
+let lastError: unknown | undefined;
+
+for (let retryCount = 0; retryCount < RETRIES; retryCount++) {
+    try {
+        return await submit();
+    } catch (err: unknown) {
+        lastError = err;
+        if (err instanceof CommitError) {
+            // Transaction failed validation and did not update the ledger. Handle specific transaction validation codes.
+            if (err.code === StatusCode.MVCC_READ_CONFLICT) {
+                continue; // Retry
+            }
+        }
+        break; // Failure -- don't retry
+    }
+}
+
+throw lastError;
+```
+
+See the [submit() API documentation](https://hyperledger.github.io/fabric-gateway/main/api/node/interfaces/Contract.html#submit) for the other error types that can be thrown.
+
+For some cases it can be useful to retry only a specific step within the transaction submit flow. The Gateway API provides a fine-grained flow to allow this. See the [Contract API documentation](https://hyperledger.github.io/fabric-gateway/main/api/node/interfaces/Contract.html) for examples of this fine-grained flow.

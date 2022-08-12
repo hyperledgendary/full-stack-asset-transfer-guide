@@ -1,4 +1,4 @@
-## Exercise: Implement asset transfer
+# Exercise: Implement asset transfer
 
 Currently, our trader application can only create and delete assets. To really be useful it needs to be able to transfer assets to new owners.
 
@@ -10,4 +10,6 @@ There is already a **transfer** command implemented in [transfer.ts](../../appli
 
 The smart contract contains logic that only allows users in the owning organization to modify assets. It does this by checking that the Member Services Provider (MSP) ID for the client identity invoking the transaction matches the organization MSP ID of the asset owner. If you didn't notice this before, you might want to check out the smart contract code to see how this is implemented.
 
-Optionally, you can implement an **update** command in the client application to modify the properties of an asset.
+## Optional steps
+
+Implement an **update** command in the client application to modify the properties of an asset.
