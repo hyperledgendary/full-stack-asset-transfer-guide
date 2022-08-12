@@ -47,7 +47,7 @@ doit: kind review-config operator console sample-network
 
 # Starts a local KIND Kubernetes cluster
 # Installs Nginx ingress controller
-# Adds a DNS override in kube DNS for *.localho.st -> Nginx LB IP
+# Adds a DNS override in kube DNS for *.{{ingress_domain}} -> Nginx LB IP
 kind:
     infrastructure/kind_with_nginx.sh {{cluster_name}}
     ls -lart ~/.kube/config
@@ -87,7 +87,7 @@ review-config:
     cat ${CWDIR}/_cfg/fabric-ordering-org-vars.yml
 
 # Just install the fabric-operator
-operator: review-config
+operator:
     #!/bin/bash
     set -ex -o pipefail
 
@@ -126,7 +126,7 @@ console:
         ${ANSIBLE_IMAGE} \
             ansible-playbook /playbooks/02-console-install.yml
 
-    AUTH=$(curl -X POST https://fabricinfra-hlf-console-console.localho.st:443/ak/api/v2/permissions/keys -u admin:password -k -H 'Content-Type: application/json' -d '{"roles": ["writer", "manager"],"description": "newkey"}')
+    AUTH=$(curl -X POST https://{{namespace}}-hlf-console-console.{{ingress_domain}}:443/ak/api/v2/permissions/keys -u admin:password -k -H 'Content-Type: application/json' -d '{"roles": ["writer", "manager"],"description": "newkey"}')
     KEY=$(echo $AUTH | jq .api_key | tr -d '"')
     SECRET=$(echo $AUTH | jq .api_secret | tr -d '"')
 
@@ -134,7 +134,7 @@ console:
     mkdir -p _cfg
     cat << EOF > $CWDIR/_cfg/auth-vars.yml
     api_key: $KEY
-    api_endpoint: http://fabricinfra-hlf-console-console.localho.st/
+    api_endpoint: http://{{namespace}}-hlf-console-console.{{ingress_domain}}/
     api_authtype: basic
     api_secret: $SECRET
     EOF
