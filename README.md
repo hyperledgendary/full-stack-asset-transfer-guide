@@ -84,12 +84,12 @@ But there are limited number of different types of cards, and one card can't be 
 
 ## Cloud Ready 
 
-- [Setup](./docs/cloud-ready/00-setup.md)
-- [Select a Kube](./docs/cloud-ready/10-kube.md)
-- [Deploy a Fabric Network](./docs/cloud-ready/20-fabric.md)
-- [Install Chaincode](./docs/cloud-ready/30-chaincode.md)
-- [Go Bananas](./docs/cloud-ready/40-bananas.md)
-- [Teardown](./docs/cloud-ready/90-teardown.md)
+- [Setup](docs/CloudReady/00-setup.md)
+- [Select a Kube](docs/CloudReady/10-kube.md)
+- [Deploy a Fabric Network](docs/CloudReady/20-fabric.md)
+- [Install Chaincode](docs/CloudReady/30-chaincode.md)
+- [Go Bananas](docs/CloudReady/40-bananas.md)
+- [Teardown](docs/CloudReady/90-teardown.md)
 
 
 ## Operate
