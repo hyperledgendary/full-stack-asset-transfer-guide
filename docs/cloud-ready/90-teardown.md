@@ -1,5 +1,9 @@
 # Teardown 
 
+<== [PREV: Go Bananas](40-bananas.md)
+
+---
+
 ## Kind 
 
 ```shell
@@ -22,7 +26,3 @@ multipass purge
 
 - Terminate EC2 / IKS Instances (Workshop systems will be deleted after the event)
 
-
-## Guide 
-
-Prev : [Go Bananas](40-bananas.md)

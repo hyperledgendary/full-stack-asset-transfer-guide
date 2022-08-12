@@ -10,39 +10,58 @@ cd workshop
 export WORKSHOP=$(pwd)
 ```
 
-First please check you've got the tools you need. docker/just/weft/nodejs/peer. To double check run the `check.sh` script
+First please check you've got the [required tools](../../SETUP.md) needed for the dev part of this workshop (docker, just, weft, nodejs, and Fabric peer binary). To double check run the `check.sh` script
 
 ```
 ${WORKSHOP}/check.sh
 ```
 
-Let's dive straight into creating some code to manage an 'asset'; best to have two windows open, one for running the 'FabricNetwork' and one for 'ChaincodeDev'. You may wish to open a third to watch the logs of rhte running Fabric Network. 
+Let's dive straight into creating some code to manage an 'asset'; best to have two windows open, one for running the 'FabricNetwork' and one for 'ChaincodeDev'. You may wish to open a third to watch the logs of the running Fabric Network.
 
 ## Start the Fabric Infrastructure
 
-Startup the Fabric Infrastructure, we're using MicroFab here as it's a single container and fast to start. Plus it already has the configuration required within it to start external chaincodes.
+We're using MicroFab for the Fabric infrastructure as it's a single container that is fast to start.
+The MicroFab container includes an ordering service node and a peer process that is pre-configured to create a channel and start external chaincodes.
+It also includes credentials for an `org1` organization, which will be used to run the peer. We'll use an `org1` admin user when interacting with the environment.
+
+We'll use `just` recipes to execute multiple commands. `just` recipes are similar to `make` but simpler to understand. You can open each justfile to see which commands are run with each recipe.
+
+Start the MicroFab container by running the `just` recipe:
 
 ```bash
 just -f dev.justfile microfab
 ```
 
-A file  `org1admin.env` is written out that contains the environment variables needed to run applications etc _as the org1 admin_
-*ensure that you `source _cfg/uf/org1admin.env`*
+A file `org1admin.env` is written out that contains the environment variables needed to run applications _as the org1 admin identity_.
+
+Let's take a look at the environment variables and source the file to set the environment variables:
+
+```bash
+cat _cfg/uf/org1admin.env
+
+source _cfg/uf/org1admin.env
+```
 
 At this point you may wish to run `docker logs -f microfab` in a separate window to watch the activity - you don't need to setup anything specific here.
 
-## Pacakge and deploy against Fabric
+## Package and deploy chaincode to Fabric
 
-For development purposes this is the suggested way to package the chaincode. (Note we're going to use a tool that is in the hyperledger-labs)
-We're going to start the chaincode separately from the peer, so it's easy to iterate on a debug.  If you want to short cut this section run
+We are going to use the Chaincode-As-A-Service (CCAAS) pattern for chaincode.
+With the CCAAS pattern, the Fabric peer does not launch a deployed chaincode.
+Instead, we will run chaincode as an external process so that we can easily start, stop, update, and debug the chaincode locally.
+But we still need to tell the peer where the chaincode is running. We do this by deploying a chaincode package that only includes the name of the chaincode and chaincode address, rather than the actual chaincode source code.
+
+You can either package and deploy the chaincode using a single `just` recipe, or do it step by step manually.
+
+### Option 1 : Package and deploy chaincode using `just` recipe.
 
 ```bash
 just -f ${WORKSHOP}/dev.justfile debugcc
 ```
-You can skip to the next step 'Iterative Development and Test'.
 
-> If you've written chaincode before, this step may seem a little odd; as there is no code in the chaincode package. It contains just a 'pointer' to where the chaincode will be. This is because we're using a new(ish) feature of Fabric - Chaincode-As-A-Service. 
+You will see the chaincode id and deployment steps returned.
 
+### Option 2 : Package and deploy chaincode manually using peer CLI commands.
 
 To run the commands manually:
 
@@ -50,61 +69,65 @@ To run the commands manually:
 export CHAINCODE_SERVER_ADDRESS=host.docker.internal:9999
 
 weft chaincode package caas --path . --label asset-tx-ts --address ${CHAINCODE_SERVER_ADDRESS} --archive asset-tx-ts.tgz --quiet
-asset-tx-ts:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e
 ```
 
-The returned 'chaincode-id' (or package-id) is needed for later
+The returned 'chaincode-id' (or package-id) such as `asset-tx-ts:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e` will be needed later.
+
+Your id may be different. Set an environment variable for the chaincode-id that was returned to you, for example:
+
 ```
 export CHAINCODE_ID=asset-tx-ts:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e
 ```
 
-> IMPORTANT - this chaincode package is merely telling the peer _where_ the chaincode is running; it's not the code. 
-
-
-We're going to use the peer cli to install the contracts
+We're going to use the peer CLI commands to install and deploy the chaincode. Chaincode is 'deployed' by indicating agreement to it and then committing it to a channel:
 
 ```
-source org1admin.env
+source _cfg/uf/org1admin.env
 
 peer lifecycle chaincode install asset-tx-ts.tgz
-peer lifecycle chaincode approveformyorg --channelID mychannel --name asset-tx -v 0 --package-id $CHAINCODE_ID --sequence 1
-peer lifecycle chaincode commit --channelID mychannel --name asset-tx -v 0 --sequence 1
+peer lifecycle chaincode approveformyorg --channelID mychannel --name asset-tx -v 0 --package-id $CHAINCODE_ID --sequence 1 --connTimeout 15s
+peer lifecycle chaincode commit --channelID mychannel --name asset-tx -v 0 --sequence 1 --connTimeout 15s
 
 ```
 
 (best to keep this window open for later)
 
 
+## Run the chaincode locally
 
-## Install and Build
+We'll use the example typescript contract already written in `$WORKSHOP/contracts/asset-tx-typescript`. Feel free to take a look at the contract code in `contracts/asset-tx-typescript/src/assetTransfer`.
 
-We'll use the example contract already written in `$WORKSHOP/contracts/asset-tx-typescript`
+As with any typescript module we need to run `npm install` to manage the dependencies and then build (compile) the typescript to javascript.
 
-As with any node module this needs to be installed, as as it's typescript built
+Use another terminal window for the chaincode:
 
 ```
 cd contracts/asset-tx-typescript
+
 npm install
 
 npm run build
 ```
 
-On it's own a smart contract can't do a lot, however an easy way to test the contract has been built ok, is to generate the 'Contract Metatadata'. This is a language agnostic definition of the contracts, and the datatypes the contract returns. It borrows from the OpenAPI used for defining REST APIs.  It is also very useful to share to teams writing client applications so they know the data structures and transaction functions they can call. 
-As it's a JSON document, it's ammenable to process to create other resources
+On it's own a smart contract can't do a lot, however an easy way to test the contract has been built ok, is to generate the 'Contract Metatadata'. This is a language agnostic definition of the contracts, and the datatypes the contract returns. It borrows from the OpenAPI used for defining REST APIs.  It is also very useful to share to teams writing client applications so they know the data structures and transaction functions they can call.
+As it's a JSON document, it's amenable to process to create other resources.
 
-The metadata-generate command has been put into the `package.json`
+The metadata-generate command has been put into the `package.json`:
+
 ```
 npm run metadata
 ```
 
-Review the `metadata.json` and see the summary of the contract information, the transaction functions, and datatypes. This information can also be captured at runtime and is a good way of testing deployment
+Review the `metadata.json` and see the summary of the contract information, the transaction functions, and datatypes. This information can also be captured at runtime and is a good way of testing deployment.
 
 
 ## Iterative Development and Test
 
-**All the steps until here are one time only. You can now iterate over the development of your contract**
+**All the steps up until here are one time only. You can now iterate over the development of your contract**
 
-From a separate shell/window lets start the Smart Contract. Remember that the `CHAINCODE_ID` and the `CHAINCODE_SERVER_ADDRESS` are the only pieces of information needed.
+From your chaincode terminal window lets start the Smart Contract node module. Remember that the `CHAINCODE_ID` and the `CHAINCODE_SERVER_ADDRESS` are the only pieces of information needed.
+
+Note: Use your specific CHAINCODE_ID from earlier.
 
 ```
 export CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999
@@ -117,44 +140,56 @@ npm run start:server-debug
 ```
 
 ### Run some transactions
-Choose a window to run the transactions from; initially we'll use the `peer` cli to run the commands.
-Make sure that the peer binary and the config directory are set.  (run the `${WORKKOP}/check.sh script to double check)
 
-Setup the environment context for acting as the Org 1 Administrator.
+Choose a terminal window to run the transactions from; initially we'll use the `peer` CLI to run the commands.
+Make sure that the peer binary and the config directory are set (run the `${WORKKOP}/check.sh script to double check).
+
+Set up the environment context for acting as the Org 1 Administrator.
 
 ```
 source ${WORKSHOP}/_cfg/uf/org1admin.env
 ```
 
-The peer cli and issue basic query commands; for example to check the metadata for the contract (if you have jq, it's easier to read if you pipe this into jq)
+Use the peer CLI to issue basic query commands against the contract. For example check the metadata for the contract (if you have jq, it's easier to read if you pipe the results into jq). Use one of these commands:
+
 ```
 peer chaincode query -C mychannel -n asset-tx -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}'
+peer chaincode query -C mychannel -n asset-tx -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}' | jq
 ```
 
-Let's create an asset with ID=001
+Let's create an asset with ID=001:
 
 ```
-peer chaincode invoke -C mychannel -n asset-tx -c '{"Args":["CreateAsset","{\"ID\":\"001\", \"C
-olor\":\"Red\",\"Size\":52,\"Owner\":\"Fred\",\"AppraisedValue\":234234}"]}'
+peer chaincode invoke -C mychannel -n asset-tx -c '{"Args":["CreateAsset","{\"ID\":\"001\", \"Color\":\"Red\",\"Size\":52,\"Owner\":\"Fred\",\"AppraisedValue\":234234}"]}' --connTimeout 15s
 ```
 
-And read back that asset
+And read back that asset:
 
 ```
 peer chaincode query -C mychannel -n asset-tx -c '{"Args":["ReadAsset","001"]}'
+```
+
+You'll see the asset returned:
+
+```
 {"AppraisedValue":234234,"Color":"Red","ID":"001","Owner":"{\"org\":\"org1MSP\",\"user\":\"Fred\"}","Size":52}
 ```
 
-## Making a change and re-running the code
+### Making a change and re-running the code
 
-If we invoke a query command on a asset that does not exist, for example 002; we get back an error.
+If we invoke a query command on a asset that does not exist, for example 002, we'll get back an error:
 
 ```
 peer chaincode query -C mychannel -n asset-tx -c '{"Args":["ReadAsset","002"]}'
-Error: endorsement failure during query. response: status:500 message:"The asset 002 does not exist"
 ```
 
-Let's say we want to change that error message to "Sorry, the asset 002 has not been created"
+returns error:
+
+```
+Error: endorsement failure during query. response: status:500 message:"Sorry, asset 002 has not been created"
+```
+
+Let's say we want to change that error message to something else.
 
 - Stop the running chaincode (CTRL-C!)
 - Load the `src/assetTransfer.ts` file into an editor of your choice
@@ -168,11 +203,10 @@ npm run start:server-debug
 ```
 
 
-And run the same transaction, and see the updated error code
+And run the same query, and see the updated error message:
 
 ```
 peer chaincode query -C mychannel -n asset-tx -c '{"Args":["ReadAsset","002"]}'
-Error: endorsement failure during query. response: status:500 message:"Sorry, asset 002 has not been created"
 ```
 
 ## Debugging
@@ -191,3 +225,4 @@ Watch out for:
 
 
 Next look at the [Test and Debuging Contracts] for more details and information on other langauges
+

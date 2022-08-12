@@ -6,7 +6,7 @@
 
 import { ChaincodeEvent, checkpointers, Gateway } from '@hyperledger/fabric-gateway';
 import * as path from 'path';
-import { chaincodeName, channelName } from '../connect';
+import { chaincodeName, channelName } from '../config';
 import { ExpectedError } from '../expectedError';
 import { printable } from '../utils';
 
@@ -14,13 +14,6 @@ const checkpointFile = path.resolve(process.env.CHECKPOINT_FILE ?? 'checkpoint.j
 const simulatedFailureCount = getSimulatedFailureCount();
 
 const startBlock = BigInt(0);
-
-let eventCount = 0; // Used only to simulate failures
-
-function onEvent(event: ChaincodeEvent): void {
-    simulateFailureIfRequired();
-    console.log(printable(event));
-}
 
 export default async function main(gateway: Gateway): Promise<void> {
     const network = gateway.getNetwork(channelName);
@@ -33,18 +26,22 @@ export default async function main(gateway: Gateway): Promise<void> {
     }
 
     const events = await network.getChaincodeEvents(chaincodeName, {
-        checkpoint: checkpointer,
         startBlock, // Used only if there is no checkpoint block number
     });
 
     try {
         for await (const event of events) {
             onEvent(event);
-            await checkpointer.checkpointChaincodeEvent(event);
         }
     } finally {
         events.close();
     }
+}
+
+function onEvent(event: ChaincodeEvent): void {
+    simulateFailureIfRequired();
+
+    console.log(printable(event));
 }
 
 function getSimulatedFailureCount(): number {
@@ -56,6 +53,8 @@ function getSimulatedFailureCount(): number {
 
     return count;
 }
+
+let eventCount = 0; // Used only to simulate failures
 
 function simulateFailureIfRequired(): void {
     if (simulatedFailureCount > 0 && eventCount++ >= simulatedFailureCount) {

@@ -5,7 +5,7 @@
  */
 
 import { Gateway } from '@hyperledger/fabric-gateway';
-import { chaincodeName, channelName } from '../connect';
+import { chaincodeName, channelName } from '../config';
 import { AssetTransfer } from '../contract';
 import { assertAllDefined } from '../utils';
 
