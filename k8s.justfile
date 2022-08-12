@@ -28,6 +28,9 @@ set export
 # set the current directory, and the location of the test dats
 CWDIR := justfile_directory()
 
+
+ANSIBLE_IMAGE := "ghcr.io/ibm-blockchain/ofs-ansibe:sha-65a953b"
+
 _default:
   @just -f {{justfile()}}  --list
 
@@ -82,7 +85,7 @@ review-config:
     cat ${CWDIR}/_cfg/fabric-ordering-org-vars.yml
 
 # Just install the fabric-operator
-operator:
+operator: review-config
     #!/bin/bash
     set -ex -o pipefail
 
@@ -90,9 +93,20 @@ operator:
         --rm \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
         -v ${CWDIR}/_cfg:/_cfg \
+        -v $(pwd)/infrastructure/kind_console_ingress:/playbooks \
+        --network=host \
+        --workdir /playbooks \
+        ${ANSIBLE_IMAGE} \
+            ansible-playbook /playbooks/90-KIND-ingress.yml
+
+
+    docker run \
+        --rm \
+        -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
+        -v ${CWDIR}/_cfg:/_cfg \
         -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
         --network=host \
-        ofs-ansible:latest \
+        ${ANSIBLE_IMAGE} \
             ansible-playbook /playbooks/01-operator-install.yml
 
 
@@ -107,7 +121,7 @@ console:
         -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ofs-ansible:latest \
+        ${ANSIBLE_IMAGE} \
             ansible-playbook /playbooks/02-console-install.yml
 
     AUTH=$(curl -X POST https://fabricinfra-hlf-console-console.localho.st:443/ak/api/v2/permissions/keys -u admin:password -k -H 'Content-Type: application/json' -d '{"roles": ["writer", "manager"],"description": "newkey"}')
@@ -136,7 +150,7 @@ sample-network:
         -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ofs-ansible:latest \
+        ${ANSIBLE_IMAGE} \
             ansible-playbook /playbooks/00-complete.yml
 
 build-chaincode:
@@ -166,7 +180,7 @@ deploy-chaincode:
         -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ofs-ansible:latest \
+        ${ANSIBLE_IMAGE} \
             ansible-playbook /playbooks/19-install-and-approve-chaincode.yml 
 
     docker run \
@@ -176,7 +190,7 @@ deploy-chaincode:
         -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ofs-ansible:latest \
+        ${ANSIBLE_IMAGE} \
             ansible-playbook /playbooks/20-install-and-approve-chaincode.yml 
 
     docker run \
@@ -186,7 +200,7 @@ deploy-chaincode:
         -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ofs-ansible:latest \
+        ${ANSIBLE_IMAGE} \
             ansible-playbook /playbooks/21-commit-chaincode.yml 
 
 # register-application: 
