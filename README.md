@@ -66,11 +66,11 @@ But there are limited number of different types of cards, and one card can't be 
 		- 3 organizations that people can belong too
 
 
-## Smart Contract Developing
+## Smart Contract Development
 
-- [Introduction to Smart Contract Developing](./docs/SmartContractDev/00-Introduction.md)
-- Exercise: [Getting Started with a Smart Contract](./docs/SmartContractDev/01-Getting-Started.md)
-- Exercise: [Adding a new transaction function](./docs/SmartContractDev/02-Adding-tx-function.md)  COMING_SOON
+- [Introduction](./docs/SmartContractDev/00-Introduction.md)
+- **Exercise**: [Getting Started with a Smart Contract](./docs/SmartContractDev/01-Getting-Started.md)
+- **Exercise**: [Adding a new transaction function](./docs/SmartContractDev/02-Adding-tx-function.md)  COMING_SOON
 - Reference:
   - [Detailed Test and Debug](./docs/SmartContractDev/03-Test-And-Debug.md)
   - [Smart Contract Resourfces](./docs/SmartContractDev/04-Smart-Contract-Resources.md)
@@ -85,13 +85,18 @@ But there are limited number of different types of cards, and one card can't be 
 - [Chaincode events](docs/ApplicationDev/05-ChaincodeEvents.md)
 - **Exercise:** [Use chaincode events](docs/ApplicationDev/06-Exercise-ChaincodeEvents.md)
 
-## Cloud Ready
+## Cloud Native Fabric
 
-- [Setup](docs/CloudReady/00-setup.md)
-- [Select a Kube](docs/CloudReady/10-kube.md)
-- [Deploy a Fabric Network](docs/CloudReady/20-fabric.md)
-- [Install Chaincode](docs/CloudReady/30-chaincode.md)
-- [Go Bananas](docs/CloudReady/40-bananas.md)
+- [Cloud Ready!](docs/CloudReady/00-setup.md)
+- **Exercise:** [Deploy a Kubernetes Cluster](docs/CloudReady/10-kube.md)
+- [Fabric Operator](docs/CloudReady/xx-todo.md)
+- **Exercise:** [Deploy a Fabric Network](docs/CloudReady/20-fabric.md)
+- **Exercise:** [Deploy a Smart Contract](docs/CloudReady/30-chaincode.md)
+- **Exercise:** [Deploy a Client Application](docs/CloudReady/40-bananas.md)
+
+
+## Epilogue
+
+- [Go Bananas](docs/CloudReady/50-conga-pit.md)
 - [Teardown](docs/CloudReady/90-teardown.md)
-
-
+- [Bring it Home](docs/CloudReady/100-bring-it-home.md)
