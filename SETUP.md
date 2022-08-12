@@ -45,14 +45,15 @@ just -f justfile.dev devshell
 You will need a set of tools to work with development along with an editor and the compiler of your choice.
 
 - [docker engine](https://docs.docker.com/engine/install/)
-- [just](https://github.com/casey/just#installation) to run all the comamnds here directly
+
+- [just](https://github.com/casey/just#installation) to run all the commands here directly
 
 - [weft ](https://www.npmjs.com/package/@hyperledger-labs/weft)  Hyperledger-Labs cli to work with identities and chaincode packages
 ```
 npm install -g @hyperledger-labs/weft
 ```
 
-- peer cli
+- Fabric peer CLI
 ```
 curl -sSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh && chmod +x install-fabric.sh
 ./install-fabric.sh binary
@@ -83,4 +84,3 @@ Note to extract a PR
 git fetch origin pull/615/head:latest
 git checkout latest
 ```
-
