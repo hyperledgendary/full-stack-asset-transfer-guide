@@ -109,23 +109,23 @@ debugcc:
 
     export CFG=$CWDIR/_cfg/uf
 
-    pushd $CWDIR/contracts/asset-tx-typescript
+    pushd $CWDIR/contracts/asset-transfer-typescript
 
     # this is the ip address the peer will use to talk to the CHAINCODE_ID
     # remember this is relative from where the peer is running.
     export CHAINCODE_SERVER_ADDRESS=host.docker.internal:9999
-    export CHAINCODE_ID=$(weft chaincode package caas --path . --label asset-tx-ts --address ${CHAINCODE_SERVER_ADDRESS} --archive asset-tx-ts.tgz --quiet)
+    export CHAINCODE_ID=$(weft chaincode package caas --path . --label asset-transfer --address ${CHAINCODE_SERVER_ADDRESS} --archive asset-transfer.tgz --quiet)
     export CORE_PEER_LOCALMSPID=org1MSP
     export CORE_PEER_MSPCONFIGPATH=$CFG/_msp/org1/org1admin/msp
     export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
 
     echo "CHAINCODE_ID=${CHAINCODE_ID}"
 
-    set -x && peer lifecycle chaincode install asset-tx-ts.tgz &&     { set +x; } 2>/dev/null
+    set -x && peer lifecycle chaincode install asset-transfer.tgz &&     { set +x; } 2>/dev/null
     echo
-    set -x && peer lifecycle chaincode approveformyorg --channelID mychannel --name asset-tx -v 0 --package-id $CHAINCODE_ID --sequence 1 --connTimeout 15s && { set +x; } 2>/dev/null
+    set -x && peer lifecycle chaincode approveformyorg --channelID mychannel --name asset-transfer -v 0 --package-id $CHAINCODE_ID --sequence 1 --connTimeout 15s && { set +x; } 2>/dev/null
     echo
-    set -x && peer lifecycle chaincode commit --channelID mychannel --name asset-tx -v 0 --sequence 1  --connTimeout 15s && { set +x; } 2>/dev/null
+    set -x && peer lifecycle chaincode commit --channelID mychannel --name asset-transfer -v 0 --sequence 1  --connTimeout 15s && { set +x; } 2>/dev/null
     echo
     set -x && peer lifecycle chaincode querycommitted --channelID=mychannel && { set +x; } 2>/dev/null
     echo

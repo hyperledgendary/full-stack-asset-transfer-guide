@@ -2,10 +2,10 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ---
-smart_contract_name: "asset-tx"
+smart_contract_name: "asset-transfer"
 smart_contract_version: "1.0.0"
 smart_contract_sequence: 1
-smart_contract_package: "asset-tx-k8s-contract.tgz"
+smart_contract_package: "asset-transfer-k8s-contract.tgz"
 # smart_contract_constructor: "initLedger"
 smart_contract_endorsement_policy: ""
 smart_contract_collections_file: ""

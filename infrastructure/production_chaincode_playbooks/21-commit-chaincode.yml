@@ -7,10 +7,10 @@
   vars:
     wallet: "/_cfg"
   vars_files:
-    - /_cfg/asset-tx-chaincode-vars.yml    
+    - /_cfg/asset-transfer-chaincode-vars.yml
     - /_cfg/fabric-common-vars.yml
     - /_cfg/fabric-org1-vars.yml
-    - /_cfg/auth-vars.yml    
+    - /_cfg/auth-vars.yml
   tasks:
     - name: Commit the chaincode on the channel
       ibm.blockchain_platform.committed_chaincode:
