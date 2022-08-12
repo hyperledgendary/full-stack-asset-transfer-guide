@@ -34,7 +34,7 @@ Connection to the Gateway service is driven by the **runCommand()** function in 
         },
     });
     ```
-    The **Gateway** connection is established by calling the [connect()](https://hyperledger.github.io/fabric-gateway/main/api/node/functions/connect.html) factory function with a client [identity](https://hyperledger.github.io/fabric-gateway/main/api/node/interfaces/Identity.html) (user's X.509 certificate) and [signing implementation](https://hyperledger.github.io/fabric-gateway/main/api/node/functions/signers.newPrivateKeySigner.html) (user's private key). It allows a specific user to interact with a Fabric network using the previously created gRPC connection. Optional configuration can also be supplied, and it is strongly recommended to include default timeouts for operations.
+    The **Gateway** connection is established by calling the [connect()](https://hyperledger.github.io/fabric-gateway/main/api/node/functions/connect.html) factory function with a client [identity](https://hyperledger.github.io/fabric-gateway/main/api/node/interfaces/Identity.html) (user's X.509 certificate) and [signing implementation](https://hyperledger.github.io/fabric-gateway/main/api/node/functions/signers.newPrivateKeySigner.html) (based on the user's private key). It allows a specific user to interact with a Fabric network using the previously created gRPC connection. Optional configuration can also be supplied, and it is strongly recommended to include default timeouts for operations.
 
 ## Application CLI commands
 
