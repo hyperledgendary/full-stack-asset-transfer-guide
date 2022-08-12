@@ -33,8 +33,12 @@ export async function newGrpcConnection(): Promise<grpc.Client> {
     const certPath = path.resolve(tlsCertPath ?? defaultTlsCertificate);
     const tlsRootCert = await fs.promises.readFile(certPath);
 
-    const tlsCredentials = grpc.credentials.createSsl(tlsRootCert);
-    return new grpc.Client(gatewayEndpoint, tlsCredentials, newGrpcClientOptions());
+    if (fs.existsSync(tlsRootCert)){
+        const tlsCredentials = grpc.credentials.createSsl(tlsRootCert);
+        return new grpc.Client(gatewayEndpoint, tlsCredentials, newGrpcClientOptions());    
+    } else {
+        return new grpc.Client(gatewayEndpoint, grpc.ChannelCredentials.createInsecure());
+    }
 }
 
 function newGrpcClientOptions(): grpc.ClientOptions {

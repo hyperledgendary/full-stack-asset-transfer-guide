@@ -307,4 +307,6 @@ Watch out for:
     - remember the client/fabric transaction timeout, whilst you've the chaicode stopped in the debugger, the timeout is still 'ticking'
 
 
-Next look at the [Test and Debuging Contracts](./03-Test-And-Debug.md) for more details and information on other langauges
+Look at the [Test and Debuging Contracts](./03-Test-And-Debug.md) for more details and information on other langauges
+
+
