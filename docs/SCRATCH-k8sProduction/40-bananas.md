@@ -26,36 +26,21 @@ fabric-ca-client enroll \
   --url           https://${USERNAME}:${PASSWORD}@test-network-org1-ca-ca.${TEST_NETWORK_INGRESS_DOMAIN} \
   --tls.certfiles $PWD/config/build/cas/org1-ca/tls-cert.pem \
   --mspdir        $PWD/config/build/enrollments/org1/users/${USERNAME}/msp
+  
+export PEER_HOST_ALIAS=test-network-org1-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN} 
+export PEER_ENDPOINT=test-network-org1-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN}:443
+
+export KEY_DIRECTORY_PATH=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/keystore/
+export CERT_PATH=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/signcerts/cert.pem
+export TLS_CERT_PATH=$PWD/config/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
 
 ```
 
-## Go Bananas 
-
-```shell
-# User organization MSP ID 
-export MSP_ID=Org1MSP   
-
-# Path to private key file 
-export PRIVATE_KEY=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/keystore/3d0c2aa7de3a9a0e5a437c935f3679aeffb3e514f9398419e8aecb0e8b997808_sk
-
-# Path to user certificate file 
-export CERTIFICATE=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/signcerts/cert.pem
-
-# Path to CA certificate 
-export TLS_CERT=$PWD/config/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
-
-# Gateway peer SSL host name override 
-export HOST_ALIAS=test-network-org1-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN}
-
-# Gateway endpoint
-export ENDPOINT=$HOST_ALIAS:443
-
-```
+## Go Bananas
 
 ```shell
 pushd applications/trader-typescript 
 npm install
-
 ```
 
 ```shell
