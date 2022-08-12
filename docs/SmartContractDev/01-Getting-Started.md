@@ -32,15 +32,72 @@ Start the MicroFab container by running the `just` recipe:
 just -f dev.justfile microfab
 ```
 
-A file `org1admin.env` is written out that contains the environment variables needed to run applications _as the org1 admin identity_.
+This will start the docker container, and also write out some configuration/data files. 
+```bash
+ls -1 _cfg/uf
+
+_cfg
+_gateways
+_wallets
+org1admin.env
+org2admin.env
+```
+
+A file `org1admin.env` is written out that contains the environment variables needed to run applications _as the org1 admin identity_. A second organization is created, with a `org2admin.env` - this is for later exercises and is not needed at the moment.
 
 Let's take a look at the environment variables and source the file to set the environment variables:
 
 ```bash
+source _cfg/uf/org1admin.env
 cat _cfg/uf/org1admin.env
 
-source _cfg/uf/org1admin.env
+# sample contents
+export CORE_PEER_LOCALMSPID=org1MSP
+export CORE_PEER_MSPCONFIGPATH=/workshop/full-stack-asset-transfer-guide/_cfg/uf/_msp/org1/org1admin/msp
+export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
+export FABRIC_CFG_PATH=/workshop/full-stack-asset-transfer-guide/config
+export CORE_PEER_CLIENT_CONNTIMEOUT=15s
+export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
+export PATH="..../
 ```
+
+Next let's look at the three directories that are created `_msp`, `_gateways`, `_wallets`
+Firstly the `_msp` directory contains the file system structure for the Fabric Peer commands. You casee the refernced in the `CORE_PEER_MSGCONFIGPATH` environment variable.
+
+Secondly the `_gatways` directory contains two JSON files, one per ogranizxation. This file contains details of the Peer's endpoint url to connect clients to. Older Fabric Client SDks would need all the information in this file, but the new "Gateway SDKs" remove the need for all the detail. The just need the peer's endpoint and tls configuration. See this [example code](../../applications/ping-chaincode/src/fabric-connection-profile.ts) on how to parse this file easily for the gateway sdk.
+
+Third is the `_wallets` directory - there are three subdirectories for the Orderering Organization and Organizations 1 and 2. These contain details of identities:
+```
+_wallets
+├── Orderer
+│   └── ordereradmin.id
+├── org1
+│   ├── org1admin.id
+│   └── org1caadmin.id
+└── org2
+    ├── org2admin.id
+    └── org2caadmin.id
+```
+
+There are identities here with admin permissions for the Certificate Authorities (used to create more identities) and id to use with the Peers. 
+Note the Certificate Authority created the admin ids, when Microfab started.
+
+Pick one if the id files and look at the contents (it's json format)
+```
+cat _cfg/_wallets/org1/org1admin.id | jq
+{
+  "credentials": {
+    "certificate": "-----BEGIN CERTIFICATE-----\n  xxxx \n-----END CERTIFICATE-----\n",
+    "privateKey": "-----BEGIN PRIVATE KEY-----\n  xxxx  \n-----END PRIVATE KEY-----\n"
+  },
+  "mspId": "org1MSP",
+  "type": "X.509",
+  "version": 1
+}
+
+```
+This information then can be used by the client applications. See [this example code](../../applications/ping-chaincode/src/jsonid-adapter.ts) for how you can directly parse this file to use with the gateway.
+
 
 At this point you may wish to run `docker logs -f microfab` in a separate window to watch the activity - you don't need to setup anything specific here.
 
@@ -51,32 +108,55 @@ With the CCAAS pattern, the Fabric peer does not launch a deployed chaincode.
 Instead, we will run chaincode as an external process so that we can easily start, stop, update, and debug the chaincode locally.
 But we still need to tell the peer where the chaincode is running. We do this by deploying a chaincode package that only includes the name of the chaincode and chaincode address, rather than the actual chaincode source code.
 
-You can either package and deploy the chaincode using a single `just` recipe, or do it step by step manually.
-
-### Option 1 : Package and deploy chaincode using `just` recipe.
+### Package and deploy chaincode using `just` recipe.
 
 ```bash
 just -f ${WORKSHOP}/dev.justfile debugcc
 ```
 
-You will see the chaincode id and deployment steps returned.
+You will see the chaincode id and deployment steps returned; 
 
-### Option 2 : Package and deploy chaincode manually using peer CLI commands.
+### Details of this packaging and deployment
 
-To run the commands manually:
+These steps are best automated as you've just run as part of the build script. It's worth getting an idea of what is involved by running the steps manually. If you want to keep going and come back please do [skip ahead](#run-the-chaincode-locally)
+
+Fabric chaincode packages are a `tgz` format archive that contain two files:
+
+- `metadata.json` - the chaincode label and type
+- `code.tar.gz` - source artifacts for the chaincode
+
+Create the `metadata.json` first, this tells the Peer the type of chaincode and a label to use to refer to this later
 
 ```bash
-export CHAINCODE_SERVER_ADDRESS=host.docker.internal:9999
-
-weft chaincode package caas --path . --label asset-tx-ts --address ${CHAINCODE_SERVER_ADDRESS} --archive asset-tx-ts.tgz --quiet
+cat << METADATAJSON-EOF > metadata.json
+{
+    "type": "ccaas",
+    "label": "asset-tx-ts
+}
+METADATAJSON-EOF
 ```
 
-The returned 'chaincode-id' (or package-id) such as `asset-tx-ts:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e` will be needed later.
-
-Your id may be different. Set an environment variable for the chaincode-id that was returned to you, for example:
+Create the `code.tar.gz` - for the Chaincode-as-a-service, this file will contain a single JSON file `connection.json`. Traditional Fabric packaging would include all the source code of the chaincode here. In this case, we need the JSON file to contain the URL the peer will find the chaincode at and a timeout. Note this is a special hostname so the peer inside the docker container can locate the chaincode running on the host system
 
 ```
-export CHAINCODE_ID=asset-tx-ts:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e
+cat << CONNECTIONJSON-EOF > connection.json
+{
+  "address":"host.docker.internal:9999",
+  "dial_timeout":"15s"
+}
+CONNECTIONJSON-EOF
+```
+
+We can now build the actual package.  Create a code.tar.gz archive containing the image.json file.
+
+```bash
+tar -czf code.tar.gz connection.json
+```
+
+Create the final chaincode package archive.
+
+```bash
+tar -czf go-contract.tgz metadata.json code.tar.gz
 ```
 
 We're going to use the peer CLI commands to install and deploy the chaincode. Chaincode is 'deployed' by indicating agreement to it and then committing it to a channel:
@@ -85,13 +165,16 @@ We're going to use the peer CLI commands to install and deploy the chaincode. Ch
 source _cfg/uf/org1admin.env
 
 peer lifecycle chaincode install asset-tx-ts.tgz
+```
+
+The ChaincodeID that is returned from this install command needs to be save, typically this is best as an environment variable
+```bash
+export CHAINCODE_ID=asset-tx-ts:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e
+
 peer lifecycle chaincode approveformyorg --channelID mychannel --name asset-tx -v 0 --package-id $CHAINCODE_ID --sequence 1 --connTimeout 15s
 peer lifecycle chaincode commit --channelID mychannel --name asset-tx -v 0 --sequence 1 --connTimeout 15s
 
 ```
-
-(best to keep this window open for later)
-
 
 ## Run the chaincode locally
 
@@ -127,7 +210,7 @@ Review the `metadata.json` and see the summary of the contract information, the 
 
 From your chaincode terminal window lets start the Smart Contract node module. Remember that the `CHAINCODE_ID` and the `CHAINCODE_SERVER_ADDRESS` are the only pieces of information needed.
 
-Note: Use your specific CHAINCODE_ID from earlier.
+Note: Use your specific CHAINCODE_ID from earlier; the `CHAINCODE_SERVER_ADDRESS` is different - this is because in this case it is telling the chaincode where to listen to for incoming connections from the Peer. Therefore is needs to find to `0.0.0.0`  
 
 ```
 export CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999

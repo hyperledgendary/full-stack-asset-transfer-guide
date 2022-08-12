@@ -49,6 +49,9 @@ microfab: microfab-bye
         "endorsing_organizations":[
             {
                 "name": "org1"
+            },
+            {
+                "name": "org2"
             }
         ],
         "channels":[
@@ -57,7 +60,14 @@ microfab: microfab-bye
                 "endorsing_organizations":[
                     "org1"
                 ]
+            },
+            {
+                "name": "appchannel",
+                "endorsing_organizations":[
+                    "org1","org2"
+                ]
             }
+
         ],
         "capability_level":"V2_0"
     }'
@@ -69,7 +79,7 @@ microfab: microfab-bye
     docker run --name microfab -p 8080:8080 --add-host host.docker.internal:host-gateway --rm -d -e MICROFAB_CONFIG="${MICROFAB_CONFIG}"  ibmcom/ibp-microfab
     sleep 5
 
-    curl -s http://console.127-0-0-1.nip.io:8080/ak/api/v1/components | weft microfab -w $CFG/_wallets -p $CFG/_gateways -m $CFG/_cfg/_msp -f
+    curl -s http://console.127-0-0-1.nip.io:8080/ak/api/v1/components | weft microfab -w $CFG/_wallets -p $CFG/_gateways -m $CFG/_msp -f
     cat << EOF > $CFG/org1admin.env
     export CORE_PEER_LOCALMSPID=org1MSP
     export CORE_PEER_MSPCONFIGPATH=$CFG/_cfg/_msp/org1/org1admin/msp
@@ -80,10 +90,20 @@ microfab: microfab-bye
     export PATH="${CWDIR}/bin:$PATH"
     EOF
 
+    cat << EOF > $CFG/org2admin.env
+    export CORE_PEER_LOCALMSPID=org2MSP
+    export CORE_PEER_MSPCONFIGPATH=$CFG/_cfg/_msp/org2/org2admin/msp
+    export CORE_PEER_ADDRESS=org2peer-api.127-0-0-1.nip.io:8080
+    export FABRIC_CFG_PATH=$CWDIR/config
+    export CORE_PEER_CLIENT_CONNTIMEOUT=15s
+    export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
+    export PATH="${CWDIR}/bin:$PATH"
+    EOF
+
     echo
     echo "To get an peer cli environment run:"
     echo
-    echo '   source $WORKSHOP/_cfg/uf/org1admin.env'
+    echo 'source $WORKSHOP/_cfg/uf/org1admin.env'
 
 debugcc:
     #!/bin/bash
