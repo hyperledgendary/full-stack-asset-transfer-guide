@@ -6,7 +6,7 @@
 
 import { Gateway } from '@hyperledger/fabric-gateway';
 import * as crypto from 'crypto';
-import { chaincodeName, channelName } from '../connect';
+import { chaincodeName, channelName } from '../config';
 import { AssetCreate, AssetTransfer } from '../contract';
 import { allFulfilled, differentElement, randomElement, randomInt } from '../utils';
 
@@ -64,5 +64,9 @@ class TransactApp {
             Size: randomInt(maxInitialSize) + 1,
             AppraisedValue: randomInt(maxInitialValue) + 1,
         };
+    }
+
+    setbatchSize(batchSize: number): void {
+        this.#batchSize = batchSize;
     }
 }
