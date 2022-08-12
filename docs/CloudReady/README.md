@@ -4,7 +4,7 @@
 - [Select a Kube](10-kube.md)
   - [KIND](11-kube-kind.md)
   - [Multipass VM](12-kube-multipass.md)
-  - [EC2 VM](13-kube-ec2.md)
+  - [EC2 VM](13-kube-ec2-vm.md)
   - [IBM Cloud VM](14-kube-ibmcloud.md)
   - [EKS](15-kube-eks.md)
   - [IKS](16-kube-iks.md)

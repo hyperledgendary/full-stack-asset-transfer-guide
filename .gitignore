@@ -12,3 +12,4 @@ bin
 config
 
 .DS_Store
+.idea/

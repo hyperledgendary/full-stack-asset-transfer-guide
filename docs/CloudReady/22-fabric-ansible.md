@@ -13,24 +13,9 @@
 # start kind + nginx + DNS localho.st + container registry   
 just -f cloud.justfile kind 
 
+# review the config.  Check _cfg/ for localho.st in console_domain -> should be $TEST_NETWORK_INGRESS_DOMAIN 
 just -f k8s.justfile review-config
 
-just -f k8s.justfile operator 
-==> error no ofs-ansible:latest image 
-```
-
-- OFF THE TRAIL: PINK  
-- ofs-ansible (trail from infrastructure/fabric-quickly.sh)
-- update fabric-operator to read from ghcr.io/hyperledger-labs/fabric-operator not ibm-blockchain 
-```shell
-git clone git@github.com:IBM-Blockchain/ansible-collection.git
-cd ansible-collection 
-
-docker build -t ofs-ansible . 
-```
-
-BLUE: 
-```shell
 # start the operator in fabricinfra namespace 
 just -f k8s.justfile operator 
 
@@ -38,29 +23,17 @@ just -f k8s.justfile operator
 just -f k8s.justfile console 
 ```
 
-+ cat /Users/jkneubuh/github.com/jkneubuh/full-stack-asset-transfer-guide/_cfg/auth-vars.yml
-  api_key: k88mTSErJ2iGWvwu
-  api_endpoint: http://fabricinfra-hlf-console-console.localho.st/
-  api_authtype: basic
-  api_secret: gxWjjWKugX3Q4nWBI9ENSu7vVQHtefK_
-
-
-BLUE: 
 ```shell
 # Create the sample network with ansible 
 just -f k8s.justfile sample-network 
+
 ```
 
-CONSOLE IS UPDATED ! 
+- NOTE!!!  CONSOLE IS UPDATED ! 
+```shell
+open https://${TEST_NETWORK_NS}-hlf-console-console.${TEST_NETWORK_INGRESS_DOMAIN}
 
-
-
-
-
-
-
-
-
+``` 
 
 
 

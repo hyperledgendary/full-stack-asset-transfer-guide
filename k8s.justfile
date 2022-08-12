@@ -38,7 +38,9 @@ bootstrap:
     #!/bin/bash
 
 
-cluster_name := "kind"
+cluster_name   := env_var_or_default("TEST_NETWORK_CLUSTER_NAME",   "kind")
+namespace      := env_var_or_default("TEST_NETWORK_NS",             "fabricinfra")
+ingress_domain := env_var_or_default("TEST_NETWORK_INGRESS_DOMAIN", "localho.st")
 
 
 doit: kind review-config operator console sample-network
@@ -214,5 +216,5 @@ deploy-chaincode:
 #         -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks \
 #         -v ${CWDIR}/_cfg:/_cfg \
 #         --network=host \
-#         ofs-ansible:latest \
+#         ${ANSIBLE_IMAGE}:latest \
 #             ansible-playbook /playbooks/22-register-application.yml           
