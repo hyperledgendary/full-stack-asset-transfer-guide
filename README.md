@@ -69,18 +69,16 @@ But there are limited number of different types of cards, and one card can't be 
 ## Smart Contract Developing
 
 - [Introduction to Smart Contract Developing](./docs/SmartContractDev/00-Introduction.md)
-- [Getting Started with a Smart Contract](./docs/SmartContractDev/01-Getting-Started.md)
-- [Creating a Blank Contract](./docs/SmartContractDev/02-Creating-Blank-Contract.md)
-  - Here you can fill in the functions based on the Trading Card Scenario
-- [Detailed Test and Debug](./docs/SmartContractDev/03-Test-And-Debug.md)
-- [Deploying to Production](./docs/SmartContractDev/04-Production-Pipelines.md)
+- Exercise: [Getting Started with a Smart Contract](./docs/SmartContractDev/01-Getting-Started.md)
+- Exercise: [Adding a new transaction function](./docs/SmartContractDev/02-Adding-tx-function.md)  COMING_SOON
+- Reference:
+  - [Detailed Test and Debug](./docs/SmartContractDev/03-Test-And-Debug.md)
+  - [Smart Contract Resourfces](./docs/SmartContractDev/04-Smart-Contract-Resources.md)
+  - [Contract Packaging in depth](./docs/SmartContractDev/05-Contract-packaging-Reference.md)
 
 ## Write Application Code
 
 - [Introuction to Application Developing](./docs/ApplicationDev/00-introduction.md)
-- client sdks for both parties working with assets
-- how these can be written and debugged
-
 
 ## Cloud Ready 
 
@@ -90,10 +88,5 @@ But there are limited number of different types of cards, and one card can't be 
 - [Install Chaincode](./docs/cloud-ready/30-chaincode.md)
 - [Go Bananas](./docs/cloud-ready/40-bananas.md)
 - [Teardown](./docs/cloud-ready/90-teardown.md)
-
-
-## Operate
-
-- Deploy Contracts
 
 
