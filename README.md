@@ -2,10 +2,10 @@
 
 **AIM:** To show a full end-to-end development of a solution on the Hyperledger Fabric Platform
 
-Fabric can be used to represent many types of assets from 'marbles/pineapples/classic cars/monetary products/fine art' and track their 
+Fabric can be used to represent many types of assets from 'marbles/pineapples/classic cars/monetary products/fine art' and track their
 exchange, provenance and lifecycle.
 
-**OBJECTIVES:** 
+**OBJECTIVES:**
 
 - Show how a Asset Transfer solution can be modelled and take advantage of a blockchains qualitites of service.
 - Show how a Hyperledger Fabric network can be created via automation in K8S
@@ -24,17 +24,17 @@ exchange, provenance and lifecycle.
 **Please ensure you've the [required tools](./SETUP.md) on your local machine  -- To check, run `./check.sh`**
 
 ---
-		
+
 ## Before you begin....
 
 Fabric is a multi-server node distributed system, so it can be quite complex to configure. Even the simplest smart contract needs a running Fabric Infrastructure and one size does not fit all.
 
-There are configurations that can run Fabric either as local binaries, in a single docker container, 
+There are configurations that can run Fabric either as local binaries, in a single docker container,
 in multiple containers, or in K8S.  This workshop will show some of the approaches that be used for developing applications and contracts, and how a production deployment can be achieved. There are other ways
 of deploying Fabric produced by the community - these are equally valid and useful. Feel free to try the others, once you got a graps of the basic concepts to find what works best for you.
 
 At a high-level remember that a solution using Fabric has (a) client application to send in transaction requrests (b) Fabric infrastructure to service those requests (c) Smart Contract to action the transactions.
-The nature of (b) the fabric infrastructure will change depending on your scenario; start simple and build up. The smart contracts and client application's code will remain the same no matter the way Fabric is provisioned.  
+The nature of (b) the fabric infrastructure will change depending on your scenario; start simple and build up. The smart contracts and client application's code will remain the same no matter the way Fabric is provisioned.
 There will be minor variations in deployment (eg local docker container vs remote K8S cluster) but fundamentally the process is the same.
 
 ## Running the workshop
@@ -49,22 +49,22 @@ There will be minor variations in deployment (eg local docker container vs remot
 - Work through the sections below in order, initially using the supplied scripts and resources
 - There are suggested changes highlighted in each section; this lets you expriment with different stages of development.
 
---- 
+---
 ## Scenario
 
 As a real-world example, lets assuming a 'game/trading card'. Each card represents a comic book character, with their attributes such as strength.
-These can be passed between people, with some cards having more 'value' due to rarity or having notable attibutes.  
+These can be passed between people, with some cards having more 'value' due to rarity or having notable attibutes.
 
 In token terms, these cards have aspects of Fungible tokens in that a card for say "Mr Blockchain" is equally exchangable for another "Mr Blockchain card"
 But there are limited number of different types of cards, and one card can't be subdivided. So have more in common with non-fungible tokens.
 
 - Asset transfer - move cards between people
-- Organizations: 
+- Organizations:
     - Escrow (as endorsing org) and the original holder of all the cards
     - Regulator (as ordering org) to ensure fair play
     - Owner Organizations
 		- 3 organizations that people can belong too
-		
+
 
 ## Smart Contract Developing
 
@@ -76,11 +76,16 @@ But there are limited number of different types of cards, and one card can't be 
   - [Smart Contract Resourfces](./docs/SmartContractDev/04-Smart-Contract-Resources.md)
   - [Contract Packaging in depth](./docs/SmartContractDev/05-Contract-packaging-Reference.md)
 
-## Write Application Code
+## Client Application Development
 
-- [Introuction to Application Developing](./docs/ApplicationDev/00-introduction.md)
+- [Fabric Gateway](docs/ApplicationDev/01-FabricGateway.md)
+- **Exercise:** [Run the client application](docs/ApplicationDev/02-Exercise-RunApplication.md)
+- [Application overview](docs/ApplicationDev/03-ApplicationOverview.md)
+- **Exercise:** [Implement asset transfer](docs/ApplicationDev/04-Exercise-AssetTransfer.md)
+- [Chaincode events](docs/ApplicationDev/05-ChaincodeEvents.md)
+- **Exercise:** [Use chaincode events](docs/ApplicationDev/06-Exercise-ChaincodeEvents.md)
 
-## Cloud Ready 
+## Cloud Ready
 
 - [Setup](docs/CloudReady/00-setup.md)
 - [Select a Kube](docs/CloudReady/10-kube.md)

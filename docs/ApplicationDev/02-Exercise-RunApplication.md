@@ -12,14 +12,12 @@ In a terminal window, nagivate to the [applications/trader-typescript](../../app
     ```
 
 1. Set environment variables to point to resources required by the application.
-    > TODO: Populate with suitable values resulting from the smart contract part of the workshop.
     ```bash
-    export MSP_ID=Org1MSP
-    export CERTIFICATE=
-    export PRIVATE_KEY=
-    export ENDPOINT=
-    export TLS_CERT=
-    export HOST_ALIAS=
+    export MSP_ID=org1MSP
+    export CERTIFICATE=../../_cfg/uf/_msp/org1/org1admin/msp/admincerts/org1admin.pem
+    export PRIVATE_KEY=../../_cfg/uf/_msp/org1/org1admin/msp/keystore/cert_sk
+    export ENDPOINT=org1peer-api.127-0-0-1.nip.io:8080
+    export TLS_CERT=../../_cfg/uf/_msp/org1/org1caadmin/msp/cacerts/ca.pem
     ```
 
 1. Run the **getAllAssets** command to check the assets that currently exist on the ledger (if any).

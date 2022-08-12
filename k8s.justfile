@@ -63,7 +63,7 @@ review-config:
     #!/bin/bash
     mkdir -p _cfg
     rm -rf _cfg/*  || true
-    
+
     cp ${CWDIR}/infrastructure/configuration/*.yml ${CWDIR}/_cfg
 
     echo ">> Fabric Operations Console Configuration"
@@ -113,7 +113,7 @@ operator:
 
 
 # Install the operations console and fabric-operator
-console: 
+console:
     #!/bin/bash
     set -ex -o pipefail
 
@@ -141,7 +141,7 @@ console:
     cat ${CWDIR}/_cfg/auth-vars.yml
 
 # Installs and configures a sample Fabric Network
-sample-network: 
+sample-network:
     #!/bin/bash
     set -ex -o pipefail
 
@@ -158,7 +158,7 @@ sample-network:
 build-chaincode:
     #!/bin/bash
     set -ex -o pipefail
-    pushd ${CWDIR}/contracts/asset-tx-typescript
+    pushd ${CWDIR}/contracts/asset-transfer-typescript
 
     export IMG_NAME=localhost:5000/asset_tx
     DOCKER_BUILDKIT=1 docker build -t ${IMAGE_NAME} . --target k8s
@@ -170,11 +170,11 @@ build-chaincode:
 
     popd
 
-deploy-chaincode: 
+deploy-chaincode:
     #!/bin/bash
     set -ex -o pipefail
 
-    cp ${CWDIR}/contracts/asset-tx-typescript/asset-tx-chaincode-vars.yml ${CWDIR}/_cfg
+    cp ${CWDIR}/contracts/asset-transfer-typescript/asset-transfer-chaincode-vars.yml ${CWDIR}/_cfg
     docker run \
         --rm \
         -u $(id -u) \
@@ -183,7 +183,7 @@ deploy-chaincode:
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         ${ANSIBLE_IMAGE} \
-            ansible-playbook /playbooks/19-install-and-approve-chaincode.yml 
+            ansible-playbook /playbooks/19-install-and-approve-chaincode.yml
 
     docker run \
         --rm \
@@ -193,7 +193,7 @@ deploy-chaincode:
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         ${ANSIBLE_IMAGE} \
-            ansible-playbook /playbooks/20-install-and-approve-chaincode.yml 
+            ansible-playbook /playbooks/20-install-and-approve-chaincode.yml
 
     docker run \
         --rm \
@@ -203,9 +203,9 @@ deploy-chaincode:
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         ${ANSIBLE_IMAGE} \
-            ansible-playbook /playbooks/21-commit-chaincode.yml 
+            ansible-playbook /playbooks/21-commit-chaincode.yml
 
-# register-application: 
+# register-application:
 #     #!/bin/bash
 #     set -ex -o pipefail
 
@@ -217,4 +217,4 @@ deploy-chaincode:
 #         -v ${CWDIR}/_cfg:/_cfg \
 #         --network=host \
 #         ${ANSIBLE_IMAGE}:latest \
-#             ansible-playbook /playbooks/22-register-application.yml           
+#             ansible-playbook /playbooks/22-register-application.yml

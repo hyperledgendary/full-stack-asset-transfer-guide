@@ -3,7 +3,7 @@
 This scenario sets up a KIND Kubenetes cluster on a multipass VM, using [fabric-operator](https://github.com/hyperledger-labs/fabric-operator)
 to create a Fabric network by applying a series of peer, orderer, and CA CRDs to the k8s API controller.
 
-Chaincode may be run on the host OS "as a service", or the image can be uploaded to a container registry and launched 
+Chaincode may be run on the host OS "as a service", or the image can be uploaded to a container registry and launched
 in the cluster using the [k8s chaincode builder](https://github.com/hyperledger-labs/fabric-builder-k8s).
 
 Gateway applications run locally on the HOST OS, connecting to the Fabric network endpoints via Nginx ingress.
@@ -42,7 +42,7 @@ multipass mount $PWD/config fabric-dev:/mnt/config
 
 ```
 
-## Operator Sample Network 
+## Operator Sample Network
 
 - open MP shell:
 ```shell
@@ -55,23 +55,23 @@ sudo su - dev
 git clone https://github.com/hyperledger-labs/fabric-operator.git
 ```
 
-- Apply CRDs to the K8s API controller: 
+- Apply CRDs to the K8s API controller:
 ```shell
-cd ~/fabric-operator/sample-network 
+cd ~/fabric-operator/sample-network
 
-export TEST_NETWORK_DOMAIN=$(hostname -I  | cut -d ' ' -f 1 | tr -s '.' '-').nip.io 
+export TEST_NETWORK_DOMAIN=$(hostname -I  | cut -d ' ' -f 1 | tr -s '.' '-').nip.io
 export TEST_NETWORK_INGRESS_DOMAIN=${TEST_NETWORK_DOMAIN}
 export TEST_NETWORK_STAGE_DOCKER_IMAGES=true
 export TEST_NETWORK_LOCAL_REGISTRY_INTERFACE=0.0.0.0
 export TEST_NETWORK_PEER_IMAGE=ghcr.io/hyperledger-labs/k8s-fabric-peer
 export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
 
-time ./network kind 
+time ./network kind
 time ./network cluster init
 time ./network up
-time ./network channel create 
- 
-# Copy the crypto material to the host OS via the multipass volume mount 
+time ./network channel create
+
+# Copy the crypto material to the host OS via the multipass volume mount
 mkdir -p /mnt/config/build && cp -r temp/* /mnt/config/build
 
 ```
@@ -94,7 +94,7 @@ the insecure registry URL and restarted.
 E.g. on OSX / Docker Desktop, add the following stanza to the Docker -> Preferences -> Docker Engine config, using
 the `$TEST_NETWORK_DOMAIN` as allocated to the multipass VM:
 ```json
-{  
+{
   "insecure-registries": [
     "192-168-205-6.nip.io:5000"
   ]
@@ -130,7 +130,7 @@ export CHANNEL_NAME=mychannel
 
 - Build a docker image, upload to the docker registry, and prepare a k8s chaincode package:
 ```shell
-export CHAINCODE_NAME=asset-tx-typescript
+export CHAINCODE_NAME=asset-transfer-typescript
 export CONTAINER_REGISTRY=$TEST_NETWORK_DOMAIN:5000
 export CHAINCODE_IMAGE=$CONTAINER_REGISTRY/$CHAINCODE_NAME
 
@@ -140,7 +140,7 @@ docker push $CHAINCODE_IMAGE
 IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $CHAINCODE_IMAGE | cut -d'@' -f2)
 
 infrastructure/pkgcc.sh -l $CHAINCODE_NAME -n localhost:5000/$CHAINCODE_NAME -d $IMAGE_DIGEST
- 
+
 ```
 
 - Install the contract to org1-peer1:
@@ -151,7 +151,7 @@ export SEQUENCE=1
 ```
 
 ```shell
-peer lifecycle chaincode install ${CHAINCODE_NAME}.tgz 
+peer lifecycle chaincode install ${CHAINCODE_NAME}.tgz
 
 export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid ${CHAINCODE_NAME}.tgz) && echo $PACKAGE_ID
 
@@ -188,7 +188,7 @@ peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledg
 ### Register and enroll a new user at the org1 CA
 
 ```shell
-USERNAME=org1user 
+USERNAME=org1user
 PASSWORD=org1userpw
 
 fabric-ca-client  register \
@@ -203,8 +203,8 @@ fabric-ca-client enroll \
   --url           https://${USERNAME}:${PASSWORD}@${TEST_NETWORK_NS}-org1-ca-ca.${TEST_NETWORK_DOMAIN} \
   --tls.certfiles $PWD/config/build/cas/org1-ca/tls-cert.pem \
   --mspdir        $PWD/config/build/enrollments/org1/users/${USERNAME}/msp
-  
-export PEER_HOST_ALIAS=${TEST_NETWORK_NS}-org1-peer1-peer.${TEST_NETWORK_DOMAIN} 
+
+export PEER_HOST_ALIAS=${TEST_NETWORK_NS}-org1-peer1-peer.${TEST_NETWORK_DOMAIN}
 export PEER_ENDPOINT=${TEST_NETWORK_NS}-org1-peer1-peer.${TEST_NETWORK_DOMAIN}:443
 
 export KEY_DIRECTORY_PATH=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/keystore/
@@ -216,33 +216,33 @@ export TLS_CERT_PATH=$PWD/config/build/channel-msp/peerOrganizations/org1/msp/tl
 ### Go Bananas
 
 ```shell
-pushd applications/trader-typescript 
+pushd applications/trader-typescript
 npm install
 ```
 
 ```shell
-npm start create banana bananaman yellow 
+npm start create banana bananaman yellow
 
 npm start getAllAssets
 
-npm start transfer banana appleman Org1MSP 
+npm start transfer banana appleman Org1MSP
 
-npm start getAllAssets 
+npm start getAllAssets
 
-npm start transfer banana bananaman Org2MSP 
+npm start transfer banana bananaman Org2MSP
 
-npm start transfer banana bananaman Org1MSP 
+npm start transfer banana bananaman Org1MSP
 
 ```
 
 ## Teardown
 
 ```shell
-popd 
-rm -rf config/build 
+popd
+rm -rf config/build
 
-multipass delete fabric-dev 
-multipass purge 
+multipass delete fabric-dev
+multipass purge
 
 
 ```

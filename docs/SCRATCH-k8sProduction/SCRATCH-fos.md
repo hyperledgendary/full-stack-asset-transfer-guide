@@ -6,18 +6,18 @@
 - setup sample network asset-transfer-basic ccaas
 - todo: trader / basic with k8s builder package
 
-General env: 
+General env:
 ```shell
 export SAMPLE_NETWORK_DIR=/Users/jkneubuh/github.com/jkneubuh/fabric-operator/sample-network
-export CHAINCODE_NAME=asset-tx-typescript
+export CHAINCODE_NAME=asset-transfer-typescript
 export NS=test-network
 export TEST_NETWORK_INGRESS_DOMAIN=localho.st
 ```
 
 
-### Contract Installation 
+### Contract Installation
 
-Env setup for the peer binary commands 
+Env setup for the peer binary commands
 ```shell
 export FABRIC_CFG_PATH=${SAMPLE_NETWORK_DIR}/temp/config
 export CORE_PEER_LOCALMSPID=Org1MSP
@@ -36,11 +36,11 @@ curl -fsSL https://raw.githubusercontent.com/hyperledgendary/package-k8s-chainco
 Build a docker image, upload to a repo, and construct a cc package
 ```shell
 docker build -t localhost:5000/${CHAINCODE_NAME} .
-docker push localhost:5000/${CHAINCODE_NAME} 
+docker push localhost:5000/${CHAINCODE_NAME}
 
 IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' localhost:5000/${CHAINCODE_NAME} | cut -d'@' -f2)
 
-./pkgk8scc.sh -l ${CHAINCODE_NAME} -n localhost:5000/${CHAINCODE_NAME} -d ${IMAGE_DIGEST} 
+./pkgk8scc.sh -l ${CHAINCODE_NAME} -n localhost:5000/${CHAINCODE_NAME} -d ${IMAGE_DIGEST}
 
 ```
 
@@ -53,7 +53,7 @@ export SEQUENCE=1
 ```
 
 ```shell
-peer lifecycle chaincode install ${CHAINCODE_NAME}.tgz 
+peer lifecycle chaincode install ${CHAINCODE_NAME}.tgz
 
 export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid ${CHAINCODE_NAME}.tgz) && echo $PACKAGE_ID
 
@@ -92,14 +92,14 @@ peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledg
 ### Gateway Application Sample
 
 ```shell
-cd applications/trader-typescript 
-npm install 
+cd applications/trader-typescript
+npm install
 ```
 
 #### Register / enroll a new user with the org1 CA
 
 ```shell
-USERNAME=org1admin 
+USERNAME=org1admin
 PASSWORD=org1adminpw
 
 
@@ -108,20 +108,20 @@ PASSWORD=org1adminpw
   ENROLLMENTS_DIR=${TEMP_DIR}/enrollments
   CA_DIR=$TEMP_DIR/cas/org1-ca
   CA_HOST=test-network-org1-ca-ca.localho.st:443
-  
-  
-  
+
+
+
   FABRIC_CA_CLIENT_HOME=$ENROLLMENTS_DIR/org1/users/testuser \
     fabric-ca-client enroll \
       --url https://$USERNAME:$PASSWORD@$CA_HOST \
       --tls.certfiles $CA_DIR/tls-cert.pem
-  
-  
-  
+
+
+
 ```
 
 
-#### Transact as the user 
+#### Transact as the user
 
 
 

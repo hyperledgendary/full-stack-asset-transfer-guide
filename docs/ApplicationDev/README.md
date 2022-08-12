@@ -1,4 +1,4 @@
-# Application Development
+# Client Application Development
 
 This session consistes of the following topics to be covered in order:
 
