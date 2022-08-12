@@ -1,6 +1,6 @@
 # Exercise: Use chaincode events
 
-First, let's try listening for chaincode events to see what information is provided by the events emitted by the smart contract transaction functions.
+First, let's try listening for chaincode events to see what information is included in events emitted by the smart contract transaction functions.
 
 1. Run the **listen** command to listen for chaincode events. Once you have received the available events, interrupt the application using `Control-C`.
 1. Run the **listen** command again. What do we see this time?
@@ -17,6 +17,8 @@ Let's implement checkpointing to ensure there are no duplicate or missed events.
 1. Run the **listen** command again. You should see event listening resume from the same chaincode event that the application failed to process on the previous run.
 
 > **Note:** The checkpointer persists its current listening position in a `checkpoint.json` file. If you want to remove the checkpointer's stored state and start listening from the `startBlock` again, remove the `checkpoint.json` file while the checkpointer is not in use.
+
+## Optional steps
 
 So far we have been replaying previously emitted chaincode events. Let's use the **listen** command to notify us in realtime when we take ownership of assets.
 

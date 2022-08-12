@@ -10,3 +10,5 @@ _*
 
 bin
 config
+
+.DS_Store

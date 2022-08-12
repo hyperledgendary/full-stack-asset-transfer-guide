@@ -77,6 +77,7 @@ export class AssetTransfer {
 
     async transferAsset(id: string, newOwner: string, newOwnerOrg: string): Promise<void> {
         // TODO: Implement me!
+        // Submit a 'TransferAsset' transaction, which requires [id, newOwner, newOwnerOrg] arguments.
     }
 }
 
