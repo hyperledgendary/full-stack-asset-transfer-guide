@@ -208,3 +208,21 @@ And run the same query, and see the updated error message:
 ```
 peer chaincode query -C mychannel -n asset-tx -c '{"Args":["ReadAsset","002"]}'
 ```
+
+## Debugging
+
+As the chaincode was started with the Node.js debug setting, you can connect a node.js debugger. For example VSCode has a good
+typescript/node.js debugging in built. 
+
+If you select the debug tab, and open the debug configurations, add a "Attach to a node.js process" configuration. VSCode will prompt you 
+with the template. The default port should be sufficient here.  You can then start the 'attached to process' debug, and pick the process to debug into.
+
+Remember to set a breakpoint at the start of the transaction function you want to debug.
+
+Watch out for:
+    - vscode uses node, so take care in selecting the right process
+    - remember the client/fabric transaction timeout, whilst you've the chaicode stopped in the debugger, the timeout is still 'ticking'
+
+
+Next look at the [Test and Debuging Contracts] for more details and information on other langauges
+
