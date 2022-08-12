@@ -109,12 +109,3 @@ peer lifecycle \
 peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}' | jq
 
 ```
-
-
-# Take it Further 
-
-## Deploy a Chaincode Package prepared by a GitHub Action 
-
-## Deploy a Chaincode Package with Ansible 
-
-## Debug with Chaincode as a Service 
