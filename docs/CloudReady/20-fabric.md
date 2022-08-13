@@ -70,9 +70,9 @@ cp -r temp/* ~/full-stack-asset-transfer-guide/config/build/
 ## Configure the Fabric Ingress Domain
 
 ```shell
-export WORKSHOP_NAMESPACE=test-network
-export WORKSHOP_CRYPTO=$WORKSHOP_PATH/config/build 
-export WORKSHOP_DOMAIN=$(echo $WORKSHOP_IP | tr -s '.' '-').nip.io && echo $WORKSHOP_DOMAIN
+WORKSHOP_NAMESPACE=test-network
+WORKSHOP_CRYPTO=$WORKSHOP_PATH/config/build 
+WORKSHOP_DOMAIN=$(echo $WORKSHOP_IP | tr -s '.' '-').nip.io && echo $WORKSHOP_DOMAIN
 
 ```
 
