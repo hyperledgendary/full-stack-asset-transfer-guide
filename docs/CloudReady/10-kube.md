@@ -52,7 +52,8 @@ k9s -n test-network
 
 - look on the back of your conga card.
 - ssh to the WORKSHOP_IP on the back of the conga card.
-- Set up an SSH-key for access to the remote system. 
+- Set up password-less ssh access to the EC2 instance 
+- Use the [ec2 vm instance](11-kube-ec2-vm.md) to provision your KIND cluster
 
 
 # Take it Further:
