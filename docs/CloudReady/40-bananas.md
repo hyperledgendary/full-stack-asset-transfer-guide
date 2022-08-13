@@ -4,6 +4,20 @@
 
 ---
 
+## Checks 
+
+- todo: write a check for each exercise 
+```shell
+   [[ -d ${FABRIC_CFG_PATH} ]] || echo stop1 \
+&& [[ -d ${WORKSHOP_PATH}   ]] || echo stop2 \
+&& [[ -d ${WORKSHOP_CRYPTO} ]] || echo stop3 \
+&& [[ -v WORKSHOP_IP        ]] || echo stop4 \
+&& [[ -v WORKSHOP_DOMAIN    ]] || echo stop5 \
+&& [[ -v WORKSHOP_NAMESPACE ]] || echo stop6 \
+
+```
+
+
 ## Register and enroll a new user at the org CA
 
 ```shell
@@ -16,27 +30,22 @@ PASSWORD=org1userpw
 ```
 
 ```shell
-WORKSHOP=$PWD # todo: do 
-
-NAMESPACE=test-network
-NETWORK_CONFIG=$WORKSHOP/config/build   # -> _cfg  
-
-ADMIN_MSP_DIR=$NETWORK_CONFIG/enrollments/${ORG}/users/rcaadmin/msp
-USER_MSP_DIR=$NETWORK_CONFIG/enrollments/${ORG}/users/${USERNAME}/msp
-PEER_MSP_DIR=$NETWORK_CONFIG/channel-msp/peerOrganizations/${ORG}/msp
+ADMIN_MSP_DIR=$WORKSHOP_CRYPTO/enrollments/${ORG}/users/rcaadmin/msp
+USER_MSP_DIR=$WORKSHOP_CRYPTO/enrollments/${ORG}/users/${USERNAME}/msp
+PEER_MSP_DIR=$WORKSHOP_CRYPTO/channel-msp/peerOrganizations/${ORG}/msp
 
 fabric-ca-client  register \
   --id.name       ${USERNAME} \
   --id.secret     ${PASSWORD} \
   --id.type       client \
-  --url           https://${NAMESPACE}-${ORG}-ca-ca.${TEST_NETWORK_INGRESS_DOMAIN} \
-  --tls.certfiles $NETWORK_CONFIG/cas/${ORG}-ca/tls-cert.pem \
-  --mspdir        $NETWORK_CONFIG/enrollments/${ORG}/users/rcaadmin/msp
+  --url           https://${NAMESPACE}-${ORG}-ca-ca.${WORKSHOP_DOMAIN} \
+  --tls.certfiles $WORKSHOP_CRYPTO/cas/${ORG}-ca/tls-cert.pem \
+  --mspdir        $WORKSHOP_CRYPTO/enrollments/${ORG}/users/rcaadmin/msp
 
 fabric-ca-client enroll \
-  --url           https://${USERNAME}:${PASSWORD}@${NAMESPACE}-${ORG}-ca-ca.${TEST_NETWORK_INGRESS_DOMAIN} \
-  --tls.certfiles ${NETWORK_CONFIG}/cas/${ORG}-ca/tls-cert.pem \
-  --mspdir        ${NETWORK_CONFIG}/enrollments/${ORG}/users/${USERNAME}/msp
+  --url           https://${USERNAME}:${PASSWORD}@${NAMESPACE}-${ORG}-ca-ca.${WORKSHOP_DOMAIN} \
+  --tls.certfiles ${WORKSHOP_CRYPTO}/cas/${ORG}-ca/tls-cert.pem \
+  --mspdir        ${WORKSHOP_CRYPTO}/enrollments/${ORG}/users/${USERNAME}/msp
 
 mv $USER_MSP_DIR/keystore/*_sk $USER_MSP_DIR/keystore/key.pem
 ```
@@ -49,7 +58,7 @@ mv $USER_MSP_DIR/keystore/*_sk $USER_MSP_DIR/keystore/key.pem
 export KEY_DIRECTORY_PATH=$USER_MSP_DIR/keystore/
 export CERT_PATH=$USER_MSP_DIR/signcerts/cert.pem
 export TLS_CERT_PATH=$PEER_MSP_DIR/tlscacerts/tlsca-signcert.pem
-export PEER_HOST_ALIAS=$NAMESPACE-$ORG-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN} 
+export PEER_HOST_ALIAS=$WORKSHOP_NAMESPACE-$ORG-peer1-peer.${WORKSHOP_DOMAIN} 
 export PEER_ENDPOINT=$PEER_HOST_ALIAS:443
 
 # Path to private key file 
@@ -59,7 +68,7 @@ export PEER_ENDPOINT=$PEER_HOST_ALIAS:443
 # Path to CA certificate 
 #export TLS_CERT=${PEER_MSP_DIR}/tlscacerts/tlsca-signcert.pem
 # Gateway peer SSL host name override 
-#export HOST_ALIAS=${NAMESPACE}-${ORG}-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN}
+#export HOST_ALIAS=${NAMESPACE}-${ORG}-peer1-peer.${WORKSHOP_DOMAIN}
 # Gateway endpoint
 #export ENDPOINT=$HOST_ALIAS:443
 
