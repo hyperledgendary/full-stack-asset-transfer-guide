@@ -144,7 +144,7 @@ CHAINCODE_PACKAGE=asset-transfer-typescript-${VERSION}.tgz
 
 - Download a chaincode release artifact from GitHub:
 ```shell
-curl -O https://github.com/hyperledgendary/full-stack-asset-transfer-guide/releases/download/${VERSION}/${CHAINCODE_PACKAGE}
+curl -LO https://github.com/hyperledgendary/full-stack-asset-transfer-guide/releases/download/${VERSION}/${CHAINCODE_PACKAGE}
 
 ```
 
