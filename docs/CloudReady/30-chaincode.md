@@ -30,14 +30,13 @@ Configure the docker engine with the insecure container registry:
 ## Prepare the Chaincode Image
 
 ```shell
-export CHAINCODE_NAME=asset-transfer-typescript
+export CHAINCODE_NAME=asset-transfer
 export CHAINCODE_PACKAGE=${CHAINCODE_NAME}.tgz
-export CHANNEL_NAME=mychannel
 export CONTAINER_REGISTRY=$TEST_NETWORK_INGRESS_DOMAIN:5000
 export CHAINCODE_IMAGE=$CONTAINER_REGISTRY/$CHAINCODE_NAME
 
 # Build the chaincode image
-docker build -t $CHAINCODE_IMAGE contracts/$CHAINCODE_NAME
+docker build -t $CHAINCODE_IMAGE contracts/$CHAINCODE_NAME-typescript
 
 # Push the image to the insecure container registry
 docker push $CHAINCODE_IMAGE
@@ -69,9 +68,7 @@ export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=10s
 export ORDERER_ENDPOINT=test-network-org0-orderersnode1-orderer.${TEST_NETWORK_INGRESS_DOMAIN}:443
 export ORDERER_TLS_CERT=${PWD}/config/build/channel-msp/ordererOrganizations/org0/orderers/org0-orderersnode1/tls/signcerts/tls-cert.pem
 
-```
-
-```shell
+export CHANNEL_NAME=mychannel
 export VERSION=1
 export SEQUENCE=1
 
