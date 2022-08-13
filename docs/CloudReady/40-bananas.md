@@ -4,57 +4,72 @@
 
 ---
 
-## Prerequisites 
-
-- node 
-
-## Register and enroll a new user at the org1 CA
+## Register and enroll a new user at the org CA
 
 ```shell
-USERNAME=org1user 
+# User organization MSP ID 
+MSP_ID=Org1MSP        
+ORG=org1
+USERNAME=org1user
 PASSWORD=org1userpw
+
+```
+
+```shell
+WORKSHOP=$PWD # todo: do 
+
+NAMESPACE=test-network
+NETWORK_CONFIG=$WORKSHOP/config/build   # -> _cfg  
+
+ADMIN_MSP_DIR=$NETWORK_CONFIG/enrollments/${ORG}/users/rcaadmin/msp
+USER_MSP_DIR=$NETWORK_CONFIG/enrollments/${ORG}/users/${USERNAME}/msp
+PEER_MSP_DIR=$NETWORK_CONFIG/channel-msp/peerOrganizations/${ORG}/msp
 
 fabric-ca-client  register \
   --id.name       ${USERNAME} \
   --id.secret     ${PASSWORD} \
   --id.type       client \
-  --url           https://test-network-org1-ca-ca.${TEST_NETWORK_INGRESS_DOMAIN} \
-  --tls.certfiles $PWD/config/build/cas/org1-ca/tls-cert.pem \
-  --mspdir        $PWD/config/build/enrollments/org1/users/rcaadmin/msp
+  --url           https://${NAMESPACE}-${ORG}-ca-ca.${TEST_NETWORK_INGRESS_DOMAIN} \
+  --tls.certfiles $NETWORK_CONFIG/cas/${ORG}-ca/tls-cert.pem \
+  --mspdir        $NETWORK_CONFIG/enrollments/${ORG}/users/rcaadmin/msp
 
 fabric-ca-client enroll \
-  --url           https://${USERNAME}:${PASSWORD}@test-network-org1-ca-ca.${TEST_NETWORK_INGRESS_DOMAIN} \
-  --tls.certfiles $PWD/config/build/cas/org1-ca/tls-cert.pem \
-  --mspdir        $PWD/config/build/enrollments/org1/users/${USERNAME}/msp
+  --url           https://${USERNAME}:${PASSWORD}@${NAMESPACE}-${ORG}-ca-ca.${TEST_NETWORK_INGRESS_DOMAIN} \
+  --tls.certfiles ${NETWORK_CONFIG}/cas/${ORG}-ca/tls-cert.pem \
+  --mspdir        ${NETWORK_CONFIG}/enrollments/${ORG}/users/${USERNAME}/msp
 
+mv $USER_MSP_DIR/keystore/*_sk $USER_MSP_DIR/keystore/key.pem
 ```
 
 ## Go Bananas 
 
+- todo: the new cert paths / npm client app are throwing an error.  There may still be another ENV var necessary from the old launch 
+- workaround:  git checkout feature/creaky from jkneubuh branch and npm install.  Use the older launch vars: 
 ```shell
-# User organization MSP ID 
-export MSP_ID=Org1MSP   
+export KEY_DIRECTORY_PATH=$USER_MSP_DIR/keystore/
+export CERT_PATH=$USER_MSP_DIR/signcerts/cert.pem
+export TLS_CERT_PATH=$PEER_MSP_DIR/tlscacerts/tlsca-signcert.pem
+export PEER_HOST_ALIAS=$NAMESPACE-$ORG-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN} 
+export PEER_ENDPOINT=$PEER_HOST_ALIAS:443
 
 # Path to private key file 
-export PRIVATE_KEY=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/keystore/3d0c2aa7de3a9a0e5a437c935f3679aeffb3e514f9398419e8aecb0e8b997808_sk
-
+#export PRIVATE_KEY=${USER_MSP_DIR}/keystore/key.pem
 # Path to user certificate file 
-export CERTIFICATE=$PWD/config/build/enrollments/org1/users/${USERNAME}/msp/signcerts/cert.pem
-
+#export CERTIFICATE=${USER_MSP_DIR}/signcerts/cert.pem
 # Path to CA certificate 
-export TLS_CERT=$PWD/config/build/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
-
+#export TLS_CERT=${PEER_MSP_DIR}/tlscacerts/tlsca-signcert.pem
 # Gateway peer SSL host name override 
-export HOST_ALIAS=test-network-org1-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN}
-
+#export HOST_ALIAS=${NAMESPACE}-${ORG}-peer1-peer.${TEST_NETWORK_INGRESS_DOMAIN}
 # Gateway endpoint
-export ENDPOINT=$HOST_ALIAS:443
+#export ENDPOINT=$HOST_ALIAS:443
 
 ```
 
 ```shell
 pushd applications/trader-typescript 
-npm install
+
+# todo: fix the launch env.  This works with the npm app < 8/12 
+#npm install
 
 ```
 
@@ -63,12 +78,18 @@ npm start create banana bananaman yellow
 
 npm start getAllAssets
 
-npm start transfer banana appleman Org1MSP 
+npm start transfer banana appleman ${ORG}MSP 
 
 npm start getAllAssets 
 
 npm start transfer banana bananaman Org2MSP 
 
-npm start transfer banana bananaman Org1MSP 
+npm start transfer banana bananaman ${ORG}MSP 
 
 ```
+
+## Gateway Load Balancing 
+
+- todo: set up a gateway Service alias in Kubernetes. 
+- todo: the peer CA cert needs a new SAN in the enrollment to accept the host name of the gateway service.   This works well with the Kube test network, but needs some work with the operator, which bootstraps the node TLS certs behind the scenes.
+- todo: if we can't issue a new TLS cert for the peer with the gateway host SAN, try using the HOST_ALIAS as set above, connecting via the Gateway Service endpoint.  This may not work with the ingress routing.   
