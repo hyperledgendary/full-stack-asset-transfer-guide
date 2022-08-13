@@ -1,6 +1,6 @@
 # Deploy a Fabric Network 
 
-[PREV: Select a Kube](10-kube.md) <==> [NEXT: Install Chaincode](30-chaincode.md)
+[PREV: Deploy a Kube](10-kube.md) <==> [NEXT: Install Chaincode](30-chaincode.md)
 
 ---
 
@@ -104,6 +104,6 @@ curl --cacert $WORKSHOP_CRYPTO/cas/org1-ca/tls-cert.pem https://${WORKSHOP_NAMES
 
 ---
 
-[PREV: Select a Kube](10-kube.md) <==> [NEXT: Install Chaincode](30-chaincode.md)
+[PREV: Deploy a Kube](10-kube.md) <==> [NEXT: Install Chaincode](30-chaincode.md)
 
 
