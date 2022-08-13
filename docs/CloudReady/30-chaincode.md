@@ -38,7 +38,7 @@ export ORDERER_TLS_CERT=${WORKSHOP_CRYPTO}/channel-msp/ordererOrganizations/org0
 
 Configure the docker engine with the insecure container registry `${WORKSHOP_DOMAIN}:5000`
 
-For example: 
+For example:  (Docker -> Preferences -> Docker Engine) 
 ```json
 {
   "insecure-registries": [
@@ -46,6 +46,8 @@ For example:
   ]
 }
 ```
+
+- apply and restart
 
 
 ## Build the Chaincode Docker Image

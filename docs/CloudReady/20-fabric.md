@@ -23,6 +23,12 @@ multipass shell fabric-dev
 
 ```
 
+- Install the fabric-operator [Kubernetes Custom Resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
+```shell
+kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
+
+```
+
 ```shell
 git clone https://github.com/hyperledger-labs/fabric-operator.git
 cd ~/fabric-operator/sample-network
@@ -30,12 +36,6 @@ cd ~/fabric-operator/sample-network
 export TEST_NETWORK_INGRESS_DOMAIN=$(hostname -I | cut -d ' ' -f 1 | tr -s '.' '-').nip.io
 export TEST_NETWORK_PEER_IMAGE=ghcr.io/hyperledger-labs/k8s-fabric-peer
 export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
-
-```
-
-- Install the fabric-operator [Kubernetes Custom Resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
-```shell
-kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
 
 ```
 
