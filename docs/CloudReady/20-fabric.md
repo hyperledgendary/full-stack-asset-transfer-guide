@@ -84,10 +84,6 @@ curl --cacert $WORKSHOP_CRYPTO/cas/org1-ca/tls-cert.pem https://${WORKSHOP_NAMES
 
 ```
 
-## Troubleshooting 
-
-- todo
-
 
 # Take it Further:  
 
