@@ -51,10 +51,10 @@ For example:
 ## Build the Chaincode Docker Image
 
 ```shell
-export CHAINCODE_NAME=asset-transfer
-export CHAINCODE_PACKAGE=${CHAINCODE_NAME}.tgz
-export CONTAINER_REGISTRY=$WORKSHOP_DOMAIN:5000
-export CHAINCODE_IMAGE=$CONTAINER_REGISTRY/$CHAINCODE_NAME
+CHAINCODE_NAME=asset-transfer
+CHAINCODE_PACKAGE=${CHAINCODE_NAME}.tgz
+CONTAINER_REGISTRY=$WORKSHOP_DOMAIN:5000
+CHAINCODE_IMAGE=$CONTAINER_REGISTRY/$CHAINCODE_NAME
 
 # Build the chaincode image
 docker build -t $CHAINCODE_IMAGE contracts/$CHAINCODE_NAME-typescript
@@ -77,9 +77,9 @@ infrastructure/pkgcc.sh -l $CHAINCODE_NAME -n localhost:5000/$CHAINCODE_NAME -d 
 ## Install the Chaincode
 
 ```shell
-export CHANNEL_NAME=mychannel
-export VERSION=v0.0.1
-export SEQUENCE=1
+CHANNEL_NAME=mychannel
+VERSION=v0.0.1
+SEQUENCE=1
 
 ```
 
@@ -122,8 +122,8 @@ peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledg
 ## Edit, compile, upload, and re-install your chaincode: 
 
 ```shell
-export SEQUENCE=$((SEQUENCE + 1))
-export VERSION=v0.0.$SEQUENCE
+SEQUENCE=$((SEQUENCE + 1))
+VERSION=v0.0.$SEQUENCE
 
 ```
 
@@ -136,9 +136,9 @@ export VERSION=v0.0.$SEQUENCE
 ## Install chaincode from a CI Pipeline
 
 ```shell
-export SEQUENCE=$((SEQUENCE + 1))
-export VERSION=v0.1.3
-export CHAINCODE_PACKAGE=asset-transfer-typescript-${VERSION}.tgz
+SEQUENCE=$((SEQUENCE + 1))
+VERSION=v0.1.3
+CHAINCODE_PACKAGE=asset-transfer-typescript-${VERSION}.tgz
 
 ```
 

@@ -8,9 +8,8 @@
 
 - todo: write a check.sh for each exercise 
 ```shell
-[[ -d ${WORKSHOP_PATH} ]] || echo stop 
-[[ -v WORKSHOP_IP      ]] || echo stop 
-[[ -v WORKSHOP_DOMAIN  ]] || echo stop 
+   [[ -d ${WORKSHOP_PATH} ]] || echo stop1 \
+&& [[ -v WORKSHOP_IP      ]] || echo stop2 \
 
 ```
 
@@ -81,7 +80,7 @@ export WORKSHOP_DOMAIN=$(echo $WORKSHOP_IP | tr -s '.' '-').nip.io && echo $WORK
 ## Post Checks 
 
 ```shell
-curl --cacert $WORKSHOP_PATH/config/build/cas/org1-ca/tls-cert.pem https://${WORKSHOP_NAMESPACE}-org1-ca-ca.$WORKSHOP_DOMAIN/cainfo
+curl --cacert $WORKSHOP_CRYPTO/cas/org1-ca/tls-cert.pem https://${WORKSHOP_NAMESPACE}-org1-ca-ca.$WORKSHOP_DOMAIN/cainfo
 
 ```
 
