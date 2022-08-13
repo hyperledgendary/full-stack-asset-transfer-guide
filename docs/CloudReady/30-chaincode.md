@@ -38,7 +38,7 @@ export ORDERER_TLS_CERT=${WORKSHOP_CRYPTO}/channel-msp/ordererOrganizations/org0
 
 Configure the docker engine with the insecure container registry `${WORKSHOP_DOMAIN}:5000`
 
-For example: 
+For example:  (Docker -> Preferences -> Docker Engine) 
 ```json
 {
   "insecure-registries": [
@@ -47,6 +47,16 @@ For example:
 }
 ```
 
+- apply and restart
+
+## Chaincode Target Revision
+
+```shell
+CHANNEL_NAME=mychannel
+VERSION=v0.0.1
+SEQUENCE=1
+
+```
 
 ## Build the Chaincode Docker Image
 
@@ -75,13 +85,6 @@ infrastructure/pkgcc.sh -l $CHAINCODE_NAME -n localhost:5000/$CHAINCODE_NAME -d 
 ```
 
 ## Install the Chaincode
-
-```shell
-CHANNEL_NAME=mychannel
-VERSION=v0.0.1
-SEQUENCE=1
-
-```
 
 ```shell
 peer lifecycle chaincode install $CHAINCODE_PACKAGE

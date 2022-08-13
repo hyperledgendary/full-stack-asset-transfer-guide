@@ -38,12 +38,12 @@ fabric-ca-client  register \
   --id.name       ${USERNAME} \
   --id.secret     ${PASSWORD} \
   --id.type       client \
-  --url           https://${NAMESPACE}-${ORG}-ca-ca.${WORKSHOP_DOMAIN} \
+  --url           https://${WORKSHOP_NAMESPACE}-${ORG}-ca-ca.${WORKSHOP_DOMAIN} \
   --tls.certfiles $WORKSHOP_CRYPTO/cas/${ORG}-ca/tls-cert.pem \
   --mspdir        $WORKSHOP_CRYPTO/enrollments/${ORG}/users/rcaadmin/msp
 
 fabric-ca-client enroll \
-  --url           https://${USERNAME}:${PASSWORD}@${NAMESPACE}-${ORG}-ca-ca.${WORKSHOP_DOMAIN} \
+  --url           https://${USERNAME}:${PASSWORD}@${WORKSHOP_NAMESPACE}-${ORG}-ca-ca.${WORKSHOP_DOMAIN} \
   --tls.certfiles ${WORKSHOP_CRYPTO}/cas/${ORG}-ca/tls-cert.pem \
   --mspdir        ${WORKSHOP_CRYPTO}/enrollments/${ORG}/users/${USERNAME}/msp
 
@@ -87,13 +87,13 @@ npm start create banana bananaman yellow
 
 npm start getAllAssets
 
-npm start transfer banana appleman ${ORG}MSP 
+npm start transfer banana appleman Org1MSP 
 
 npm start getAllAssets 
 
 npm start transfer banana bananaman Org2MSP 
 
-npm start transfer banana bananaman ${ORG}MSP 
+npm start transfer banana bananaman Org1MSP 
 
 ```
 
@@ -101,4 +101,8 @@ npm start transfer banana bananaman ${ORG}MSP
 
 - todo: set up a gateway Service alias in Kubernetes. 
 - todo: the peer CA cert needs a new SAN in the enrollment to accept the host name of the gateway service.   This works well with the Kube test network, but needs some work with the operator, which bootstraps the node TLS certs behind the scenes.
-- todo: if we can't issue a new TLS cert for the peer with the gateway host SAN, try using the HOST_ALIAS as set above, connecting via the Gateway Service endpoint.  This may not work with the ingress routing.   
+- todo: if we can't issue a new TLS cert for the peer with the gateway host SAN, try using the HOST_ALIAS as set above, connecting via the Gateway Service endpoint.  This may not work with the ingress routing.
+
+---
+
+[PREV: Install Chaincode](30-chaincode.md) <==> [NEXT: Teardown](90-teardown.md)
