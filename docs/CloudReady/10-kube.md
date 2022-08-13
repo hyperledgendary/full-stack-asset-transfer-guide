@@ -16,12 +16,18 @@ multipass launch \
 
 multipass mount $PWD fabric-dev:/home/ubuntu/full-stack-asset-transfer-guide
 
-multipass shell fabric-dev
+export WORKSHOP_IP=$(multipass info fabric-dev --format json | jq -r .info.\"fabric-dev\".ipv4[0])
 
 ```
 
 
 ## Start a KIND Cluster
+
+- Open a new shell and connect to the VM 
+```shell
+# todo ssh authorized_keys -> ubuntu@${WORKSHOP_IP} not multipass shell 
+multipass shell fabric-dev
+```
 
 ```shell
 cd ~/full-stack-asset-transfer-guide 
@@ -33,9 +39,6 @@ export CONTAINER_REGISTRY_PORT=5000
 # Create a Kubernetes cluster in Docker, configure an Nginx ingress, and docker container registry
 just -f k8s.justfile kind 
 
-# Install fabric-operator CRDs
-kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
-
 ```
 
 ```shell
@@ -44,27 +47,21 @@ k9s -n test-network
 
 ```
 
-## Fabric Ingress Domain 
 
-Start a new shell on the host OS:
-
-```shell
-export INSTANCE_IP=$(multipass info fabric-dev --format json | jq -r .info.\"fabric-dev\".ipv4[0])
-export TEST_NETWORK_INGRESS_DOMAIN=$(echo $INSTANCE_IP | tr -s '.' '-').nip.io
-
-echo "Connecting to Fabric network domain $TEST_NETWORK_INGRESS_DOMAIN"
-
-```
-
-# Troubleshooting: 
+## Troubleshooting: 
 
 - look on the back of your conga card.
-- ssh to the IP address on the back of the conga card.
+- ssh to the WORKSHOP_IP on the back of the conga card.
 - Set up an SSH-key for access to the remote system. 
 
 
 # Take it Further:
 
-- Run k8s directly on your laptop with [KIND](todo.md)
-- Provision an EC2 instance on your AWS account  
+- Run k8s directly on your laptop with [KIND](todo.md)  (`export WORKSHOP_DOMAIN=localho.st`)
+- Provision an EC2 instance on your AWS account with a [#cloud-config](../../infrastructure/ec2-cloud-config.yaml)
 - Connect your kube client to a cloud k8s provider 
+
+
+---
+[PREV: Setup](00-setup.md) <==> [NEXT: Deploy a Fabric Network](20-fabric.md)
+

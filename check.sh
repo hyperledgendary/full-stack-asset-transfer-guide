@@ -9,7 +9,7 @@ then
     echo "${WARN} Please install Docker; suggested install commands:"
     EXIT=1
 else
-    echo "${SUCCESS} Docker found    @ $(cat /tmp/cmdpath)"
+    echo -e "${SUCCESS} Docker found:\t$(cat /tmp/cmdpath)"
 fi
 
 if ! command -v kubectl &> /tmp/cmdpath
@@ -17,7 +17,7 @@ then
     echo "${WARN} Please install kubectl if you want to use k8s; suggested install commands:"
     EXIT=1
 else
-    echo "${SUCCESS} kubectl found   @ $(cat /tmp/cmdpath)"
+    echo -e "${SUCCESS} kubectl found:\t$(cat /tmp/cmdpath)"
 fi
 
 # Install kind
@@ -30,7 +30,7 @@ then
   echo
   EXIT=1
 else
-    echo "${SUCCESS} kind found      @ $(cat /tmp/cmdpath)"  
+    echo -e "${SUCCESS} kind found:\t\t$(cat /tmp/cmdpath)"
 fi
 
 # Install k9s
@@ -45,7 +45,7 @@ then
   echo
   EXIT=1
 else
-  echo "${SUCCESS} k9s found       @ $(cat /tmp/cmdpath)"
+  echo -e "${SUCCESS} k9s found:\t\t$(cat /tmp/cmdpath)"
 fi
 
 # Install just
@@ -56,7 +56,7 @@ then
   echo "curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --tag ${JUST_VERSION} --to /usr/local/bin"
   EXIT=1
 else
-  echo "${SUCCESS} Just found      @ $(cat /tmp/cmdpath)"
+  echo -e "${SUCCESS} Just found:\t\t$(cat /tmp/cmdpath)"
 fi
 
 # Install weft
@@ -64,8 +64,9 @@ if ! command -v weft &> /tmp/cmdpath
 then
   echo "${WARN} Please install weft; suggested install commands:"
   echo "npm install -g @hyperledger-labs/weft"
+  EXIT=1
 else 
-  echo "${SUCCESS} weft found      @ $(cat /tmp/cmdpath)"
+  echo -e "${SUCCESS} weft found:\t\t$(cat /tmp/cmdpath)"
 fi
 
 
@@ -78,16 +79,24 @@ then
   echo 'export FABRIC_CFG_PATH=$(pwd)/config'
   EXIT=1
 else
-  echo "${SUCCESS} peer found      @ $(cat /tmp/cmdpath)"
-fi
- 
-if [[ ! -z "${FABRIC_CFG_PATH}" && -d "${FABRIC_CFG_PATH}" ]]; then
-  echo "${SUCCESS} FABRIC_CFG_PATH set" 
-  EXIT=1
-else
-  echo "${WARN}  FABRIC_CFG_PATH must be set"
+  echo -e "${SUCCESS} peer found:\t\t$(cat /tmp/cmdpath)"
 fi
 
+# tests if varname is defined in the env AND it's an existing directory
+function must_declare() {
+  local varname=$1
+
+  if [[ ! -d ${!varname} ]]; then
+    echo "${WARN} ${varname} must be set to a directory"
+    EXIT=1
+
+  else
+    echo -e "${SUCCESS} ${varname}:\t${!varname}"
+  fi
+}
+
+must_declare "FABRIC_CFG_PATH"
+must_declare "WORKSHOP_PATH"
 
 rm /tmp/cmdpath &> /dev/null
 
