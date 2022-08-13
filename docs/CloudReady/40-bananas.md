@@ -38,12 +38,12 @@ fabric-ca-client  register \
   --id.name       ${USERNAME} \
   --id.secret     ${PASSWORD} \
   --id.type       client \
-  --url           https://${NAMESPACE}-${ORG}-ca-ca.${WORKSHOP_DOMAIN} \
+  --url           https://${WORKSHOP_NAMESPACE}-${ORG}-ca-ca.${WORKSHOP_DOMAIN} \
   --tls.certfiles $WORKSHOP_CRYPTO/cas/${ORG}-ca/tls-cert.pem \
   --mspdir        $WORKSHOP_CRYPTO/enrollments/${ORG}/users/rcaadmin/msp
 
 fabric-ca-client enroll \
-  --url           https://${USERNAME}:${PASSWORD}@${NAMESPACE}-${ORG}-ca-ca.${WORKSHOP_DOMAIN} \
+  --url           https://${USERNAME}:${PASSWORD}@${WORKSHOP_NAMESPACE}-${ORG}-ca-ca.${WORKSHOP_DOMAIN} \
   --tls.certfiles ${WORKSHOP_CRYPTO}/cas/${ORG}-ca/tls-cert.pem \
   --mspdir        ${WORKSHOP_CRYPTO}/enrollments/${ORG}/users/${USERNAME}/msp
 
