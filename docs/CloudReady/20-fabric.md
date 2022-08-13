@@ -40,7 +40,7 @@ kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/
 
 ```
 
-- Apply a series of CA, peer, and orderer CRDs to fabric-operator 
+- Apply a series of CA, peer, and orderer resources to the Kube API controller
 ```shell
 ./network up
 
@@ -52,7 +52,7 @@ kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/
 
 ```
 
-- Extract the network x509 certificates:
+- Extract the network crypto material
 ```shell
 # todo: ssh + tar.  Do NOT use a volume share to the host OS. 
 
@@ -71,8 +71,8 @@ cp -r temp/* ~/full-stack-asset-transfer-guide/config/build/
 ## Configure the Fabric Ingress Domain
 
 ```shell
-export WORKSHOP_CRYPTO=$WORKSHOP_PATH/config/build 
 export WORKSHOP_NAMESPACE=test-network
+export WORKSHOP_CRYPTO=$WORKSHOP_PATH/config/build 
 export WORKSHOP_DOMAIN=$(echo $WORKSHOP_IP | tr -s '.' '-').nip.io && echo $WORKSHOP_DOMAIN
 
 ```
