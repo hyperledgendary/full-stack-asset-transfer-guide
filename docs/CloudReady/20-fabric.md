@@ -4,16 +4,22 @@
 
 ---
 
+## Checks 
 
-## Pre Checks 
+- todo: write a check.sh for each exercise 
+```shell
+[[ -d ${WORKSHOP_PATH} ]] || echo stop 
+[[ -v WORKSHOP_IP      ]] || echo stop 
+[[ -v WORKSHOP_DOMAIN  ]] || echo stop 
 
-- TEST_NETWORK_INGRESS_DOMAIN is set 
+```
+
 
 ## Operator Sample Network 
 
-- Open a shell on the multipass VM 
+- Open a new shell and connect to the VM
 ```shell
-# todo: ssh 
+# todo: ssh authorized_keys -> ubuntu@${WORKSHOP_IP}
 multipass shell fabric-dev 
 
 ```
@@ -22,14 +28,19 @@ multipass shell fabric-dev
 git clone https://github.com/hyperledger-labs/fabric-operator.git
 cd ~/fabric-operator/sample-network
 
-export INSTANCE_IP=$(hostname -I | cut -d ' ' -f 1)
-export TEST_NETWORK_INGRESS_DOMAIN=$(echo $INSTANCE_IP | tr -s '.' '-').nip.io
+export TEST_NETWORK_INGRESS_DOMAIN=$(hostname -I | cut -d ' ' -f 1 | tr -s '.' '-').nip.io
 export TEST_NETWORK_PEER_IMAGE=ghcr.io/hyperledger-labs/k8s-fabric-peer
 export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
 
 ```
 
-- Apply a series of CA, peer, and orderer CRDs to fabric-operator 
+- Install the fabric-operator [Kubernetes Custom Resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
+```shell
+kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
+
+```
+
+- Apply a series of CA, peer, and orderer resources to the Kube API controller
 ```shell
 ./network up
 
@@ -41,34 +52,59 @@ export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
 
 ```
 
-- Copy the crypto material from the sample network to the host OS
+- Extract the network crypto material
 ```shell
-rm -rf ~/full-stack-asset-transfer-guide/config/build 
+# todo: ssh + tar.  Do NOT use a volume share to the host OS. 
+
+# Delete the crypto material from any previous run 
+rm -rf ~/full-stack-asset-transfer-guide/config/build
+
+# Copy the crypto material for the newly created network to the host volume share  
 mkdir -p ~/full-stack-asset-transfer-guide/config/build 
 cp -r temp/* ~/full-stack-asset-transfer-guide/config/build/
 
 ```
 
-- Exit the multipass shell.
+- Exit the multipass shell.  All further interaction with the network will be run from the host OS. 
+
+
+## Configure the Fabric Ingress Domain
+
+```shell
+export WORKSHOP_NAMESPACE=test-network
+export WORKSHOP_CRYPTO=$WORKSHOP_PATH/config/build 
+export WORKSHOP_DOMAIN=$(echo $WORKSHOP_IP | tr -s '.' '-').nip.io && echo $WORKSHOP_DOMAIN
+
+```
 
 
 ## Post Checks 
 
 ```shell
-curl --cacert config/build/cas/org1-ca/tls-cert.pem https://test-network-org1-ca-ca.$TEST_NETWORK_INGRESS_DOMAIN/cainfo
+curl --cacert $WORKSHOP_PATH/config/build/cas/org1-ca/tls-cert.pem https://${WORKSHOP_NAMESPACE}-org1-ca-ca.$WORKSHOP_DOMAIN/cainfo
+
 ```
 
+## Troubleshooting 
 
-## Take it Further:  
+- todo
+
+
+# Take it Further:  
 
 ### Build a network with Ansible
-  - just operator 
-  - just console 
-  - just sample-network 
+- just operator 
+- just console 
+- just sample-network 
 
 ### Build a network with the Fabric Operations Console
 
 - just operator 
 - just console 
 - open https://fabricinfra-hlf-console-console.$TEST_NETWORK_INGRESS_DOMAIN/    ( admin/password )  
+
+---
+
+[PREV: Select a Kube](10-kube.md) <==> [NEXT: Install Chaincode](30-chaincode.md)
+
 
