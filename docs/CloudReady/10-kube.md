@@ -16,7 +16,7 @@ multipass launch \
 
 multipass mount $PWD fabric-dev:/home/ubuntu/full-stack-asset-transfer-guide
 
-export WORKSHOP_IP=$(multipass info fabric-dev --format json | jq -r .info.\"fabric-dev\".ipv4[0])
+WORKSHOP_IP=$(multipass info fabric-dev --format json | jq -r .info.\"fabric-dev\".ipv4[0])
 
 ```
 

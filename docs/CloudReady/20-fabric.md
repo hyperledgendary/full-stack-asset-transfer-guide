@@ -1,6 +1,6 @@
 # Deploy a Fabric Network 
 
-[PREV: Select a Kube](10-kube.md) <==> [NEXT: Install Chaincode](30-chaincode.md)
+[PREV: Deploy a Kube](10-kube.md) <==> [NEXT: Install Chaincode](30-chaincode.md)
 
 ---
 
@@ -8,9 +8,8 @@
 
 - todo: write a check.sh for each exercise 
 ```shell
-[[ -d ${WORKSHOP_PATH} ]] || echo stop 
-[[ -v WORKSHOP_IP      ]] || echo stop 
-[[ -v WORKSHOP_DOMAIN  ]] || echo stop 
+   [[ -d ${WORKSHOP_PATH} ]] || echo stop1 \
+&& [[ -v WORKSHOP_IP      ]] || echo stop2 \
 
 ```
 
@@ -71,9 +70,9 @@ cp -r temp/* ~/full-stack-asset-transfer-guide/config/build/
 ## Configure the Fabric Ingress Domain
 
 ```shell
-export WORKSHOP_NAMESPACE=test-network
-export WORKSHOP_CRYPTO=$WORKSHOP_PATH/config/build 
-export WORKSHOP_DOMAIN=$(echo $WORKSHOP_IP | tr -s '.' '-').nip.io && echo $WORKSHOP_DOMAIN
+WORKSHOP_NAMESPACE=test-network
+WORKSHOP_CRYPTO=$WORKSHOP_PATH/config/build 
+WORKSHOP_DOMAIN=$(echo $WORKSHOP_IP | tr -s '.' '-').nip.io && echo $WORKSHOP_DOMAIN
 
 ```
 
@@ -81,13 +80,9 @@ export WORKSHOP_DOMAIN=$(echo $WORKSHOP_IP | tr -s '.' '-').nip.io && echo $WORK
 ## Post Checks 
 
 ```shell
-curl --cacert $WORKSHOP_PATH/config/build/cas/org1-ca/tls-cert.pem https://${WORKSHOP_NAMESPACE}-org1-ca-ca.$WORKSHOP_DOMAIN/cainfo
+curl --cacert $WORKSHOP_CRYPTO/cas/org1-ca/tls-cert.pem https://${WORKSHOP_NAMESPACE}-org1-ca-ca.$WORKSHOP_DOMAIN/cainfo
 
 ```
-
-## Troubleshooting 
-
-- todo
 
 
 # Take it Further:  
@@ -105,6 +100,6 @@ curl --cacert $WORKSHOP_PATH/config/build/cas/org1-ca/tls-cert.pem https://${WOR
 
 ---
 
-[PREV: Select a Kube](10-kube.md) <==> [NEXT: Install Chaincode](30-chaincode.md)
+[PREV: Deploy a Kube](10-kube.md) <==> [NEXT: Install Chaincode](30-chaincode.md)
 
 
