@@ -7,9 +7,7 @@
 ## Kind 
 
 ```shell
-kind delete cluster 
-docker kill kind-registry
-docker rm kind-registry
+just -f k8s.justfile unkind
 
 ```
 
