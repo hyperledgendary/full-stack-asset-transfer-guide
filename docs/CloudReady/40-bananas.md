@@ -87,13 +87,13 @@ npm start create banana bananaman yellow
 
 npm start getAllAssets
 
-npm start transfer banana appleman ${ORG}MSP 
+npm start transfer banana appleman Org1MSP 
 
 npm start getAllAssets 
 
 npm start transfer banana bananaman Org2MSP 
 
-npm start transfer banana bananaman ${ORG}MSP 
+npm start transfer banana bananaman Org1MSP 
 
 ```
 
