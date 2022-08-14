@@ -7,16 +7,10 @@
 ## Kind 
 
 ```shell
-just kind-down
+just unkind
 
 ```
 
-## Microfab 
-
-```shell
-just microfab-down
-
-```
 
 ## Multipass VM 
 

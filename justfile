@@ -43,7 +43,7 @@ check:
 ###############################################################################
 
 # Shut down the microfab (uf) instance
-microfab-down:
+microfab-bye:
     #!/bin/bash
 
     if docker inspect microfab &>/dev/null; then
@@ -53,7 +53,7 @@ microfab-down:
 
 
 # Start a micro fab instance and create configuration in _cfg/uf
-microfab: microfab-down
+microfab: microfab-bye
     #!/bin/bash
     set -e -o pipefail
 
@@ -176,7 +176,7 @@ ingress_domain := env_var_or_default("WORKSHOP_DOMAIN",         "localho.st")
 
 
 # Start a local KIND cluster with nginx, localhost:5000 registry, and *.localho.st alias in kube DNS
-kind: kind-down
+kind: unkind
     infrastructure/kind_with_nginx.sh {{cluster_name}}
     ls -lart ~/.kube/config
     chmod o+r ~/.kube/config
@@ -186,7 +186,7 @@ kind: kind-down
 
 
 # Shut down the KIND cluster
-kind-down:
+unkind:
     #!/bin/bash
     kind delete cluster --name {{cluster_name}}
 
