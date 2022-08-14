@@ -29,7 +29,7 @@ We'll use `just` recipes to execute multiple commands. `just` recipes are simila
 Start the MicroFab container by running the `just` recipe:
 
 ```bash
-just -f dev.justfile microfab
+just microfab
 ```
 
 This will start the docker container, and also write out some configuration/data files.

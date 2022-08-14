@@ -11,21 +11,21 @@
 
 ```shell
 # start kind + nginx + DNS localho.st + container registry   
-just -f cloud.justfile kind 
+just kind 
 
 # review the config.  Check _cfg/ for localho.st in console_domain -> should be $TEST_NETWORK_INGRESS_DOMAIN 
-just -f k8s.justfile review-config
+just ansible-review-config
 
 # start the operator in fabricinfra namespace 
-just -f k8s.justfile operator 
+just operator 
 
 # start the console 
-just -f k8s.justfile console 
+just console 
 ```
 
 ```shell
 # Create the sample network with ansible 
-just -f k8s.justfile sample-network 
+just ansible-sample-network 
 
 ```
 
