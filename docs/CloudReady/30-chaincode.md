@@ -8,12 +8,13 @@
 
 - todo: write a check.sh for each exercise
 ```shell
-   [[ -d ${FABRIC_CFG_PATH} ]] || echo stop1 \
-&& [[ -d ${WORKSHOP_PATH}   ]] || echo stop2 \
-&& [[ -d ${WORKSHOP_CRYPTO} ]] || echo stop3 \
-&& [[ -v WORKSHOP_IP        ]] || echo stop4 \
-&& [[ -v WORKSHOP_DOMAIN    ]] || echo stop5 \
-&& [[ -v WORKSHOP_NAMESPACE ]] || echo stop6 \
+
+   [[ -d ${FABRIC_CFG_PATH}       ]] || echo stop1 \
+&& [[ -d ${WORKSHOP_PATH}         ]] || echo stop2 \
+&& [[ -d ${WORKSHOP_CRYPTO}       ]] || echo stop3 \
+&& [[ -v WORKSHOP_IP              ]] || echo stop4 \
+&& [[ -v WORKSHOP_INGRESS_DOMAIN  ]] || echo stop5 \
+&& [[ -v WORKSHOP_NAMESPACE       ]] || echo stop6 \
 
 ```
 
@@ -21,22 +22,23 @@
 ## Set the peer client environment
 
 ```shell
+
 # org1-peer1: 
 export CORE_PEER_LOCALMSPID=Org1MSP
-export CORE_PEER_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer1-peer.${WORKSHOP_DOMAIN}:443
+export CORE_PEER_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer1-peer.${WORKSHOP_INGRESS_DOMAIN}:443
 export CORE_PEER_TLS_ENABLED=true
 export CORE_PEER_MSPCONFIGPATH=${WORKSHOP_CRYPTO}/enrollments/org1/users/org1admin/msp
 export CORE_PEER_TLS_ROOTCERT_FILE=${WORKSHOP_CRYPTO}/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
 export CORE_PEER_CLIENT_CONNTIMEOUT=10s
 export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=10s
-export ORDERER_ENDPOINT=${WORKSHOP_NAMESPACE}-org0-orderersnode1-orderer.${WORKSHOP_DOMAIN}:443
+export ORDERER_ENDPOINT=${WORKSHOP_NAMESPACE}-org0-orderersnode1-orderer.${WORKSHOP_INGRESS_DOMAIN}:443
 export ORDERER_TLS_CERT=${WORKSHOP_CRYPTO}/channel-msp/ordererOrganizations/org0/orderers/org0-orderersnode1/tls/signcerts/tls-cert.pem
 
 ```
 
 ## Docker Engine Configuration
 
-Configure the docker engine with the insecure container registry `${WORKSHOP_DOMAIN}:5000`
+Configure the docker engine with the insecure container registry `${WORKSHOP_INGRESS_DOMAIN}:5000`
 
 For example:  (Docker -> Preferences -> Docker Engine) 
 ```json
@@ -49,9 +51,10 @@ For example:  (Docker -> Preferences -> Docker Engine)
 
 - apply and restart
 
-## Chaincode Target Revision
+## Chaincode Revision
 
 ```shell
+
 CHANNEL_NAME=mychannel
 VERSION=v0.0.1
 SEQUENCE=1
@@ -61,9 +64,10 @@ SEQUENCE=1
 ## Build the Chaincode Docker Image
 
 ```shell
+
 CHAINCODE_NAME=asset-transfer
 CHAINCODE_PACKAGE=${CHAINCODE_NAME}.tgz
-CONTAINER_REGISTRY=$WORKSHOP_DOMAIN:5000
+CONTAINER_REGISTRY=$WORKSHOP_INGRESS_DOMAIN:5000
 CHAINCODE_IMAGE=$CONTAINER_REGISTRY/$CHAINCODE_NAME
 
 # Build the chaincode image
@@ -78,6 +82,7 @@ docker push $CHAINCODE_IMAGE
 ## Prepare a k8s Chaincode Package
 
 ```shell
+
 IMAGE_DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' $CHAINCODE_IMAGE | cut -d'@' -f2)
 
 infrastructure/pkgcc.sh -l $CHAINCODE_NAME -n localhost:5000/$CHAINCODE_NAME -d $IMAGE_DIGEST
@@ -87,6 +92,7 @@ infrastructure/pkgcc.sh -l $CHAINCODE_NAME -n localhost:5000/$CHAINCODE_NAME -d 
 ## Install the Chaincode
 
 ```shell
+
 peer lifecycle chaincode install $CHAINCODE_PACKAGE
 
 export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid $CHAINCODE_PACKAGE) && echo $PACKAGE_ID
@@ -115,6 +121,7 @@ peer lifecycle \
 ```
 
 ```shell
+
 peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}' | jq
 
 ```
@@ -125,6 +132,7 @@ peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledg
 ## Edit, compile, upload, and re-install your chaincode: 
 
 ```shell
+
 SEQUENCE=$((SEQUENCE + 1))
 VERSION=v0.0.$SEQUENCE
 
@@ -139,6 +147,7 @@ VERSION=v0.0.$SEQUENCE
 ## Install chaincode from a CI Pipeline
 
 ```shell
+
 SEQUENCE=$((SEQUENCE + 1))
 VERSION=v0.1.3
 CHAINCODE_PACKAGE=asset-transfer-typescript-${VERSION}.tgz
@@ -147,6 +156,7 @@ CHAINCODE_PACKAGE=asset-transfer-typescript-${VERSION}.tgz
 
 - Download a chaincode release artifact from GitHub:
 ```shell
+
 curl -LO https://github.com/hyperledgendary/full-stack-asset-transfer-guide/releases/download/${VERSION}/${CHAINCODE_PACKAGE}
 
 ```

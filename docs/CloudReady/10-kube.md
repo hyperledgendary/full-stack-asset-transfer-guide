@@ -4,63 +4,54 @@
 
 ---
 
-## Provision a Virtual Machine
+## Ready?
 
+- todo: write a check.sh and just target for each exercise 
 ```shell
-multipass launch \
-  --name        fabric-dev \
-  --disk        80G \
-  --cpus        8 \
-  --mem         8G \
-  --cloud-init  infrastructure/multipass-cloud-config.yaml
 
-multipass mount $PWD fabric-dev:/home/ubuntu/full-stack-asset-transfer-guide
-
-WORKSHOP_IP=$(multipass info fabric-dev --format json | jq -r .info.\"fabric-dev\".ipv4[0])
+   [[ -d ${WORKSHOP_PATH} ]] || echo stop1 \
 
 ```
 
+## Kubernetes IN Docker (KIND)
 
-## Start a KIND Cluster
-
-- Open a new shell and connect to the VM 
 ```shell
-# todo ssh authorized_keys -> ubuntu@${WORKSHOP_IP} not multipass shell 
-multipass shell fabric-dev
+
+export WORKSHOP_INGRESS_DOMAIN=localho.st
+export WORKSHOP_NAMESPACE=test-network
+
 ```
 
 ```shell
-cd ~/full-stack-asset-transfer-guide 
-
-# Bind a docker container registry to the VM's external IP  
-export CONTAINER_REGISTRY_ADDRESS=0.0.0.0
-export CONTAINER_REGISTRY_PORT=5000
 
 # Create a Kubernetes cluster in Docker, configure an Nginx ingress, and docker container registry
-just kind 
+just kind
+
+# KIND will set the current kube client context in ~/.kube/config 
+kubectl cluster-info
 
 ```
 
 ```shell
-# Observe the target Kubernetes workspace 
-k9s -n test-network
+
+# Run k9s to observe the target namespace 
+k9s -n $WORKSHOP_NAMESPACE
 
 ```
 
 
-## Troubleshooting: 
+## Trouble? 
 
-- look on the back of your conga card.
-- ssh to the WORKSHOP_IP on the back of the conga card.
-- Set up password-less ssh access to the EC2 instance 
-- Use the [ec2 vm instance](11-kube-ec2-vm.md) to provision your KIND cluster
+- Run KIND on a [multipass VM](11-kube-multipass.md) on your local system
+- Run KIND on an [EC2 instance](12-kube-ec2-vm.md) at AWS
+- ssh to a workshop EC2 instance (see the login information on the back of your Conga Trading Card)
+- 
 
 
-# Take it Further:
+## Take it Further: 
 
-- Run k8s directly on your laptop with [KIND](todo.md)  (`export WORKSHOP_DOMAIN=localho.st`)
 - Provision an EC2 instance on your AWS account with a [#cloud-config](../../infrastructure/ec2-cloud-config.yaml)
-- Connect your kube client to a cloud k8s provider 
+- Connect your kube client to a public cloud provider (IKS, EKS, AKS, GKS, Rancher, etc...) 
 
 
 ---

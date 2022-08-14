@@ -181,8 +181,8 @@ kind: unkind
     ls -lart ~/.kube/config
     chmod o+r ~/.kube/config
 
-    echo "Kind cluster-info:"
-    kubectl cluster-info
+    # check connectivity to local k8s 
+    kubectl cluster-info &>/dev/null
 
 
 # Shut down the KIND cluster
