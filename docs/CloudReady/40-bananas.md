@@ -61,15 +61,19 @@ export TLS_CERT_PATH=$PEER_MSP_DIR/tlscacerts/tlsca-signcert.pem
 export PEER_HOST_ALIAS=$WORKSHOP_NAMESPACE-$ORG-peer1-peer.${WORKSHOP_DOMAIN} 
 export PEER_ENDPOINT=$PEER_HOST_ALIAS:443
 
-# Path to private key file 
+## Path to private key file 
 #export PRIVATE_KEY=${USER_MSP_DIR}/keystore/key.pem
-# Path to user certificate file 
+#
+## Path to user certificate file 
 #export CERTIFICATE=${USER_MSP_DIR}/signcerts/cert.pem
-# Path to CA certificate 
+#
+## Path to CA certificate 
 #export TLS_CERT=${PEER_MSP_DIR}/tlscacerts/tlsca-signcert.pem
-# Gateway peer SSL host name override 
-#export HOST_ALIAS=${NAMESPACE}-${ORG}-peer1-peer.${WORKSHOP_DOMAIN}
-# Gateway endpoint
+#
+## Gateway peer SSL host name override 
+#export HOST_ALIAS=${WORKSHOP_NAMESPACE}-${ORG}-peer1-peer.${WORKSHOP_DOMAIN}
+#
+## Gateway endpoint
 #export ENDPOINT=$HOST_ALIAS:443
 
 ```
