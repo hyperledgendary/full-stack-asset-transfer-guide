@@ -7,7 +7,7 @@
 ## Kind 
 
 ```shell
-just -f k8s.justfile unkind
+just unkind
 
 ```
 

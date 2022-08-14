@@ -31,7 +31,7 @@ export CONTAINER_REGISTRY_ADDRESS=0.0.0.0
 export KIND_API_SERVER_ADDRESS=$MULTIPASS_IP
 
 # Create a Kubernetes cluster in Docker, nginx ingress, and local docker registry:
-just -f k8s.justfile kind
+just kind
 
 # Install fabric-operator CRDs
 kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
