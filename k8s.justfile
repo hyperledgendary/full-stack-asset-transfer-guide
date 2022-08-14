@@ -160,13 +160,13 @@ build-chaincode:
     set -ex -o pipefail
     pushd ${CWDIR}/contracts/asset-transfer-typescript
 
-    export IMG_NAME=localhost:5000/asset_tx
+    export IMAGE_NAME=localhost:5000/asset-transfer
     DOCKER_BUILDKIT=1 docker build -t ${IMAGE_NAME} . --target k8s
-    docker push ${IMG_NAME}
+    docker push ${IMAGE_NAME}
 
     # note the double { } for escaping
-    export IMG_SHA=$(docker inspect --format='{{{{index .RepoDigests 0}}' localhost:5000/asset_tx | cut -d'@' -f2)
-    weft chaincode package k8s --name ${IMG_NAME} --digest ${IMG_SHA}
+    export IMG_SHA=$(docker inspect --format='{{{{index .RepoDigests 0}}' localhost:5000/asset-transfer | cut -d'@' -f2)
+    weft chaincode package k8s --name ${IMAGE_NAME} --digest ${IMG_SHA} --label asset-transfer
 
     popd
 
