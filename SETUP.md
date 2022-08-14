@@ -31,13 +31,13 @@ export WORKSHOP=$(pwd)
 - Would you like to use a dev-container?
 
 Experimental: but there is a `dockerfile` in the `_bootstrap` directory; docker and just are required
-(or if you don't have just, copy the docker run command from justfile.dev)
+(or if you don't have just, copy the docker run command from the justfile)
 
 ```
 docker build -t fabgo .
 
 # run this in several cli windows
-just -f justfile.dev devshell
+just devshell
 ```
 
 ## DEV - Required Tools

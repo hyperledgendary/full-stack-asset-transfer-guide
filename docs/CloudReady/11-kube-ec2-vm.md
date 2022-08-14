@@ -45,7 +45,7 @@ export CONTAINER_REGISTRY_ADDRESS=0.0.0.0
 export CONTAINER_REGISTRY_PORT=5000
 
 # Create a Kubernetes cluster in Docker, configure an Nginx ingress, and docker container registry
-just -f k8s.justfile kind 
+just kind 
 
 ```
 

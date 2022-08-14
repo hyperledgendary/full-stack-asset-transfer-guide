@@ -111,7 +111,7 @@ But we still need to tell the peer where the chaincode is running. We do this by
 ### Package and deploy chaincode using `just` recipe.
 
 ```bash
-just -f ${WORKSHOP}/dev.justfile debugcc
+just debugcc
 ```
 
 You will see the chaincode id and deployment steps returned;

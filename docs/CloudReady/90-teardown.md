@@ -7,10 +7,16 @@
 ## Kind 
 
 ```shell
-just -f k8s.justfile unkind
+just kind-down
 
 ```
 
+## Microfab 
+
+```shell
+just microfab-down
+
+```
 
 ## Multipass VM 
 
