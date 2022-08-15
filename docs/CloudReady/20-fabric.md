@@ -26,7 +26,7 @@ kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/
 - Apply a series of CA, peer, and orderer resources directly to the Kube API controller
 ```shell
 
-just network-up
+just network
 
 ```
 
@@ -47,6 +47,15 @@ curl \
   --cacert $WORKSHOP_CRYPTO/cas/org1-ca/tls-cert.pem \
   https://${WORKSHOP_NAMESPACE}-org1-ca-ca.$WORKSHOP_INGRESS_DOMAIN/cainfo \
   | jq
+
+```
+
+## Troubleshooting 
+
+```shell
+
+# While running "just network": 
+tail -f infrastructure/sample-network/network-debug.log
 
 ```
 
