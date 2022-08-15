@@ -198,15 +198,12 @@ unkind:
 
 # Deploy the operator sample network and create a channel
 network-up:
-    #!/bin/bash
-
-    echo "Go bigly."
+    infrastructure/sample-network/network up
 
 
 # Tear down the operator sample network
 network-down:
-    #!/bin/bash
-    echo "Go home."
+    infrastructure/sample-network/network down
 
 
 ###############################################################################

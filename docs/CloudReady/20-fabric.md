@@ -23,25 +23,10 @@ kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/
 
 ```
 
-- todo: don't clone fabric-operator to set up a network.  just use just targets in this project
-```shell
-pushd /tmp 
-git clone https://github.com/hyperledger-labs/fabric-operator.git
-cd fabric-operator/sample-network
-
-export TEST_NETWORK_PEER_IMAGE=ghcr.io/hyperledger-labs/k8s-fabric-peer
-export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
-export TEST_NETWORK_INGRESS_DOMAIN=$WORKSHOP_INGRESS_DOMAIN
-export TEST_NETWORK_NS=$WORKSHOP_NAMESPACE
-
-```
-
-- Apply a series of CA, peer, and orderer resources to the Kube API controller
+- Apply a series of CA, peer, and orderer resources directly to the Kube API controller
 ```shell
 
-./network down   # todo - just sample-network will need to scrub crypto material from a previous network 
-./network up
-./network channel create
+just network-up
 
 ```
 
@@ -50,11 +35,8 @@ export TEST_NETWORK_NS=$WORKSHOP_NAMESPACE
 
 export WORKSHOP_CRYPTO=$WORKSHOP_PATH/_cfg/sample-network
 
-rm -rf $WORKSHOP_PATH/_cfg/sample-network
-mkdir -p $WORKSHOP_CRYPTO
-cp -r temp/* $WORKSHOP_CRYPTO
-
-popd
+rm -rf $WORKSHOP_PATH/_cfg/sample-network && mkdir -p $WORKSHOP_CRYPTO
+cp -r  $WORKSHOP_PATH/infrastructure/sample-network/temp/* $WORKSHOP_CRYPTO
 
 ```
 
