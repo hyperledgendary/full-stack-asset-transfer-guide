@@ -55,14 +55,16 @@ curl \
 
 ### Build a network with the [Ansible Blockchain Collection](https://github.com/IBM-Blockchain/ansible-collection)
 
+- Run the [00-complete](../../infrastructure/fabric_network_playbooks/00-complete.yml) play: 
 ```shell
+export WORKSHOP_NAMESPACE=fabricinfra
 
 # Start the operator and Fabric Operations Console
-just operator
-just console 
+just ansible-operator
+just ansible-console 
 
 # Construct a network and channel with ansible playbooks
-just ansible-sample-network
+just ansible-network
 
 ```
 
@@ -73,8 +75,8 @@ just ansible-sample-network
 ```shell
 
 # Start the operator and Fabric Operations Console
-just operator
-just console 
+just ansible-operator
+just ansible-console 
 
 # The console will be available at the Nginx ingress domain alias: 
 echo "open https://$WORKSHOP_NAMESPACE-hlf-console-console.$WORKSHOP_INGRESS_DOMAIN/" 
