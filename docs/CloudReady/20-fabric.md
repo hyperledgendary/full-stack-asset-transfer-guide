@@ -30,13 +30,10 @@ just network-up
 
 ```
 
-- Copy the network crypto material to the asset transfer guide config folder: 
+- Set the location for the network's TLS certificates, channel MSP, and user enrollments 
 ```shell
 
-export WORKSHOP_CRYPTO=$WORKSHOP_PATH/_cfg/sample-network
-
-rm -rf $WORKSHOP_PATH/_cfg/sample-network && mkdir -p $WORKSHOP_CRYPTO
-cp -r  $WORKSHOP_PATH/infrastructure/sample-network/temp/* $WORKSHOP_CRYPTO
+export WORKSHOP_CRYPTO=$WORKSHOP_PATH/infrastructure/sample-network/temp
 
 ```
 
