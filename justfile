@@ -38,6 +38,32 @@ check:
   ${CWDIR}/check.sh
 
 
+cluster_name   := env_var_or_default("WORKSHOP_CLUSTER_NAME",   "kind")
+ingress_domain := env_var_or_default("WORKSHOP_INGRESS_DOMAIN", "localho.st")
+
+
+# Start a local KIND cluster with nginx, localhost:5000 registry, and *.localho.st alias in kube DNS
+kind: kind-down
+    infrastructure/kind_with_nginx.sh {{cluster_name}}
+    ls -lart ~/.kube/config
+    chmod o+r ~/.kube/config
+
+    # check connectivity to local k8s
+    kubectl cluster-info &>/dev/null
+
+
+# Shut down the KIND cluster
+kind-down:
+    #!/bin/bash
+    kind delete cluster --name {{cluster_name}}
+
+    if docker inspect kind-registry &>/dev/null; then
+        echo "Stopping container registry"
+        docker kill kind-registry
+        docker rm kind-registry
+    fi
+
+
 ###############################################################################
 # MICROFAB / DEV TARGETS                                                      #
 ###############################################################################
@@ -170,39 +196,19 @@ devshell:
 # CLOUD NATIVE TARGETS                                                        #
 ###############################################################################
 
-cluster_name   := env_var_or_default("WORKSHOP_CLUSTER_NAME",   "kind")
-ingress_domain := env_var_or_default("WORKSHOP_DOMAIN",         "localho.st")
-
-
-# Start a local KIND cluster with nginx, localhost:5000 registry, and *.localho.st alias in kube DNS
-kind: kind-down
-    infrastructure/kind_with_nginx.sh {{cluster_name}}
-    ls -lart ~/.kube/config
-    chmod o+r ~/.kube/config
-
-    # check connectivity to local k8s 
-    kubectl cluster-info &>/dev/null
-
-
-# Shut down the KIND cluster
-kind-down:
-    #!/bin/bash
-    kind delete cluster --name {{cluster_name}}
-
-    if docker inspect kind-registry &>/dev/null; then
-        echo "Stopping container registry"
-        docker kill kind-registry
-        docker rm kind-registry
-    fi
-
 # Deploy the operator sample network and create a channel
-network:
+network: network-down
     infrastructure/sample-network/network up
 
 
 # Tear down the operator sample network
 network-down:
     infrastructure/sample-network/network down
+
+
+# Create 'mychannel'
+network-channel:
+    infrastructure/sample-network/network channel create
 
 
 ###############################################################################
