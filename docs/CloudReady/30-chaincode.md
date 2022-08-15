@@ -37,6 +37,8 @@ export ORDERER_TLS_CERT=${WORKSHOP_CRYPTO}/channel-msp/ordererOrganizations/org0
 
 ## Docker Engine Configuration
 
+**NOTE: SKIP THIS STEP IF USING `localho.st` AS THE INGRESS DOMAIN** 
+
 Configure the docker engine with the insecure container registry `${WORKSHOP_INGRESS_DOMAIN}:5000`
 
 For example:  (Docker -> Preferences -> Docker Engine) 

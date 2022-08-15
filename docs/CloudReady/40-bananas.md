@@ -11,9 +11,8 @@
    [[ -d ${FABRIC_CFG_PATH} ]] || echo stop1 \
 && [[ -d ${WORKSHOP_PATH}   ]] || echo stop2 \
 && [[ -d ${WORKSHOP_CRYPTO} ]] || echo stop3 \
-&& [[ -v WORKSHOP_IP        ]] || echo stop4 \
-&& [[ -v WORKSHOP_DOMAIN    ]] || echo stop5 \
-&& [[ -v WORKSHOP_NAMESPACE ]] || echo stop6 \
+&& [[ -v WORKSHOP_DOMAIN    ]] || echo stop4 \
+&& [[ -v WORKSHOP_NAMESPACE ]] || echo stop5 \
 
 ```
 
