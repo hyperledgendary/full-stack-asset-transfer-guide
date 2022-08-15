@@ -40,6 +40,7 @@ export TEST_NETWORK_NS=$WORKSHOP_NAMESPACE
 - Apply a series of CA, peer, and orderer resources to the Kube API controller
 ```shell
 
+./network down   # todo - just sample-network will need to scrub crypto material from a previous network 
 ./network up
 ./network channel create
 
