@@ -23,38 +23,17 @@ kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/
 
 ```
 
-- todo: don't clone fabric-operator to set up a network.  just use just targets in this project
+- Apply a series of CA, peer, and orderer resources directly to the Kube API controller
 ```shell
-pushd /tmp 
-git clone https://github.com/hyperledger-labs/fabric-operator.git
-cd fabric-operator/sample-network
 
-export TEST_NETWORK_PEER_IMAGE=ghcr.io/hyperledger-labs/k8s-fabric-peer
-export TEST_NETWORK_PEER_IMAGE_LABEL=v0.7.2
-export TEST_NETWORK_INGRESS_DOMAIN=$WORKSHOP_INGRESS_DOMAIN
-export TEST_NETWORK_NS=$WORKSHOP_NAMESPACE
+just network
 
 ```
 
-- Apply a series of CA, peer, and orderer resources to the Kube API controller
+- Set the location for the network's TLS certificates, channel MSP, and user enrollments 
 ```shell
 
-./network down   # todo - just sample-network will need to scrub crypto material from a previous network 
-./network up
-./network channel create
-
-```
-
-- Copy the network crypto material to the asset transfer guide config folder: 
-```shell
-
-export WORKSHOP_CRYPTO=$WORKSHOP_PATH/_cfg/sample-network
-
-rm -rf $WORKSHOP_PATH/_cfg/sample-network
-mkdir -p $WORKSHOP_CRYPTO
-cp -r temp/* $WORKSHOP_CRYPTO
-
-popd
+export WORKSHOP_CRYPTO=$WORKSHOP_PATH/infrastructure/sample-network/temp
 
 ```
 
@@ -71,22 +50,53 @@ curl \
 
 ```
 
+## Troubleshooting 
+
+```shell
+
+# While running "just network": 
+tail -f infrastructure/sample-network/network-debug.log
+
+```
+
 
 # Take it Further:  
 
-### Build a network with Ansible
-- just operator 
-- just console 
-- just sample-network 
+### Build a network with the [Ansible Blockchain Collection](https://github.com/IBM-Blockchain/ansible-collection)
 
-### Build a network with the Fabric Operations Console
+- Run the [00-complete](../../infrastructure/fabric_network_playbooks/00-complete.yml) play: 
+```shell
+export WORKSHOP_NAMESPACE=fabricinfra
 
-- just operator 
-- just console 
-- open https://fabricinfra-hlf-console-console.$TEST_NETWORK_INGRESS_DOMAIN/    ( admin/password )  
+# Start the operator and Fabric Operations Console
+just ansible-operator
+just ansible-console 
+
+# Construct a network and channel with ansible playbooks
+just ansible-network
+
+```
+
+
+### Build a network with the [Fabric Operations Console](https://github.com/hyperledger-labs/fabric-operations-console)  
+
+- Launch the [fabric-operator](https://github.com/hyperledger-labs/fabric-operator) and console 
+```shell
+
+# Start the operator and Fabric Operations Console
+just ansible-operator
+just ansible-console 
+
+# The console will be available at the Nginx ingress domain alias: 
+echo "open https://$WORKSHOP_NAMESPACE-hlf-console-console.$WORKSHOP_INGRESS_DOMAIN/" 
+
+```
+
+- Open the console (self-signed cert), log in as `admin : password`, and change the admin password.  
+
+- [Build a network](https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-build-network)
+
 
 ---
 
 [PREV: Deploy a Kube](10-kube.md) <==> [NEXT: Install Chaincode](30-chaincode.md)
-
-

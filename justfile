@@ -38,12 +38,38 @@ check:
   ${CWDIR}/check.sh
 
 
+cluster_name   := env_var_or_default("WORKSHOP_CLUSTER_NAME",   "kind")
+ingress_domain := env_var_or_default("WORKSHOP_INGRESS_DOMAIN", "localho.st")
+
+
+# Start a local KIND cluster with nginx, localhost:5000 registry, and *.localho.st alias in kube DNS
+kind: kind-down
+    infrastructure/kind_with_nginx.sh {{cluster_name}}
+    ls -lart ~/.kube/config
+    chmod o+r ~/.kube/config
+
+    # check connectivity to local k8s
+    kubectl cluster-info &>/dev/null
+
+
+# Shut down the KIND cluster
+kind-down:
+    #!/bin/bash
+    kind delete cluster --name {{cluster_name}}
+
+    if docker inspect kind-registry &>/dev/null; then
+        echo "Stopping container registry"
+        docker kill kind-registry
+        docker rm kind-registry
+    fi
+
+
 ###############################################################################
 # MICROFAB / DEV TARGETS                                                      #
 ###############################################################################
 
 # Shut down the microfab (uf) instance
-microfab-bye:
+microfab-down:
     #!/bin/bash
 
     if docker inspect microfab &>/dev/null; then
@@ -53,7 +79,7 @@ microfab-bye:
 
 
 # Start a micro fab instance and create configuration in _cfg/uf
-microfab: microfab-bye
+microfab: microfab-down
     #!/bin/bash
     set -e -o pipefail
 
@@ -170,42 +196,31 @@ devshell:
 # CLOUD NATIVE TARGETS                                                        #
 ###############################################################################
 
-cluster_name   := env_var_or_default("WORKSHOP_CLUSTER_NAME",   "kind")
-namespace      := env_var_or_default("WORKSHOP_NAMESPACE",      "fabricinfra")
-ingress_domain := env_var_or_default("WORKSHOP_DOMAIN",         "localho.st")
+# Deploy the operator sample network and create a channel
+network: network-down
+    infrastructure/sample-network/network up
 
 
-# Start a local KIND cluster with nginx, localhost:5000 registry, and *.localho.st alias in kube DNS
-kind: unkind
-    infrastructure/kind_with_nginx.sh {{cluster_name}}
-    ls -lart ~/.kube/config
-    chmod o+r ~/.kube/config
-
-    # check connectivity to local k8s 
-    kubectl cluster-info &>/dev/null
+# Tear down the operator sample network
+network-down:
+    infrastructure/sample-network/network down
 
 
-# Shut down the KIND cluster
-unkind:
-    #!/bin/bash
-    kind delete cluster --name {{cluster_name}}
-
-    if docker inspect kind-registry &>/dev/null; then
-        echo "Stopping container registry"
-        docker kill kind-registry
-        docker rm kind-registry
-    fi
+# Create 'mychannel'
+network-channel:
+    infrastructure/sample-network/network channel create
 
 
 ###############################################################################
 # ANSIBLE PLAYBOOK TARGETS                                                    #
 ###############################################################################
 
-ANSIBLE_IMAGE := "ghcr.io/ibm-blockchain/ofs-ansibe:sha-65a953b"
+ansible_image   := env_var_or_default("ANSIBLE_IMAGE",      "ghcr.io/ibm-blockchain/ofs-ansibe:sha-65a953b")
+namespace       := env_var_or_default("WORKSHOP_NAMESPACE", "fabricinfra")
 
 
 # just set up everything with Ansible
-ansible-doit: ansible-review-config operator console ansible-sample-network
+ansible-doit: ansible-review-config ansible-operator ansible-console ansible-network
 
 
 # Review the Ansible Blockchain Collection configuration in _cfg/
@@ -238,7 +253,7 @@ ansible-review-config:
 
 
 # Start the Kubernetes fabric-operator with the Ansible Blockchain Collection
-operator:
+ansible-operator:
     #!/bin/bash
     set -ex -o pipefail
 
@@ -249,7 +264,7 @@ operator:
         -v $(pwd)/infrastructure/kind_console_ingress:/playbooks \
         --network=host \
         --workdir /playbooks \
-        ${ANSIBLE_IMAGE} \
+        {{ansible_image}} \
             ansible-playbook /playbooks/90-KIND-ingress.yml
 
     docker run \
@@ -258,12 +273,12 @@ operator:
         -v ${CWDIR}/_cfg:/_cfg \
         -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
         --network=host \
-        ${ANSIBLE_IMAGE} \
+        {{ansible_image}} \
             ansible-playbook /playbooks/01-operator-install.yml
 
 
 # Start the Fabric Operations Console with the Ansible Blockchain Collection
-console:
+ansible-console:
     #!/bin/bash
     set -ex -o pipefail
 
@@ -273,7 +288,7 @@ console:
         -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ${ANSIBLE_IMAGE} \
+        {{ansible_image}} \
             ansible-playbook /playbooks/02-console-install.yml
 
     AUTH=$(curl -X POST https://{{namespace}}-hlf-console-console.{{ingress_domain}}:443/ak/api/v2/permissions/keys -u admin:password -k -H 'Content-Type: application/json' -d '{"roles": ["writer", "manager"],"description": "newkey"}')
@@ -292,7 +307,7 @@ console:
 
 
 # Build a sample Fabric network with the Ansible Blockchain Collection
-ansible-sample-network:
+ansible-network:
     #!/bin/bash
     set -ex -o pipefail
 
@@ -303,8 +318,16 @@ ansible-sample-network:
         -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ${ANSIBLE_IMAGE} \
+        {{ansible_image}} \
             ansible-playbook /playbooks/00-complete.yml
+
+
+# Bring down the sample network created with the Ansible Blockchain Collection
+ansible-network-down:
+    #!/bin/bash
+    set -ex -o pipefail
+
+    kubectl delete namespace {{ namespace }} --ignore-not-found
 
 
 # Build a chaincode package with Ansible Blockchain Collection
@@ -337,7 +360,7 @@ ansible-deploy-chaincode:
         -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ${ANSIBLE_IMAGE} \
+        {{ansible_image}} \
             ansible-playbook /playbooks/19-install-and-approve-chaincode.yml
 
     docker run \
@@ -347,7 +370,7 @@ ansible-deploy-chaincode:
         -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ${ANSIBLE_IMAGE} \
+        {{ansible_image}} \
             ansible-playbook /playbooks/20-install-and-approve-chaincode.yml
 
     docker run \
@@ -357,7 +380,7 @@ ansible-deploy-chaincode:
         -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
-        ${ANSIBLE_IMAGE} \
+        {{ansible_image}} \
             ansible-playbook /playbooks/21-commit-chaincode.yml
 
 
@@ -372,7 +395,7 @@ ansible-deploy-chaincode:
 #         -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks \
 #         -v ${CWDIR}/_cfg:/_cfg \
 #         --network=host \
-#         ${ANSIBLE_IMAGE}:latest \
+#         {{ansible_image}}:latest \
 #             ansible-playbook /playbooks/22-register-application.yml
 
 
