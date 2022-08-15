@@ -30,6 +30,13 @@ just network
 
 ```
 
+- Create a Fabric channel
+```shell
+
+just network-channel
+
+```
+
 - Set the location for the network's TLS certificates, channel MSP, and user enrollments 
 ```shell
 
