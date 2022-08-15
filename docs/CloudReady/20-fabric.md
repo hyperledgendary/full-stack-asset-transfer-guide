@@ -53,7 +53,7 @@ curl \
 
 # Take it Further:  
 
-### Build a network and channel with Ansible
+### Build a network with the [Ansible Blockchain Collection](https://github.com/IBM-Blockchain/ansible-collection)
 
 ```shell
 
@@ -61,15 +61,15 @@ curl \
 just operator
 just console 
 
-# Construct a network and channel using the Ansible Blockchain Collection
+# Construct a network and channel with ansible playbooks
 just ansible-sample-network
 
 ```
 
 
-### Build a network with the Fabric Operations Console
+### Build a network with the [Fabric Operations Console](https://github.com/hyperledger-labs/fabric-operations-console)  
 
-- Launch the [fabric-operator](https://github.com/hyperledger-labs/fabric-operator) and [Fabric Operations Console](https://github.com/hyperledger-labs/fabric-operations-console) in Kubernetes: 
+- Launch the [fabric-operator](https://github.com/hyperledger-labs/fabric-operator) and console 
 ```shell
 
 # Start the operator and Fabric Operations Console
@@ -83,7 +83,7 @@ echo "open https://$WORKSHOP_NAMESPACE-hlf-console-console.$WORKSHOP_INGRESS_DOM
 
 - Open the console (self-signed cert), log in as `admin : password`, and change the admin password.  
 
-- [Build a network](https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-build-network) with the [Fabric Operations Console](https://github.com/hyperledger-labs/fabric-operations-console)
+- [Build a network](https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-build-network)
 
 
 ---
