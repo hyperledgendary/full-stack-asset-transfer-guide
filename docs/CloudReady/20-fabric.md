@@ -53,19 +53,39 @@ curl \
 
 # Take it Further:  
 
-### Build a network with Ansible
-- just operator 
-- just console 
-- just sample-network 
+### Build a network and channel with Ansible
+
+```shell
+
+# Start the operator and Fabric Operations Console
+just operator
+just console 
+
+# Construct a network and channel using the Ansible Blockchain Collection
+just ansible-sample-network
+
+```
+
 
 ### Build a network with the Fabric Operations Console
 
-- just operator 
-- just console 
-- open https://fabricinfra-hlf-console-console.$TEST_NETWORK_INGRESS_DOMAIN/    ( admin/password )  
+- Launch the [fabric-operator](https://github.com/hyperledger-labs/fabric-operator) and [Fabric Operations Console](https://github.com/hyperledger-labs/fabric-operations-console) in Kubernetes: 
+```shell
+
+# Start the operator and Fabric Operations Console
+just operator
+just console 
+
+# The console will be available at the Nginx ingress domain alias: 
+echo "open https://$WORKSHOP_NAMESPACE-hlf-console-console.$WORKSHOP_INGRESS_DOMAIN/" 
+
+```
+
+- Open the console (self-signed cert), log in as `admin : password`, and change the admin password.  
+
+- [Build a network](https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-build-network) with the [Fabric Operations Console](https://github.com/hyperledger-labs/fabric-operations-console)
+
 
 ---
 
 [PREV: Deploy a Kube](10-kube.md) <==> [NEXT: Install Chaincode](30-chaincode.md)
-
-
