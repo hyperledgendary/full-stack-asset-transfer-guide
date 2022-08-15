@@ -31,11 +31,10 @@ const hostAlias = process.env.HOST_ALIAS;
 
 export async function newGrpcConnection(): Promise<grpc.Client> {
     const certPath = path.resolve(tlsCertPath ?? defaultTlsCertificate);
-    const tlsRootCert = await fs.promises.readFile(certPath);
-
-    if (fs.existsSync(tlsRootCert)){
+    if (fs.existsSync(certPath)) {
+        const tlsRootCert = await fs.promises.readFile(certPath);
         const tlsCredentials = grpc.credentials.createSsl(tlsRootCert);
-        return new grpc.Client(gatewayEndpoint, tlsCredentials, newGrpcClientOptions());    
+        return new grpc.Client(gatewayEndpoint, tlsCredentials, newGrpcClientOptions());
     } else {
         return new grpc.Client(gatewayEndpoint, grpc.ChannelCredentials.createInsecure());
     }
