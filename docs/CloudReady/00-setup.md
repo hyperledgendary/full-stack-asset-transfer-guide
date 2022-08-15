@@ -32,7 +32,8 @@ export PATH=$PWD/bin:$PATH
 ### Ready?
 
 ```shell
-./check.sh
+
+just check
 
 ```
 
