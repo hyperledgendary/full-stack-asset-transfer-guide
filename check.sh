@@ -25,7 +25,13 @@ KIND_VERSION=0.14.0
 if ! command -v kind &> /tmp/cmdpath
 then
   echo "${WARN} Please install kind; suggested install commands:"
+  echo
+  echo "LINUX"
   echo "sudo curl --fail --silent --show-error -L https://kind.sigs.k8s.io/dl/v${KIND_VERSION}/kind-linux-amd64 -o /usr/local/bin/kind"
+  echo "sudo chmod 755 /usr/local/bin/kind"
+  echo
+  echo "MAC"
+  echo "sudo curl --fail --silent --show-error -L https://kind.sigs.k8s.io/dl/v${KIND_VERSION}/kind-darwin-amd64 -o /usr/local/bin/kind"
   echo "sudo chmod 755 /usr/local/bin/kind"
   echo
   EXIT=1
@@ -38,11 +44,18 @@ K9S_VERSION=0.25.3
 if ! command -v k9s &> /tmp/cmdpath
 then
   echo "${WARN} Please install k9s; suggested install commands:"
+  echo
+  echo "LINUX"
   echo "curl --fail --silent --show-error -L https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz -o /tmp/k9s_Linux_x86_64.tar.gz"
   echo "tar -zxf /tmp/k9s_Linux_x86_64.tar.gz -C /usr/local/bin k9s"
-  echo "sudo chown root:root /usr/local/bin/k9s"
+  echo "sudo chown root /usr/local/bin/k9s"
   echo "sudo chmod 755 /usr/local/bin/k9s"
   echo
+  echo "MAC"
+  echo "curl --fail --silent --show-error -L https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Darwin_x86_64.tar.gz -o /tmp/k9s_Darwin_x86_64.tar.gz"
+  echo "tar -zxf /tmp/k9s_Darwin_x86_64.tar.gz -C /usr/local/bin k9s"
+  echo "sudo chown root /usr/local/bin/k9s"
+  echo "sudo chmod 755 /usr/local/bin/k9s"
   EXIT=1
 else
   echo -e "${SUCCESS} k9s found:\t\t$(cat /tmp/cmdpath)"
@@ -65,7 +78,7 @@ then
   echo "${WARN} Please install weft; suggested install commands:"
   echo "npm install -g @hyperledger-labs/weft"
   EXIT=1
-else 
+else
   echo -e "${SUCCESS} weft found:\t\t$(cat /tmp/cmdpath)"
 fi
 
