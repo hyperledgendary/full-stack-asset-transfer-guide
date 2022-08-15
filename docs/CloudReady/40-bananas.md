@@ -55,35 +55,23 @@ mv $USER_MSP_DIR/keystore/*_sk $USER_MSP_DIR/keystore/key.pem
 
 ## Go Bananas 
 
-- todo: the new cert paths / npm client app are throwing an error.  There may still be another ENV var necessary from the old launch 
-- workaround:  git checkout feature/creaky from jkneubuh branch and npm install.  Use the older launch vars: 
-```shell
-
-export KEY_DIRECTORY_PATH=$USER_MSP_DIR/keystore/
-export CERT_PATH=$USER_MSP_DIR/signcerts/cert.pem
-export TLS_CERT_PATH=$PEER_MSP_DIR/tlscacerts/tlsca-signcert.pem
-export PEER_HOST_ALIAS=$WORKSHOP_NAMESPACE-$ORG-peer1-peer.${WORKSHOP_INGRESS_DOMAIN} 
-export PEER_ENDPOINT=$PEER_HOST_ALIAS:443
-
-```
-
-- todo: broken - why? 
+- Set the gateway client to connect to the org1-peer1 as the newly enrolled `${USERNAME}`:
 ```shell
 
 # Path to private key file 
-# export PRIVATE_KEY=${USER_MSP_DIR}/keystore/key.pem
+export PRIVATE_KEY=${USER_MSP_DIR}/keystore/key.pem
 
 # Path to user certificate file 
-# export CERTIFICATE=${USER_MSP_DIR}/signcerts/cert.pem
+export CERTIFICATE=${USER_MSP_DIR}/signcerts/cert.pem
 
 # Path to CA certificate 
-# export TLS_CERT=${PEER_MSP_DIR}/tlscacerts/tlsca-signcert.pem
+export TLS_CERT=${PEER_MSP_DIR}/tlscacerts/tlsca-signcert.pem
 
 # Gateway peer SSL host name override 
-# export HOST_ALIAS=${WORKSHOP_NAMESPACE}-${ORG}-peer1-peer.${WORKSHOP_INGRESS_DOMAIN}
+export HOST_ALIAS=${WORKSHOP_NAMESPACE}-${ORG}-peer1-peer.${WORKSHOP_INGRESS_DOMAIN}
 
 # Gateway endpoint
-# export ENDPOINT=$HOST_ALIAS:443
+export ENDPOINT=$HOST_ALIAS:443
 
 ```
 
@@ -91,8 +79,7 @@ export PEER_ENDPOINT=$PEER_HOST_ALIAS:443
 
 pushd applications/trader-typescript 
 
-# todo: fix the launch env.  This works with the npm app < 8/12 
-#npm install
+npm install
 
 ```
 
