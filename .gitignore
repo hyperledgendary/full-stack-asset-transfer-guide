@@ -9,7 +9,7 @@ _*
 
 
 bin
-config
+./config/
 
 .DS_Store
 .idea/

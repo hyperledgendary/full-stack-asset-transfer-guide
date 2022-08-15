@@ -196,6 +196,18 @@ unkind:
         docker rm kind-registry
     fi
 
+# Deploy the operator sample network and create a channel
+network-up:
+    #!/bin/bash
+
+    echo "Go bigly."
+
+
+# Tear down the operator sample network
+network-down:
+    #!/bin/bash
+    echo "Go home."
+
 
 ###############################################################################
 # ANSIBLE PLAYBOOK TARGETS                                                    #
