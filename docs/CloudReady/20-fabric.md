@@ -9,9 +9,8 @@
 - todo: write a check.sh for each exercise 
 ```shell
    [[ -d ${WORKSHOP_PATH}         ]] || echo stop1 \
-&& [[ -v WORKSHOP_IP              ]] || echo stop2 \
-&& [[ -v WORKSHOP_INGRESS_DOMAIN  ]] || echo stop3 \
-&& [[ -v WORKSHOP_NAMESPACE       ]] || echo stop4 \
+&& [[ -v WORKSHOP_INGRESS_DOMAIN  ]] || echo stop2 \
+&& [[ -v WORKSHOP_NAMESPACE       ]] || echo stop3 \
 
 ```
 
