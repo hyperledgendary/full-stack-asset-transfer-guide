@@ -12,6 +12,8 @@
 
 - [jq](https://stedolan.github.io/jq/download/)
 
+- [k9s](https://k9scli.io/topics/install/) (recommended)
+
 - [full-stack-asset-transfer-guide](https://github.com/hyperledgendary/full-stack-asset-transfer-guide) (this project):
 ```shell
 
@@ -36,8 +38,6 @@ export FABRIC_CFG_PATH=${WORKSHOP_PATH}/config
 export PATH=${WORKSHOP_PATH}/bin:$PATH
 
 ```
-
-- todo: test for kubectl >= 1.24.  There are issues for older revs.
 
 
 ### Ready?
