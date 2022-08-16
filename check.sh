@@ -12,12 +12,36 @@ else
     echo -e "${SUCCESS} Docker found:\t$(cat /tmp/cmdpath)"
 fi
 
+KUBECTL_VERSION=v1.24.3       # $(curl -L -s https://dl.k8s.io/release/stable.txt)
 if ! command -v kubectl &> /tmp/cmdpath
 then
-    echo "${WARN} Please install kubectl if you want to use k8s; suggested install commands:"
-    EXIT=1
+  echo "${WARN} Please install kubectl if you want to use k8s; suggested install commands:"
+
+  if [ $(uname -s) = Darwin ]; then
+    if [ $(uname -m) = arm64 ]; then
+      echo "curl -LO https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/darwin/arm64/kubectl"
+      echo "chmod +x ./kubectl"
+      echo "sudo mv ./kubectl /usr/local/bin/kubectl"
+      echo "sudo chown root: /usr/local/bin/kubectl"
+    else
+      echo "curl -LO https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/darwin/amd64/kubectl"
+      echo "chmod +x ./kubectl"
+      echo "sudo mv ./kubectl /usr/local/bin/kubectl"
+      echo "sudo chown root: /usr/local/bin/kubectl"
+    fi
+  else
+    echo "curl -LO https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
+    echo "sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl"
+  fi
+  EXIT=1
 else
-    echo -e "${SUCCESS} kubectl found:\t$(cat /tmp/cmdpath)"
+  echo -e "${SUCCESS} kubectl found:\t$(cat /tmp/cmdpath)"
+
+  KUBECTL_CLIENT_VERSION=$(kubectl version --client --output=yaml | grep gitVersion | cut -c 15-)
+  if [ x${KUBECTL_CLIENT_VERSION} != x${KUBECTL_VERSION} ]; then
+    echo -e "${WARN} Found kubectl client version ${KUBECTL_CLIENT_VERSION}, which may be out of date.  Please ensure client version >= ${KUBECTL_VERSION}"
+    EXIT=1
+  fi
 fi
 
 # Install kind
