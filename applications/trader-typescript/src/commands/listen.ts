@@ -6,7 +6,7 @@
 
 import { ChaincodeEvent, checkpointers, Gateway } from '@hyperledger/fabric-gateway';
 import * as path from 'path';
-import { chaincodeName, channelName } from '../config';
+import { CHAINCODE_NAME, CHANNEL_NAME } from '../config';
 import { ExpectedError } from '../expectedError';
 import { printable } from '../utils';
 
@@ -16,7 +16,7 @@ const simulatedFailureCount = getSimulatedFailureCount();
 const startBlock = BigInt(0);
 
 export default async function main(gateway: Gateway): Promise<void> {
-    const network = gateway.getNetwork(channelName);
+    const network = gateway.getNetwork(CHANNEL_NAME);
     const checkpointer = await checkpointers.file(checkpointFile);
 
     console.log(`Starting event listening from block ${checkpointer.getBlockNumber() ?? startBlock}`);
@@ -25,7 +25,7 @@ export default async function main(gateway: Gateway): Promise<void> {
         console.log(`Simulating a write failure every ${simulatedFailureCount} transactions`);
     }
 
-    const events = await network.getChaincodeEvents(chaincodeName, {
+    const events = await network.getChaincodeEvents(CHAINCODE_NAME, {
         startBlock, // Used only if there is no checkpoint block number
     });
 

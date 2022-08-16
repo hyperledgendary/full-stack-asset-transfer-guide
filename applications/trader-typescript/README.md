@@ -16,26 +16,20 @@ The following steps prepare the client application for execution:
 > **Note:** After making any code changes to the application, be sure to recompile the application code. This can be done by explicitly running `npm install` again, or you can leave `npm run build:watch` running in a terminal window to automatically rebuild the application on any code change.
 
 
-The client application uses environment variables to supply configuration options. You should set the following environment variables when running the application:
+The client application uses environment variables to supply configuration options. You must set the following environment variables when running the application:
 
+- `ENDPOINT` - endpoint address for the Gateway service to which the client will connect in the form **hostname:port**. Depending on your environment, this can be the address of a specific peer within the user's organization, or an ingress endpoint that dispatches to aany available peer in the user's organization.
 - `MSP_ID` - member service provider ID for the user's organization.
 - `CERTIFICATE` - PEM file containing the user's X.509 certificate.
 - `PRIVATE_KEY` - PEM file containing the user's private key.
-- `ENDPOINT` - endpoint address for the Gateway service to which the client will connect in the form **hostname:port**. Depending on your environment, this can be the address of a specific peer within the user's organization, or an ingress endpoint that dispatches to aany available peer in the user's organization.
-- `TLS_CERT` - PEM file containing the CA certificate used to authenticate the TLS connection to the Gateway peer.
-   - **leave blank for use with Microfab**
+
+The following environment variables are optional and can be set if required by your environment:
+
+- `CHANNEL_NAME` - Channel to which the chaincode is deployed. (Default: `mychannel`)
+- `CHAINCODE_NAME` - Channel to which the chaincode is deployed. (Default: `asset-transfer`)
+- `TLS_CERT` - PEM file containing the CA certificate used to authenticate the TLS connection to the Gateway peer. *Only required if using a TLS connection and a private CA.*
 - `HOST_ALIAS` - the name of the Gateway peer as it appears in its TLS certificate. *Only required if the endpoint address used by the client does not match the address in the Gateway peer's TLS certificate.*
 
-You can set the environment variables directly as follows;
-
-```bash
-export ENDPOINT=$(jq '.peers[].url' ./_cfg/uf/_gateways/org1gateway.json)
-export MSPID=$(jq -r '.mspId' ./_cfg/uf/_wallets/org1/org1admin.id)
-export CERTIFICATE=$(jq -r '.credentials.certificate' ./_cfg/uf/_wallets/org1/org1admin.id > cert.pem && realpath cert.pem)
-export PRIVATE_KEY=$(jq -r '.credentials.privateKey' ./_cfg/uf/_wallets/org1/org1admin.id > pk.pem && realpath pk.pem)
-```
-
-You can if you choose load the files directly in the client application as in the [ping-chaincode](../ping-chaincode/src/app.ts) application.
 # Run
 
 The sample application is run as a command-line application, and is lauched using `npm start <command> [<arg> ...]`. The following commands are available:

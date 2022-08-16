@@ -9,7 +9,7 @@ Connection to the Gateway service is driven by the **runCommand()** function in 
 1. **Create gRPC connection to Gateway endpoint** - this is done in the **newGrpcConnection()** function in [connect.ts](../../applications/trader-typescript/src/connect.ts):
     ```typescript
     const tlsCredentials = grpc.credentials.createSsl(tlsRootCert);
-    return new grpc.Client(gatewayEndpoint, tlsCredentials);
+    return new grpc.Client(GATEWAY_ENDPOINT, tlsCredentials);
     ```
     The gRPC client connection is established using the [gRPC API](https://grpc.io/docs/) and is managed by the client application. The application can use the same gRPC connection to transact on behalf of many client identities.
 
@@ -44,12 +44,12 @@ When invoked, the command is passed the **Gateway** instance it should use to in
 
 1. **Get Network** - this represents a network of Fabric nodes belonging to a specific Fabric channel:
     ```typescript
-    const network = gateway.getNetwork(channelName);
+    const network = gateway.getNetwork(CHANNEL_NAME);
     ```
 
 1. **Get Contract** - this represents a specific smart contract deployed in the **Network**:
     ```typescript
-    const contract = network.getContract(chaincodeName);
+    const contract = network.getContract(CHAINCODE_NAME);
     ```
 
 1. **Create smart contract adapter** - this provides a view of the smart contract and its transaction functions in form that is easy to use for the client application business logic:
