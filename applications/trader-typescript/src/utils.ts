@@ -61,14 +61,14 @@ export function printable<T extends object>(event: T): PrintView<T> {
     ) as PrintView<T>;
 }
 
-export function assertAllDefined<T>(values: T[], message: string): T[] {
+export function assertAllDefined<T>(values: (T | undefined)[], message: string | (() => string)): T[] {
     values.forEach(value => assertDefined(value, message));
-    return values;
+    return values as T[];
 }
 
-export function assertDefined<T>(value: T, message: string): T {
+export function assertDefined<T>(value: T | undefined, message: string | (() => string)): T {
     if (value == undefined) {
-        throw new Error(message);
+        throw new Error(typeof message === 'string' ? message : message());
     }
 
     return value;

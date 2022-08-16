@@ -5,12 +5,12 @@
  */
 
 import { Gateway } from '@hyperledger/fabric-gateway';
-import { chaincodeName, channelName } from '../config';
+import { CHAINCODE_NAME, CHANNEL_NAME } from '../config';
 import { AssetTransfer } from '../contract';
 
 export default async function main(gateway: Gateway): Promise<void> {
-    const network = gateway.getNetwork(channelName);
-    const contract = network.getContract(chaincodeName);
+    const network = gateway.getNetwork(CHANNEL_NAME);
+    const contract = network.getContract(CHAINCODE_NAME);
 
     const smartContract = new AssetTransfer(contract);
     const assets = await smartContract.getAllAssets();

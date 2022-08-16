@@ -9,41 +9,22 @@ import { connect, Gateway, Identity, Signer, signers } from '@hyperledger/fabric
 import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
-import { defaultClientCertificate, defaultTlsCertificate, locatePrivateKey } from './config';
-
-// User organization MSP ID.
-const mspId = process.env.MSP_ID ?? 'Org1MSP';
-
-// Path to user private key file.
-const privateKeyPath = process.env.PRIVATE_KEY;
-
-// Path to user certificate file.
-const clientCertPath = process.env.CERTIFICATE;
-
-// Path to CA certificate.
-const tlsCertPath = process.env.TLS_CERT;
-
-// Gateway endpoint.
-const gatewayEndpoint = process.env.ENDPOINT ?? 'localhost:7051';
-
-// Gateway peer SSL host name override.
-const hostAlias = process.env.HOST_ALIAS;
+import { CLIENT_CERT_PATH, GATEWAY_ENDPOINT, HOST_ALIAS, MSP_ID, PRIVATE_KEY_PATH, TLS_CERT_PATH } from './config';
 
 export async function newGrpcConnection(): Promise<grpc.Client> {
-    const certPath = path.resolve(tlsCertPath ?? defaultTlsCertificate);
-    if (fs.existsSync(certPath)) {
-        const tlsRootCert = await fs.promises.readFile(certPath);
+    if (TLS_CERT_PATH) {
+        const tlsRootCert = await fs.promises.readFile(TLS_CERT_PATH);
         const tlsCredentials = grpc.credentials.createSsl(tlsRootCert);
-        return new grpc.Client(gatewayEndpoint, tlsCredentials, newGrpcClientOptions());
-    } else {
-        return new grpc.Client(gatewayEndpoint, grpc.ChannelCredentials.createInsecure());
+        return new grpc.Client(GATEWAY_ENDPOINT, tlsCredentials, newGrpcClientOptions());
     }
+
+    return new grpc.Client(GATEWAY_ENDPOINT, grpc.ChannelCredentials.createInsecure());
 }
 
 function newGrpcClientOptions(): grpc.ClientOptions {
     const result: grpc.ClientOptions = {};
-    if (hostAlias) {
-        result['grpc.ssl_target_name_override'] = hostAlias; // Only required if server TLS cert does not match the endpoint address we use
+    if (HOST_ALIAS) {
+        result['grpc.ssl_target_name_override'] = HOST_ALIAS; // Only required if server TLS cert does not match the endpoint address we use
     }
     return result;
 }
@@ -70,14 +51,14 @@ export async function newGatewayConnection(client: grpc.Client): Promise<Gateway
 }
 
 async function newIdentity(): Promise<Identity> {
-    const certPath = path.resolve(clientCertPath ?? defaultClientCertificate);
+    const certPath = path.resolve(CLIENT_CERT_PATH);
     const credentials = await fs.promises.readFile(certPath);
 
-    return { mspId, credentials };
+    return { mspId: MSP_ID, credentials };
 }
 
 async function newSigner(): Promise<Signer> {
-    const keyPath = path.resolve(privateKeyPath ?? locatePrivateKey());
+    const keyPath = path.resolve(PRIVATE_KEY_PATH);
     const privateKeyPem = await fs.promises.readFile(keyPath);
     const privateKey = crypto.createPrivateKey(privateKeyPem);
 
