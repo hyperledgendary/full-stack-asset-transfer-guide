@@ -12,7 +12,7 @@
 
 - [jq](https://stedolan.github.io/jq/download/)
 
-- [full-stack-asset-transfer-guide](https://github.com/hyperledgendary/full-stack-asset-transfer-guide) (this project)
+- [full-stack-asset-transfer-guide](https://github.com/hyperledgendary/full-stack-asset-transfer-guide) (this project):
 ```shell
 
 git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git
@@ -20,7 +20,7 @@ cd full-stack-asset-transfer-guide
 
 ```
 
-- Hyperledger Fabric [client binaries](https://hyperledger-fabric.readthedocs.io/en/latest/install.html#download-fabric-samples-docker-images-and-binaries)
+- Hyperledger Fabric [client binaries](https://hyperledger-fabric.readthedocs.io/en/latest/install.html#download-fabric-samples-docker-images-and-binaries):
 ```shell
 
 curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh | bash -s -- binary
