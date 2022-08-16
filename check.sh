@@ -26,12 +26,15 @@ if ! command -v kind &> /tmp/cmdpath
 then
   echo "${WARN} Please install kind; suggested install commands:"
   echo
-  echo "LINUX"
-  echo "sudo curl --fail --silent --show-error -L https://kind.sigs.k8s.io/dl/v${KIND_VERSION}/kind-linux-amd64 -o /usr/local/bin/kind"
-  echo "sudo chmod 755 /usr/local/bin/kind"
-  echo
-  echo "MAC"
-  echo "sudo curl --fail --silent --show-error -L https://kind.sigs.k8s.io/dl/v${KIND_VERSION}/kind-darwin-amd64 -o /usr/local/bin/kind"
+  if [ $(uname -s) = Darwin ]; then
+    if [ $(uname -m) = arm64 ]; then
+      echo "sudo curl --fail --silent --show-error -L https://kind.sigs.k8s.io/dl/v${KIND_VERSION}/kind-darwin-arm64 -o /usr/local/bin/kind"
+    else
+      echo "sudo curl --fail --silent --show-error -L https://kind.sigs.k8s.io/dl/v${KIND_VERSION}/kind-darwin-amd64 -o /usr/local/bin/kind"
+    fi
+  else
+    echo "sudo curl --fail --silent --show-error -L https://kind.sigs.k8s.io/dl/v${KIND_VERSION}/kind-linux-amd64 -o /usr/local/bin/kind"
+  fi
   echo "sudo chmod 755 /usr/local/bin/kind"
   echo
   EXIT=1
@@ -45,17 +48,21 @@ if ! command -v k9s &> /tmp/cmdpath
 then
   echo "${WARN} Please install k9s; suggested install commands:"
   echo
-  echo "LINUX"
-  echo "curl --fail --silent --show-error -L https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz -o /tmp/k9s_Linux_x86_64.tar.gz"
-  echo "tar -zxf /tmp/k9s_Linux_x86_64.tar.gz -C /usr/local/bin k9s"
+  if [ $(uname -s) = Darwin ]; then
+    if [ $(uname -m) = arm64 ]; then
+      echo "curl --fail --silent --show-error -L https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Darwin_arm64.tar.gz -o /tmp/k9s_Darwin_arm64.tar.gz"
+      echo "tar -zxf /tmp/k9s_Darwin_arm64.tar.gz -C /usr/local/bin k9s"
+    else
+      echo "curl --fail --silent --show-error -L https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Darwin_x86_64.tar.gz -o /tmp/k9s_Darwin_x86_64.tar.gz"
+      echo "tar -zxf /tmp/k9s_Darwin_x86_64.tar.gz -C /usr/local/bin k9s"
+    fi
+  else
+    echo "curl --fail --silent --show-error -L https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Linux_x86_64.tar.gz -o /tmp/k9s_Linux_x86_64.tar.gz"
+    echo "tar -zxf /tmp/k9s_Linux_x86_64.tar.gz -C /usr/local/bin k9s"
+  fi
   echo "sudo chown root /usr/local/bin/k9s"
   echo "sudo chmod 755 /usr/local/bin/k9s"
   echo
-  echo "MAC"
-  echo "curl --fail --silent --show-error -L https://github.com/derailed/k9s/releases/download/v${K9S_VERSION}/k9s_Darwin_x86_64.tar.gz -o /tmp/k9s_Darwin_x86_64.tar.gz"
-  echo "tar -zxf /tmp/k9s_Darwin_x86_64.tar.gz -C /usr/local/bin k9s"
-  echo "sudo chown root /usr/local/bin/k9s"
-  echo "sudo chmod 755 /usr/local/bin/k9s"
   EXIT=1
 else
   echo -e "${SUCCESS} k9s found:\t\t$(cat /tmp/cmdpath)"
