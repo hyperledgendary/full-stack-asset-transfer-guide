@@ -15,7 +15,7 @@ In a terminal window, nagivate to the [applications/trader-typescript](../../app
     ```bash
     export ENDPOINT=org1peer-api.127-0-0-1.nip.io:8080
     export MSP_ID=org1MSP
-    export CERTIFICATE=../../_cfg/uf/_msp/org1/org1admin/msp/admincerts/org1admin.pem
+    export CERTIFICATE=../../_cfg/uf/_msp/org1/org1admin/msp/signcerts/org1admin.pem
     export PRIVATE_KEY=../../_cfg/uf/_msp/org1/org1admin/msp/keystore/cert_sk
     ```
 
@@ -43,6 +43,6 @@ The environment variable settings above run as a user from org1. If you want to 
 ```bash
 export ENDPOINT=org2peer-api.127-0-0-1.nip.io:8080
 export MSP_ID=org2MSP
-export CERTIFICATE=../../_cfg/uf/_msp/org2/org2admin/msp/admincerts/org2admin.pem
+export CERTIFICATE=../../_cfg/uf/_msp/org2/org2admin/msp/signcerts/org2admin.pem
 export PRIVATE_KEY=../../_cfg/uf/_msp/org2/org2admin/msp/keystore/cert_sk
 ```
