@@ -44,7 +44,7 @@ export PATH=${WORKSHOP_PATH}/bin:$PATH
 
 ```shell
 
-just check
+./check.sh
 
 ```
 
