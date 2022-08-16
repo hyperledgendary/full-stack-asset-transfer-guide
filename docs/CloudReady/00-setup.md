@@ -4,7 +4,15 @@
 
 ---
 
-## Prerequisites 
+### Prerequisites
+
+- [full-stack-asset-transfer-guide](https://github.com/hyperledgendary/full-stack-asset-transfer-guide) (this GitHub project):
+```shell
+
+git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git
+cd full-stack-asset-transfer-guide
+
+```
 
 - [docker](https://www.docker.com/get-started/)
 
@@ -13,14 +21,6 @@
 - [jq](https://stedolan.github.io/jq/download/)
 
 - [k9s](https://k9scli.io/topics/install/) (recommended)
-
-- [full-stack-asset-transfer-guide](https://github.com/hyperledgendary/full-stack-asset-transfer-guide) (this project):
-```shell
-
-git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git
-cd full-stack-asset-transfer-guide
-
-```
 
 - Hyperledger Fabric [client binaries](https://hyperledger-fabric.readthedocs.io/en/latest/install.html#download-fabric-samples-docker-images-and-binaries):
 ```shell
