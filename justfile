@@ -68,7 +68,7 @@ kind-down:
 ###############################################################################
 
 # Run e2e tests of all scenarios
-test: test-chaincode test-appdev test-network # test-ansible
+test: test-chaincode test-appdev test-cloud # test-ansible
 
 # Run an e2e test of the SmartContractDev scenario
 test-chaincode:
@@ -79,7 +79,7 @@ test-appdev:
     tests/10-appdev-e2e.sh
 
 # Run an e2e test of the CloudNative scenario
-test-network:
+test-cloud:
     tests/20-cloud-e2e.sh
 
 # test-ansible:
