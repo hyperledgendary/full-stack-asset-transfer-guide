@@ -97,6 +97,6 @@ But there are limited number of different types of cards, and one card can't be 
 
 ## Epilogue
 
-- [Go Bananas](docs/CloudReady/50-conga-pit.md)
+- [Go Bananas](docs/CloudReady/40-bananas.md)
 - [Teardown](docs/CloudReady/90-teardown.md)
-- [Bring it Home](docs/CloudReady/100-bring-it-home.md)
+- [Bring it Home](docs/CloudReady/100-bring-it-home.md) COMING_SOON
