@@ -65,6 +65,28 @@ kind-down:
 
 
 ###############################################################################
+# TEST TARGETS
+###############################################################################
+
+# Run e2e tests of all scenarios
+test: test-chaincode test-appdev test-cloud # test-ansible
+
+# Run an e2e test of the SmartContractDev scenario
+test-chaincode:
+    tests/00-chaincode-e2e.sh
+
+# Run an e2e test of the ApplicationDev scenario
+test-appdev:
+    tests/10-appdev-e2e.sh
+
+# Run an e2e test of the CloudNative scenario
+test-cloud:
+    tests/20-cloud-e2e.sh
+
+# test-ansible:
+
+
+###############################################################################
 # MICROFAB / DEV TARGETS                                                      #
 ###############################################################################
 
