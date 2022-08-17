@@ -119,8 +119,9 @@ if ! command -v peer &> /tmp/cmdpath
 then
   echo "${WARN} Please install the peer; suggested install commands:"
   echo "curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh | bash -s -- binary"
-  echo 'export PATH=$(pwd)/bin:$PATH'
-  echo 'export FABRIC_CFG_PATH=$(pwd)/config'
+  echo 'export WORKSHOP_PATH=$(pwd)'
+  echo 'export PATH=${WORKSHOP_PATH}/bin:$PATH'
+  echo 'export FABRIC_CFG_PATH=${WORKSHOP_PATH}/config'
   EXIT=1
 else
   echo -e "${SUCCESS} peer found:\t\t$(cat /tmp/cmdpath)"
