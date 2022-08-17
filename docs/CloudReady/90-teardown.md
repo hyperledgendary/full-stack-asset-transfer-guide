@@ -7,7 +7,7 @@
 ## Kind 
 
 ```shell
-just unkind
+just kind-down
 
 ```
 
