@@ -11,7 +11,7 @@ export const GATEWAY_ENDPOINT = assertEnv('ENDPOINT');
 export const MSP_ID = assertEnv('MSP_ID');
 export const CLIENT_CERT_PATH = resolve(assertEnv('CERTIFICATE'));
 export const PRIVATE_KEY_PATH = resolve(assertEnv('PRIVATE_KEY'));
-export const TLS_CERT_PATH = resolveIfPresent(process.env.TLS_CERT);
+export const TLS_CERT_PATH = resolvePathIfPresent(process.env.TLS_CERT);
 export const CHANNEL_NAME = process.env.CHANNEL_NAME ?? 'mychannel';
 export const CHAINCODE_NAME = process.env.CHAINCODE_NAME ?? 'asset-transfer';
 
@@ -36,10 +36,10 @@ function assertEnv(envName: string): string {
     });
 }
 
-function resolveIfPresent(rootPath: string | undefined, ...pathSegments: string[]): string | undefined {
-    if (pathSegments[0] != undefined) {
-        return resolve(...pathSegments);
+function resolvePathIfPresent(path: string | undefined): string | undefined {
+    if (path == undefined) {
+        return undefined;
     }
 
-    return undefined;
+    return resolve(path);
 }
