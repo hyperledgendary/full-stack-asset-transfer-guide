@@ -37,7 +37,6 @@ _default:
 check:
   ${CWDIR}/check.sh
 
-
 cluster_name   := env_var_or_default("WORKSHOP_CLUSTER_NAME",   "kind")
 ingress_domain := env_var_or_default("WORKSHOP_INGRESS_DOMAIN", "localho.st")
 
@@ -62,6 +61,28 @@ kind-down:
         docker kill kind-registry
         docker rm kind-registry
     fi
+
+
+###############################################################################
+# TEST TARGETS
+###############################################################################
+
+# Run e2e tests of all scenarios
+test: test-chaincode test-appdev test-cloud # test-ansible
+
+# Run an e2e test of the SmartContractDev scenario
+test-chaincode:
+    tests/00-chaincode-e2e.sh
+
+# Run an e2e test of the ApplicationDev scenario
+test-appdev:
+    tests/10-appdev-e2e.sh
+
+# Run an e2e test of the CloudNative scenario
+test-cloud:
+    tests/20-cloud-e2e.sh
+
+# test-ansible:
 
 
 ###############################################################################
@@ -190,6 +211,21 @@ devshell:
         -v /var/run/docker.sock:/var/run/docker.sock \
         --network=host \
         fabgo:latest
+
+
+# Run an e2e test of the ApplicationDev scenario
+appdev-test:
+    tests/10-appdev-e2e.sh
+
+
+# Run an e2e test of the SmartContractDev scenario
+chaincode-test:
+    tests/30-chaincode-e2e.sh
+
+
+# Run an e2e test of the CloudNative scenario
+network-test:
+    tests/20-cloud-e2e.sh
 
 
 ###############################################################################
