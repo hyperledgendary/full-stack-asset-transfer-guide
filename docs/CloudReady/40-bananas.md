@@ -23,10 +23,10 @@
 ```shell
 
 # User organization MSP ID
-MSP_ID=Org1MSP        
-ORG=org1
-USERNAME=org1user
-PASSWORD=org1userpw
+export MSP_ID=Org1MSP        
+export ORG=org1
+export USERNAME=org1user
+export PASSWORD=org1userpw
 
 ```
 

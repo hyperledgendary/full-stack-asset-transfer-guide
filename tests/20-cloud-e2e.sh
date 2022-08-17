@@ -289,10 +289,10 @@ echo "todo: 33 : crazy time, run CCaaS on localhost, invoked by peer in k8s"
 
 
 # User organization MSP ID
-MSP_ID=Org1MSP
-ORG=org1
-USERNAME=org1user
-PASSWORD=org1userpw
+export MSP_ID=Org1MSP
+export ORG=org1
+export USERNAME=org1user
+export PASSWORD=org1userpw
 
 # register / enroll the new user
 ADMIN_MSP_DIR=$WORKSHOP_CRYPTO/enrollments/${ORG}/users/rcaadmin/msp
