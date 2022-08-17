@@ -116,6 +116,8 @@ kubectl -n ${WORKSHOP_NAMESPACE} get deployment org2-ca
 kubectl -n ${WORKSHOP_NAMESPACE} get deployment org2-peer1
 kubectl -n ${WORKSHOP_NAMESPACE} get deployment org2-peer2
 
+export WORKSHOP_CRYPTO=$WORKSHOP_PATH/infrastructure/sample-network/temp
+
 # Hit the CAs using the TLS certs, etc.
 curl -s --cacert $WORKSHOP_CRYPTO/cas/org0-ca/tls-cert.pem https://$WORKSHOP_NAMESPACE-org0-ca-ca.$WORKSHOP_INGRESS_DOMAIN/cainfo | jq -c
 curl -s --cacert $WORKSHOP_CRYPTO/cas/org1-ca/tls-cert.pem https://$WORKSHOP_NAMESPACE-org1-ca-ca.$WORKSHOP_INGRESS_DOMAIN/cainfo | jq -c
@@ -125,7 +127,6 @@ curl -s --cacert $WORKSHOP_CRYPTO/cas/org2-ca/tls-cert.pem https://$WORKSHOP_NAM
 just network-channel
 
 # enrollment certificates and channel MSP
-export WORKSHOP_CRYPTO=$WORKSHOP_PATH/infrastructure/sample-network/temp
 find ${WORKSHOP_CRYPTO}
 
 
