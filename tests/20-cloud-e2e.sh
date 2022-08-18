@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -v -eou pipefail
 
@@ -43,8 +43,10 @@ export FABRIC_CFG_PATH="${WORKSHOP_PATH}/config"
 ###############################################################################
 
 # env checks
-[[ -d ${WORKSHOP_PATH} ]] || echo "Missing WORKSHOP_PATH"
+[[ ${WORKSHOP_PATH+x}   ]] || exit 1
+[[ ${FABRIC_CFG_PATH+x} ]] || exit 1
 
+# Set the ingress domain and target k8s namespace
 export WORKSHOP_INGRESS_DOMAIN=localho.st
 export WORKSHOP_NAMESPACE=test-network
 
@@ -67,9 +69,10 @@ kubectl cluster-info
 rm -rf ${WORKSHOP_PATH}/infrastructure/sample-network/temp
 
 # env checks
-   [[ -d ${WORKSHOP_PATH}         ]] || echo stop1 \
-&& [[ -v WORKSHOP_INGRESS_DOMAIN  ]] || echo stop2 \
-&& [[ -v WORKSHOP_NAMESPACE       ]] || echo stop3 \
+[[ ${WORKSHOP_PATH+x}           ]] || exit 1
+[[ ${FABRIC_CFG_PATH+x}         ]] || exit 1
+[[ ${WORKSHOP_INGRESS_DOMAIN+x} ]] || exit 1
+[[ ${WORKSHOP_NAMESPACE+x}      ]] || exit 1
 
 # check Nginx ingress
 kubectl -n ingress-nginx get all
@@ -135,15 +138,14 @@ find ${WORKSHOP_CRYPTO}
 ###############################################################################
 
 # env checks
-   [[ -d ${FABRIC_CFG_PATH}       ]] || echo stop1 \
-&& [[ -d ${WORKSHOP_PATH}         ]] || echo stop2 \
-&& [[ -d ${WORKSHOP_CRYPTO}       ]] || echo stop3 \
-&& [[ -v WORKSHOP_INGRESS_DOMAIN  ]] || echo stop4 \
-&& [[ -v WORKSHOP_NAMESPACE       ]] || echo stop5 \
+[[ ${FABRIC_CFG_PATH+x}         ]] || exit 1
+[[ ${WORKSHOP_PATH+x}           ]] || exit 1
+[[ ${WORKSHOP_CRYPTO+x}         ]] || exit 1
+[[ ${WORKSHOP_INGRESS_DOMAIN+x} ]] || exit 1
+[[ ${WORKSHOP_NAMESPACE+x}      ]] || exit 1
 
-# Peer CLI context
 
-# org1-peer1:
+# org1-peer1 peer CLI context
 export CORE_PEER_LOCALMSPID=Org1MSP
 export CORE_PEER_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer1-peer.${WORKSHOP_INGRESS_DOMAIN}:443
 export CORE_PEER_TLS_ENABLED=true
@@ -280,13 +282,13 @@ echo "todo: 33 : crazy time, run CCaaS on localhost, invoked by peer in k8s"
 # 40-bananas
 ###############################################################################
 
-# env checks
-   [[ -d ${FABRIC_CFG_PATH}       ]] || echo stop1 \
-&& [[ -d ${WORKSHOP_PATH}         ]] || echo stop2 \
-&& [[ -d ${WORKSHOP_CRYPTO}       ]] || echo stop3 \
-&& [[ -v WORKSHOP_INGRESS_DOMAIN  ]] || echo stop4 \
-&& [[ -v WORKSHOP_NAMESPACE       ]] || echo stop5 \
 
+# env checks
+[[ ${FABRIC_CFG_PATH+x}         ]] || exit 1
+[[ ${WORKSHOP_PATH+x}           ]] || exit 1
+[[ ${WORKSHOP_CRYPTO+x}         ]] || exit 1
+[[ ${WORKSHOP_INGRESS_DOMAIN+x} ]] || exit 1
+[[ ${WORKSHOP_NAMESPACE+x}      ]] || exit 1
 
 # User organization MSP ID
 export MSP_ID=Org1MSP
@@ -361,3 +363,4 @@ just network-down
 ###############################################################################
 # Looks good! 
 ###############################################################################
+exit 0
