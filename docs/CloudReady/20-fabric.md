@@ -6,11 +6,9 @@
 
 ## Ready?
 
-- todo: write a check.sh for each exercise
 ```shell
-   [[ -d ${WORKSHOP_PATH}         ]] || echo stop1 \
-&& [[ -v WORKSHOP_INGRESS_DOMAIN  ]] || echo stop2 \
-&& [[ -v WORKSHOP_NAMESPACE       ]] || echo stop3 \
+
+just check-kube
 
 ```
 
@@ -26,14 +24,14 @@ kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/
 - Apply a series of CA, peer, and orderer resources directly to the Kube API controller
 ```shell
 
-just network
+just cloud-fabric
 
 ```
 
 - Create a Fabric channel
 ```shell
 
-just network-channel
+just cloud-channel
 
 ```
 

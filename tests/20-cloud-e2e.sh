@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -v -eou pipefail
 
@@ -43,8 +43,12 @@ export FABRIC_CFG_PATH="${WORKSHOP_PATH}/config"
 ###############################################################################
 
 # env checks
-[[ -d ${WORKSHOP_PATH} ]] || echo "Missing WORKSHOP_PATH"
+[[ ${WORKSHOP_PATH+x}   ]] || exit 1
+[[ ${FABRIC_CFG_PATH+x} ]] || exit 1
 
+just check-setup
+
+# Set the ingress domain and target k8s namespace
 export WORKSHOP_INGRESS_DOMAIN=localho.st
 export WORKSHOP_NAMESPACE=test-network
 
@@ -66,10 +70,13 @@ kubectl cluster-info
 # Clear out any certs from a prior run, just in case
 rm -rf ${WORKSHOP_PATH}/infrastructure/sample-network/temp
 
+just check-kube
+
 # env checks
-   [[ -d ${WORKSHOP_PATH}         ]] || echo stop1 \
-&& [[ -v WORKSHOP_INGRESS_DOMAIN  ]] || echo stop2 \
-&& [[ -v WORKSHOP_NAMESPACE       ]] || echo stop3 \
+[[ ${WORKSHOP_PATH+x}           ]] || exit 1
+[[ ${FABRIC_CFG_PATH+x}         ]] || exit 1
+[[ ${WORKSHOP_INGRESS_DOMAIN+x} ]] || exit 1
+[[ ${WORKSHOP_NAMESPACE+x}      ]] || exit 1
 
 # check Nginx ingress
 kubectl -n ingress-nginx get all
@@ -86,7 +93,7 @@ kubectl get customresourcedefinition.apiextensions.k8s.io/ibporderers.ibp.com
 kubectl get customresourcedefinition.apiextensions.k8s.io/ibppeers.ibp.com
 
 # Bring up the network
-just network
+just cloud-fabric
 
 # Operator running?
 kubectl -n ${WORKSHOP_NAMESPACE} get deployment fabric-operator
@@ -124,7 +131,7 @@ curl -s --cacert $WORKSHOP_CRYPTO/cas/org1-ca/tls-cert.pem https://$WORKSHOP_NAM
 curl -s --cacert $WORKSHOP_CRYPTO/cas/org2-ca/tls-cert.pem https://$WORKSHOP_NAMESPACE-org2-ca-ca.$WORKSHOP_INGRESS_DOMAIN/cainfo | jq -c
 
 # create a channel
-just network-channel
+just cloud-channel
 
 # enrollment certificates and channel MSP
 find ${WORKSHOP_CRYPTO}
@@ -134,16 +141,17 @@ find ${WORKSHOP_CRYPTO}
 # 30-chaincode
 ###############################################################################
 
+just check-fabric
+
 # env checks
-   [[ -d ${FABRIC_CFG_PATH}       ]] || echo stop1 \
-&& [[ -d ${WORKSHOP_PATH}         ]] || echo stop2 \
-&& [[ -d ${WORKSHOP_CRYPTO}       ]] || echo stop3 \
-&& [[ -v WORKSHOP_INGRESS_DOMAIN  ]] || echo stop4 \
-&& [[ -v WORKSHOP_NAMESPACE       ]] || echo stop5 \
+[[ ${FABRIC_CFG_PATH+x}         ]] || exit 1
+[[ ${WORKSHOP_PATH+x}           ]] || exit 1
+[[ ${WORKSHOP_CRYPTO+x}         ]] || exit 1
+[[ ${WORKSHOP_INGRESS_DOMAIN+x} ]] || exit 1
+[[ ${WORKSHOP_NAMESPACE+x}      ]] || exit 1
 
-# Peer CLI context
 
-# org1-peer1:
+# org1-peer1 peer CLI context
 export CORE_PEER_LOCALMSPID=Org1MSP
 export CORE_PEER_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer1-peer.${WORKSHOP_INGRESS_DOMAIN}:443
 export CORE_PEER_TLS_ENABLED=true
@@ -280,13 +288,13 @@ echo "todo: 33 : crazy time, run CCaaS on localhost, invoked by peer in k8s"
 # 40-bananas
 ###############################################################################
 
-# env checks
-   [[ -d ${FABRIC_CFG_PATH}       ]] || echo stop1 \
-&& [[ -d ${WORKSHOP_PATH}         ]] || echo stop2 \
-&& [[ -d ${WORKSHOP_CRYPTO}       ]] || echo stop3 \
-&& [[ -v WORKSHOP_INGRESS_DOMAIN  ]] || echo stop4 \
-&& [[ -v WORKSHOP_NAMESPACE       ]] || echo stop5 \
 
+# env checks
+[[ ${FABRIC_CFG_PATH+x}         ]] || exit 1
+[[ ${WORKSHOP_PATH+x}           ]] || exit 1
+[[ ${WORKSHOP_CRYPTO+x}         ]] || exit 1
+[[ ${WORKSHOP_INGRESS_DOMAIN+x} ]] || exit 1
+[[ ${WORKSHOP_NAMESPACE+x}      ]] || exit 1
 
 # User organization MSP ID
 export MSP_ID=Org1MSP
@@ -353,7 +361,7 @@ popd
 # 90-teardown
 ###############################################################################
 
-just network-down
+just cloud-fabric-down
 
 
 
@@ -361,3 +369,4 @@ just network-down
 ###############################################################################
 # Looks good! 
 ###############################################################################
+exit 0
