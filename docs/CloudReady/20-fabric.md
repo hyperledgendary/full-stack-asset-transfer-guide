@@ -6,11 +6,9 @@
 
 ## Ready?
 
-- todo: write a check.sh for each exercise
 ```shell
-   [[ -d ${WORKSHOP_PATH}         ]] || echo stop1 \
-&& [[ -v WORKSHOP_INGRESS_DOMAIN  ]] || echo stop2 \
-&& [[ -v WORKSHOP_NAMESPACE       ]] || echo stop3 \
+
+just check-kube
 
 ```
 

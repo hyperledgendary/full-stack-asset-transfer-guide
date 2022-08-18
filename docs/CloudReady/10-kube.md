@@ -6,10 +6,9 @@
 
 ## Ready?
 
-- todo: write a check.sh and just target for each exercise 
 ```shell
 
-   [[ -d ${WORKSHOP_PATH} ]] || echo stop1 \
+just check-setup 
 
 ```
 

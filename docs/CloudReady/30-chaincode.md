@@ -6,14 +6,9 @@
 
 ## Checks
 
-- todo: write a check.sh for each exercise
 ```shell
 
-   [[ -d ${FABRIC_CFG_PATH}       ]] || echo stop1 \
-&& [[ -d ${WORKSHOP_PATH}         ]] || echo stop2 \
-&& [[ -d ${WORKSHOP_CRYPTO}       ]] || echo stop3 \
-&& [[ -v WORKSHOP_INGRESS_DOMAIN  ]] || echo stop4 \
-&& [[ -v WORKSHOP_NAMESPACE       ]] || echo stop5 \
+just check-fabric
 
 ```
 

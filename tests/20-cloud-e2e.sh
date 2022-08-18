@@ -46,6 +46,8 @@ export FABRIC_CFG_PATH="${WORKSHOP_PATH}/config"
 [[ ${WORKSHOP_PATH+x}   ]] || exit 1
 [[ ${FABRIC_CFG_PATH+x} ]] || exit 1
 
+just check-setup
+
 # Set the ingress domain and target k8s namespace
 export WORKSHOP_INGRESS_DOMAIN=localho.st
 export WORKSHOP_NAMESPACE=test-network
@@ -68,6 +70,8 @@ kubectl cluster-info
 # Clear out any certs from a prior run, just in case
 rm -rf ${WORKSHOP_PATH}/infrastructure/sample-network/temp
 
+just check-kube
+
 # env checks
 [[ ${WORKSHOP_PATH+x}           ]] || exit 1
 [[ ${FABRIC_CFG_PATH+x}         ]] || exit 1
@@ -89,7 +93,7 @@ kubectl get customresourcedefinition.apiextensions.k8s.io/ibporderers.ibp.com
 kubectl get customresourcedefinition.apiextensions.k8s.io/ibppeers.ibp.com
 
 # Bring up the network
-just network
+just cloud-fabric
 
 # Operator running?
 kubectl -n ${WORKSHOP_NAMESPACE} get deployment fabric-operator
@@ -127,7 +131,7 @@ curl -s --cacert $WORKSHOP_CRYPTO/cas/org1-ca/tls-cert.pem https://$WORKSHOP_NAM
 curl -s --cacert $WORKSHOP_CRYPTO/cas/org2-ca/tls-cert.pem https://$WORKSHOP_NAMESPACE-org2-ca-ca.$WORKSHOP_INGRESS_DOMAIN/cainfo | jq -c
 
 # create a channel
-just network-channel
+just cloud-channel
 
 # enrollment certificates and channel MSP
 find ${WORKSHOP_CRYPTO}
@@ -136,6 +140,8 @@ find ${WORKSHOP_CRYPTO}
 ###############################################################################
 # 30-chaincode
 ###############################################################################
+
+just check-fabric
 
 # env checks
 [[ ${FABRIC_CFG_PATH+x}         ]] || exit 1
@@ -355,7 +361,7 @@ popd
 # 90-teardown
 ###############################################################################
 
-just network-down
+just cloud-fabric-down
 
 
 

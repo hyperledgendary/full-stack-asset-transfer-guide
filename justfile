@@ -213,38 +213,37 @@ devshell:
         fabgo:latest
 
 
-# Run an e2e test of the ApplicationDev scenario
-appdev-test:
-    tests/10-appdev-e2e.sh
-
-
-# Run an e2e test of the SmartContractDev scenario
-chaincode-test:
-    tests/30-chaincode-e2e.sh
-
-
-# Run an e2e test of the CloudNative scenario
-network-test:
-    tests/20-cloud-e2e.sh
-
-
 ###############################################################################
 # CLOUD NATIVE TARGETS                                                        #
 ###############################################################################
 
 # Deploy the operator sample network and create a channel
-network: network-down
+cloud-fabric: cloud-fabric-down
     infrastructure/sample-network/network up
 
-
 # Tear down the operator sample network
-network-down:
+cloud-fabric-down:
     infrastructure/sample-network/network down
 
-
 # Create 'mychannel'
-network-channel:
+cloud-channel: check-fabric
     infrastructure/sample-network/network channel create
+
+# Check that the cloud setup has been performed
+check-setup:
+    checks/check-setup.sh
+
+# Check that the k8s API controller is ready
+check-kube: check-setup
+    checks/check-kube.sh
+
+# Check that the sample network and channel have been deployed
+check-fabric: check-kube
+    checks/check-fabric.sh
+
+# Check that the smart contract has been deployed
+check-chaincode: check-fabric
+    checks/check-chaincode.sh
 
 
 ###############################################################################
