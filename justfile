@@ -218,7 +218,7 @@ devshell:
 ###############################################################################
 
 # Deploy the operator sample network and create a channel
-cloud-fabric: cloud-fabric-down
+cloud-fabric: cloud-fabric-down check-kube
     infrastructure/sample-network/network up
 
 # Tear down the operator sample network
@@ -226,7 +226,7 @@ cloud-fabric-down:
     infrastructure/sample-network/network down
 
 # Create 'mychannel'
-cloud-channel: check-fabric
+cloud-channel:
     infrastructure/sample-network/network channel create
 
 # Check that the cloud setup has been performed

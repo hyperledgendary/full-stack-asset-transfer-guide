@@ -24,14 +24,14 @@ kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/
 - Apply a series of CA, peer, and orderer resources directly to the Kube API controller
 ```shell
 
-just network
+just cloud-fabric
 
 ```
 
 - Create a Fabric channel
 ```shell
 
-just network-channel
+just cloud-channel
 
 ```
 
