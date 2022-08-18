@@ -179,6 +179,8 @@ debugcc:
     export CORE_PEER_LOCALMSPID=org1MSP
     export CORE_PEER_MSPCONFIGPATH=$CFG/_msp/org1/org1admin/msp
     export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
+    export CORE_PEER_CLIENT_CONNTIMEOUT=15s
+    export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s    
 
     echo "CHAINCODE_ID=${CHAINCODE_ID}"
 
@@ -432,6 +434,3 @@ ansible-deploy-chaincode:
 #         --network=host \
 #         {{ansible_image}}:latest \
 #             ansible-playbook /playbooks/22-register-application.yml
-
-
-
