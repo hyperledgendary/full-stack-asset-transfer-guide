@@ -157,8 +157,8 @@ export CORE_PEER_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer1-peer.${WORKSHOP_INGRES
 export CORE_PEER_TLS_ENABLED=true
 export CORE_PEER_MSPCONFIGPATH=${WORKSHOP_CRYPTO}/enrollments/org1/users/org1admin/msp
 export CORE_PEER_TLS_ROOTCERT_FILE=${WORKSHOP_CRYPTO}/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
-export CORE_PEER_CLIENT_CONNTIMEOUT=10s
-export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=10s
+export CORE_PEER_CLIENT_CONNTIMEOUT=15s
+export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
 export ORDERER_ENDPOINT=${WORKSHOP_NAMESPACE}-org0-orderersnode1-orderer.${WORKSHOP_INGRESS_DOMAIN}:443
 export ORDERER_TLS_CERT=${WORKSHOP_CRYPTO}/channel-msp/ordererOrganizations/org0/orderers/org0-orderersnode1/tls/signcerts/tls-cert.pem
 
@@ -367,6 +367,6 @@ just cloud-fabric-down
 
 
 ###############################################################################
-# Looks good! 
+# Looks good!
 ###############################################################################
 exit 0
