@@ -232,8 +232,7 @@ cloud-channel:
     infrastructure/sample-network/network channel create
 
 # Check that the cloud setup has been performed
-check-setup:
-    checks/check-setup.sh
+check-setup: check
 
 # Check that the k8s API controller is ready
 check-kube: check-setup

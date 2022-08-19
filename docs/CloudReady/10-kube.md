@@ -21,9 +21,9 @@ export WORKSHOP_NAMESPACE=test-network
 
 ```
 
+- Create a [kind](https://kind.sigs.k8s.io) cluster, Nginx ingress, and local container registry:
 ```shell
 
-# Create a Kubernetes cluster in Docker, configure an Nginx ingress, and docker container registry
 just kind
 
 # KIND will set the current kube client context in ~/.kube/config 
@@ -31,9 +31,9 @@ kubectl cluster-info
 
 ```
 
+- Open a new terminal window and observe the target namespace:
 ```shell
 
-# Run k9s to observe the target namespace 
 k9s -n $WORKSHOP_NAMESPACE
 
 ```
