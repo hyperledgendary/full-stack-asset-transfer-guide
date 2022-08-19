@@ -20,3 +20,20 @@ function must_declare() {
     EXIT=1
   fi
 }
+
+
+function check() {
+  local name=$1
+  local message=$2
+
+  printf "🤔 %s" $name
+
+  if $name &>/dev/null ; then
+    printf "\r%s %-40s" $SUCCESS $name
+  else
+    printf "\r%s  %-40s" $WARN $name
+    EXIT=1
+  fi
+
+  echo $message
+}

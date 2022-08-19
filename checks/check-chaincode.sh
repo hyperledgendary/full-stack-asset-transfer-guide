@@ -9,6 +9,10 @@ cd "$(dirname "$0")"/..
 
 EXIT=0
 
+function chaincode_ready() {
+  peer chaincode query -n asset-transfer -C mychannel -c '{"Args":["org.hyperledger.fabric:GetMetadata"]}'
+}
+
 must_declare WORKSHOP_CRYPTO
 
 must_declare CORE_PEER_LOCALMSPID
@@ -21,6 +25,6 @@ must_declare CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT
 must_declare ORDERER_ENDPOINT
 must_declare ORDERER_TLS_CERT
 
-
+check chaincode_ready    "asset-transfer chaincode is running"
 
 exit $EXIT
