@@ -12,7 +12,7 @@ else
     echo -e "${SUCCESS} Docker found:\t$(cat /tmp/cmdpath)"
 fi
 
-KUBECTL_VERSION=v1.24.3       # $(curl -L -s https://dl.k8s.io/release/stable.txt)
+KUBECTL_VERSION=v1.24.4       # $(curl -L -s https://dl.k8s.io/release/stable.txt)
 if ! command -v kubectl &> /tmp/cmdpath
 then
   echo "${WARN} Please install kubectl if you want to use k8s; suggested install commands:"
@@ -38,7 +38,8 @@ else
   echo -e "${SUCCESS} kubectl found:\t$(cat /tmp/cmdpath)"
 
   KUBECTL_CLIENT_VERSION=$(kubectl version --client --output=yaml | grep gitVersion | cut -c 15-)
-  if [ x${KUBECTL_CLIENT_VERSION} != x${KUBECTL_VERSION} ]; then
+  KUBECTL_CLIENT_MINOR_VERSION=$(kubectl version --client --output=yaml | grep minor | cut -c 11-12)
+  if [ ${KUBECTL_CLIENT_MINOR_VERSION} != "24" ]; then
     echo -e "${WARN} Found kubectl client version ${KUBECTL_CLIENT_VERSION}, which may be out of date.  Please ensure client version >= ${KUBECTL_VERSION}"
     EXIT=1
   fi
