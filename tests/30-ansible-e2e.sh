@@ -95,8 +95,17 @@ just ansible-operator
 just ansible-console
 
 # Bring up the fabric network with ansible
-just ansible-network
+# Unfortunately, the GHA executors do not have enough RAM to run the full network setup.
+# We can at least check that the operator and console came up OK.
+# just ansible-network
 
-# Check for the console at the nginx ingress
+
+# Operator running?
+kubectl -n ${WORKSHOP_NAMESPACE} get deployment fabric-operator
+
+# Console running?
+kubectl -n ${WORKSHOP_NAMESPACE} get deployment hlf-console
+
+# Console listening at the Nginx ingress?
 curl --fail --insecure https://${WORKSHOP_NAMESPACE}-hlf-console-console.${WORKSHOP_INGRESS_DOMAIN}/
 
