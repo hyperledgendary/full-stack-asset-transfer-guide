@@ -161,7 +161,7 @@ microfab: microfab-down
     echo
     echo "To get an peer cli environment run:"
     echo
-    echo 'source $WORKSHOP/_cfg/uf/org1admin.env'
+    echo 'source $WORKSHOP_PATH/_cfg/uf/org1admin.env'
 
 
 debugcc:
@@ -180,7 +180,7 @@ debugcc:
     export CORE_PEER_MSPCONFIGPATH=$CFG/_msp/org1/org1admin/msp
     export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
     export CORE_PEER_CLIENT_CONNTIMEOUT=15s
-    export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s    
+    export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
 
     echo "CHAINCODE_ID=${CHAINCODE_ID}"
 
@@ -201,7 +201,7 @@ debugcc:
 
     echo "Added CHAINCODE_ID and CHAINCODE_SERVER_ADDRESS to org1admin.env"
     echo
-    echo '   source $WORKSHOP/_cfg/uf/org1admin.env'
+    echo '   source $WORKSHOP_PATH/_cfg/uf/org1admin.env'
 
 
 devshell:
