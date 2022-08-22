@@ -82,7 +82,9 @@ test-appdev:
 test-cloud:
     tests/20-cloud-e2e.sh
 
-# test-ansible:
+# Run tests of the network setup with operator, console, and ansible plays
+test-ansible:
+    tests/30-ansible-e2e.sh
 
 
 ###############################################################################

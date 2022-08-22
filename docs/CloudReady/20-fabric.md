@@ -71,7 +71,11 @@ tail -f infrastructure/sample-network/network-debug.log
 
 - Run the [00-complete](../../infrastructure/fabric_network_playbooks/00-complete.yml) play:
 ```shell
+
 export WORKSHOP_NAMESPACE=fabricinfra
+
+# Generate default ansible playbook properties in _cfg/
+just ansible-review-config
 
 # Start the operator and Fabric Operations Console
 just ansible-operator
@@ -80,7 +84,13 @@ just ansible-console
 # Construct a network and channel with ansible playbooks
 just ansible-network
 
+# The console will be available at the Nginx ingress domain alias:
+echo "open https://fabricinfra-hlf-console-console.localho.st/nodes"
+
 ```
+
+- Connect to the console URL (accept the self-signed certificate), log in as admin/password, 
+  and view the network structure in the Operations Console user interface. 
 
 
 ### Build a network with the [Fabric Operations Console](https://github.com/hyperledger-labs/fabric-operations-console)  
@@ -88,16 +98,21 @@ just ansible-network
 - Launch the [fabric-operator](https://github.com/hyperledger-labs/fabric-operator) and console
 ```shell
 
+export WORKSHOP_NAMESPACE=fabricinfra
+
+# Generate default ansible playbook properties in _cfg/
+just ansible-review-config
+
 # Start the operator and Fabric Operations Console
 just ansible-operator
 just ansible-console
 
 # The console will be available at the Nginx ingress domain alias:
-echo "open https://$WORKSHOP_NAMESPACE-hlf-console-console.$WORKSHOP_INGRESS_DOMAIN/"
+echo "open https://fabricinfra-hlf-console-console.localho.st/"
 
 ```
 
-- Open the console (self-signed cert), log in as `admin : password`, and change the admin password.  
+- Open the console (accept the self-signed cert), log in as `admin : password`, and change the admin password.  
 
 - [Build a network](https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-build-network)
 
