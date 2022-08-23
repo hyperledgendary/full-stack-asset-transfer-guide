@@ -28,8 +28,10 @@ metadata:
     creator: fabric
     orgname: Org1MSP
 spec:
+  # This selector stanza will match on the orgname: label below, distributing connections to all
+  # peers matching the org MSP.
   selector:
-    app: org1-peer1
+    # app: org1-peer1
     app.kubernetes.io/instance: fabricpeer
     app.kubernetes.io/managed-by: fabric-operator
     app.kubernetes.io/name: fabric

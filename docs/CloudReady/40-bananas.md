@@ -107,9 +107,11 @@ Gateway client connections are load balanced across the org's peers in the netwo
 peer further dispatching transaction requests to peers while maintaining a balanced ledger height.
 
 To set up a load-balanced Gateway [Service and Ingress](../../infrastructure/sample-network/config/gateway/org1-peer-gateway.yaml) URL in Kubernetes:
+
+
+- Create a virtual host name / Ingress endpoint for the org peers: 
 ```shell
 
-# Set up a load-balanced virtual host name and Ingress for the org peers:
 kubectl kustomize \
   ../../infrastructure/sample-network/config/gateway \
   | envsubst \
@@ -117,7 +119,18 @@ kubectl kustomize \
 
 ```
 
-Re-run the gateway client application, using the load-balanced Gateway service:
+- Increase the chaincode sequence number and set the `peer` CLI context to reference the org1-peer2 node:
+```shell
+
+export SEQUENCE=$((SEQUENCE + 1))
+export CORE_PEER_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer2-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+
+```
+
+- [Install the chaincode](30-chaincode.md#install-the-chaincode) to the org1-peer2 node
+
+- Run the gateway client application, using the load-balanced Gateway service.  When the gateway client 
+connects to the network, the gRPCs connections will be distributed across peers in the org:
 ```shell
 
 unset HOST_ALIAS

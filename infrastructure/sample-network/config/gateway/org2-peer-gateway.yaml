@@ -26,15 +26,17 @@ metadata:
     app.kubernetes.io/managed-by: fabric-operator
     app.kubernetes.io/name: fabric
     creator: fabric
-    orgname: Org1MSP
+    orgname: Org2MSP
 spec:
+  # This selector stanza will match on the orgname: label below, distributing connections to all
+  # peers matching the org MSP.
   selector:
-    app: org2-peer1
+    # app: org2-peer1
     app.kubernetes.io/instance: fabricpeer
     app.kubernetes.io/managed-by: fabric-operator
     app.kubernetes.io/name: fabric
     creator: fabric
-    orgname: Org1MSP
+    orgname: Org2MSP
   ports:
     - name: peer-api
       port: 7051
@@ -55,7 +57,7 @@ metadata:
     app.kubernetes.io/managed-by: fabric-operator
     app.kubernetes.io/name: fabric
     creator: fabric
-    orgname: Org1MSP
+    orgname: Org2MSP
 spec:
   ingressClassName: nginx
   rules:

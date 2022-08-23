@@ -253,7 +253,7 @@ function join_org_peers() {
 
   # Join peers to channel
   join_channel_peer $orgnum 1
-  #join_channel_peer $orgnum 2
+  join_channel_peer $orgnum 2
 
   pop_fn
 }
