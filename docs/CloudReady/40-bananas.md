@@ -119,16 +119,6 @@ kubectl kustomize \
 
 ```
 
-- Increase the chaincode sequence number and set the `peer` CLI context to reference the org1-peer2 node:
-```shell
-
-export SEQUENCE=$((SEQUENCE + 1))
-export CORE_PEER_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer2-peer.${WORKSHOP_INGRESS_DOMAIN}:443
-
-```
-
-- [Install the chaincode](30-chaincode.md#install-the-chaincode) to the org1-peer2 node
-
 - Run the gateway client application, using the load-balanced Gateway service.  When the gateway client 
 connects to the network, the gRPCs connections will be distributed across peers in the org:
 ```shell

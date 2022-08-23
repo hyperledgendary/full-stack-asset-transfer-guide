@@ -2,6 +2,9 @@
 
 set -v -eou pipefail
 
+# Log all commands
+set -x
+
 # All tests run in the workshop root folder
 cd "$(dirname "$0")"/..
 
@@ -152,13 +155,16 @@ just check-network
 
 
 # org1-peer1 peer CLI context
+export ORG1_PEER1_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer1-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+export ORG1_PEER2_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer2-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+
 export CORE_PEER_LOCALMSPID=Org1MSP
-export CORE_PEER_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer1-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+export CORE_PEER_ADDRESS=${ORG1_PEER1_ADDRESS}
 export CORE_PEER_TLS_ENABLED=true
 export CORE_PEER_MSPCONFIGPATH=${WORKSHOP_CRYPTO}/enrollments/org1/users/org1admin/msp
 export CORE_PEER_TLS_ROOTCERT_FILE=${WORKSHOP_CRYPTO}/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
 export CORE_PEER_CLIENT_CONNTIMEOUT=15s
-export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
+export CORE_PEER_DELIVERYCLIENT_CONNTIMEOUT=15s
 export ORDERER_ENDPOINT=${WORKSHOP_NAMESPACE}-org0-orderersnode1-orderer.${WORKSHOP_INGRESS_DOMAIN}:443
 export ORDERER_TLS_CERT=${WORKSHOP_CRYPTO}/channel-msp/ordererOrganizations/org0/orderers/org0-orderersnode1/tls/signcerts/tls-cert.pem
 
@@ -180,7 +186,9 @@ function prepare_cc() {
 }
 
 function install_cc() {
-  peer lifecycle chaincode install $CHAINCODE_PACKAGE
+
+  CORE_PEER_ADDRESS=${ORG1_PEER1_ADDRESS} peer lifecycle chaincode install $CHAINCODE_PACKAGE
+  CORE_PEER_ADDRESS=${ORG1_PEER2_ADDRESS} peer lifecycle chaincode install $CHAINCODE_PACKAGE
 
   export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid $CHAINCODE_PACKAGE) && echo $PACKAGE_ID
 
@@ -362,14 +370,6 @@ kubectl kustomize \
   ../../infrastructure/sample-network/config/gateway \
   | envsubst \
   | kubectl -n ${WORKSHOP_NAMESPACE} apply -f -
-
-
-# Install the next sequence of the smart contract to the org1-peer2 node:
-export SEQUENCE=$((SEQUENCE + 1))
-export CORE_PEER_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer2-peer.${WORKSHOP_INGRESS_DOMAIN}:443
-
-install_cc
-check_cc_meta
 
 
 # Try submitting a few transactions to the different peer endpoints
