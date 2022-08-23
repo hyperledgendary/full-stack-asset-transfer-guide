@@ -222,11 +222,11 @@ devshell:
 ###############################################################################
 
 # Deploy the operator sample network and create a channel
-cloud-fabric: cloud-fabric-down check-kube
+cloud-network: cloud-network-down check-kube
     infrastructure/sample-network/network up
 
 # Tear down the operator sample network
-cloud-fabric-down:
+cloud-network-down:
     infrastructure/sample-network/network down
 
 # Create 'mychannel'
@@ -241,11 +241,11 @@ check-kube: check-setup
     checks/check-kube.sh
 
 # Check that the sample network and channel have been deployed
-check-fabric: check-kube
-    checks/check-fabric.sh
+check-network: check-kube
+    checks/check-network.sh
 
 # Check that the smart contract has been deployed
-check-chaincode: check-fabric
+check-chaincode: check-network
     checks/check-chaincode.sh
 
 

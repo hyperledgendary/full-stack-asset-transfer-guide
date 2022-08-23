@@ -8,7 +8,7 @@
 
 ```shell
 
-just check-fabric
+just check-network
 
 ```
 

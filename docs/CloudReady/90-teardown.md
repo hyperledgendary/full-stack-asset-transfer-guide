@@ -8,7 +8,7 @@
 
 ```shell
 
-just cloud-fabric-down 
+just cloud-network-down 
 
 ```
 

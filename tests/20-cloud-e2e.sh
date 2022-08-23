@@ -93,7 +93,7 @@ kubectl get customresourcedefinition.apiextensions.k8s.io/ibporderers.ibp.com
 kubectl get customresourcedefinition.apiextensions.k8s.io/ibppeers.ibp.com
 
 # Bring up the network
-just cloud-fabric
+just cloud-network
 
 # Operator running?
 kubectl -n ${WORKSHOP_NAMESPACE} get deployment fabric-operator
@@ -141,7 +141,7 @@ find ${WORKSHOP_CRYPTO}
 # 30-chaincode
 ###############################################################################
 
-just check-fabric
+just check-network
 
 # env checks
 [[ ${FABRIC_CFG_PATH+x}         ]] || exit 1
@@ -416,7 +416,7 @@ popd
 # 90-teardown
 ###############################################################################
 
-just cloud-fabric-down
+just cloud-network-down
 
 
 ###############################################################################
