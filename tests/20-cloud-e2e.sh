@@ -241,8 +241,8 @@ kubectl -n test-network describe pods -l app.kubernetes.io/created-by=fabric-bui
 kubectl -n ${WORKSHOP_NAMESPACE} describe pods -l app.kubernetes.io/created-by=fabric-builder-k8s
 COUNT=$(kubectl -n ${WORKSHOP_NAMESPACE} get pods -l app.kubernetes.io/created-by=fabric-builder-k8s | wc -l)
 
-# one pod + header line
-[[ $COUNT -eq 2 ]]
+# one pod per peer + header line
+[[ $COUNT -eq 3 ]]
 
 
 
@@ -261,8 +261,8 @@ check_cc_meta
 
 COUNT=$(kubectl -n ${WORKSHOP_NAMESPACE} get pods -l app.kubernetes.io/created-by=fabric-builder-k8s | wc -l)
 
-# one pod + header line
-[[ $COUNT -eq 3 ]]
+# one pod per peer + header line
+[[ $COUNT -eq 5 ]]
 
 
 ###############################################################################
@@ -281,8 +281,8 @@ check_cc_meta
 
 COUNT=$(kubectl -n ${WORKSHOP_NAMESPACE} get pods -l app.kubernetes.io/created-by=fabric-builder-k8s | wc -l)
 
-# one pod + header line
-[[ $COUNT -eq 4 ]]
+# one pod per peer + header line
+[[ $COUNT -eq 7 ]]
 
 
 ###############################################################################
