@@ -148,7 +148,7 @@ microfab: microfab-down
     export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
     export FABRIC_CFG_PATH=$CWDIR/config
     export CORE_PEER_CLIENT_CONNTIMEOUT=15s
-    export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
+    export CORE_PEER_DELIVERYCLIENT_CONNTIMEOUT=15s
     EOF
 
     cat << EOF > $CFG/org2admin.env
@@ -157,7 +157,7 @@ microfab: microfab-down
     export CORE_PEER_ADDRESS=org2peer-api.127-0-0-1.nip.io:8080
     export FABRIC_CFG_PATH=$CWDIR/config
     export CORE_PEER_CLIENT_CONNTIMEOUT=15s
-    export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
+    export CORE_PEER_DELIVERYCLIENT_CONNTIMEOUT=15s
     EOF
 
     echo
@@ -182,7 +182,7 @@ debugcc:
     export CORE_PEER_MSPCONFIGPATH=$CFG/_msp/org1/org1admin/msp
     export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
     export CORE_PEER_CLIENT_CONNTIMEOUT=15s
-    export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
+    export CORE_PEER_DELIVERYCLIENT_CONNTIMEOUT=15s
 
     echo "CHAINCODE_ID=${CHAINCODE_ID}"
 

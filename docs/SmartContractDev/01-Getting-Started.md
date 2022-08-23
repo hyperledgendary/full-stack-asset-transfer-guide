@@ -57,7 +57,7 @@ export CORE_PEER_MSPCONFIGPATH=/workshop/full-stack-asset-transfer-guide/_cfg/uf
 export CORE_PEER_ADDRESS=org1peer-api.127-0-0-1.nip.io:8080
 export FABRIC_CFG_PATH=/workshop/full-stack-asset-transfer-guide/config
 export CORE_PEER_CLIENT_CONNTIMEOUT=15s
-export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
+export CORE_PEER_DELIVERYCLIENT_CONNTIMEOUT=15s
 ```
 
 Next let's look at the three directories that are created `_msp`, `_gateways`, `_wallets`.
