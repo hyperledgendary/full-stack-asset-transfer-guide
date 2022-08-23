@@ -4,9 +4,19 @@
 
 ---
 
-## Kind 
+## Sample Network 
 
 ```shell
+
+just cloud-network-down 
+
+```
+
+
+## KIND 
+
+```shell
+
 just kind-down
 
 ```
@@ -15,6 +25,7 @@ just kind-down
 ## Multipass VM 
 
 ```shell
+
 multipass delete fabric-dev
 multipass purge
 

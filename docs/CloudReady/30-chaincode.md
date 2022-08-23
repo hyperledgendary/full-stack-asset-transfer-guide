@@ -8,7 +8,7 @@
 
 ```shell
 
-just check-fabric
+just check-network
 
 ```
 
@@ -17,14 +17,17 @@ just check-fabric
 
 ```shell
 
+export ORG1_PEER1_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer1-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+export ORG1_PEER2_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer2-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+
 # org1-peer1: 
 export CORE_PEER_LOCALMSPID=Org1MSP
-export CORE_PEER_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer1-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+export CORE_PEER_ADDRESS=${ORG1_PEER1_ADDRESS}
 export CORE_PEER_TLS_ENABLED=true
 export CORE_PEER_MSPCONFIGPATH=${WORKSHOP_CRYPTO}/enrollments/org1/users/org1admin/msp
 export CORE_PEER_TLS_ROOTCERT_FILE=${WORKSHOP_CRYPTO}/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
-export CORE_PEER_CLIENT_CONNTIMEOUT=10s
-export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=10s
+export CORE_PEER_CLIENT_CONNTIMEOUT=15s
+export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
 export ORDERER_ENDPOINT=${WORKSHOP_NAMESPACE}-org0-orderersnode1-orderer.${WORKSHOP_INGRESS_DOMAIN}:443
 export ORDERER_TLS_CERT=${WORKSHOP_CRYPTO}/channel-msp/ordererOrganizations/org0/orderers/org0-orderersnode1/tls/signcerts/tls-cert.pem
 
@@ -32,11 +35,11 @@ export ORDERER_TLS_CERT=${WORKSHOP_CRYPTO}/channel-msp/ordererOrganizations/org0
 
 ## Docker Engine Configuration
 
-**NOTE: SKIP THIS STEP IF USING `localho.st` AS THE INGRESS DOMAIN** 
+**NOTE: SKIP THIS STEP IF USING `localho.st` AS THE INGRESS DOMAIN**
 
 Configure the docker engine with the insecure container registry `${WORKSHOP_INGRESS_DOMAIN}:5000`
 
-For example:  (Docker -> Preferences -> Docker Engine) 
+For example:  (Docker -> Preferences -> Docker Engine)
 ```json
 {
   "insecure-registries": [
@@ -89,10 +92,13 @@ infrastructure/pkgcc.sh -l $CHAINCODE_NAME -n localhost:5000/$CHAINCODE_NAME -d 
 
 ```shell
 
-peer lifecycle chaincode install $CHAINCODE_PACKAGE
+# Install the chaincode package on both peers in the org 
+CORE_PEER_ADDRESS=${ORG1_PEER1_ADDRESS} peer lifecycle chaincode install $CHAINCODE_PACKAGE
+CORE_PEER_ADDRESS=${ORG1_PEER2_ADDRESS} peer lifecycle chaincode install $CHAINCODE_PACKAGE
 
 export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid $CHAINCODE_PACKAGE) && echo $PACKAGE_ID
 
+# Approve the contract for org1 
 peer lifecycle \
 	chaincode       approveformyorg \
 	--channelID     ${CHANNEL_NAME} \
@@ -104,6 +110,7 @@ peer lifecycle \
 	--tls --cafile  ${ORDERER_TLS_CERT} \
 	--connTimeout   15s
 
+# Commit the contract on the channel
 peer lifecycle \
 	chaincode       commit \
 	--channelID     ${CHANNEL_NAME} \
@@ -125,7 +132,7 @@ peer chaincode query -n $CHAINCODE_NAME -C mychannel -c '{"Args":["org.hyperledg
 
 # Take it Further 
 
-## Edit, compile, upload, and re-install your chaincode: 
+## Edit, compile, upload, and re-install your chaincode:
 
 ```shell
 
@@ -134,7 +141,7 @@ VERSION=v0.0.$SEQUENCE
 
 ```
 
-- Make a change to the contracts/asset-transfer-typescript source code 
+- Make a change to the contracts/asset-transfer-typescript source code
 - build a new chaincode docker image and publish to the local container registry  
 - prepare a new chaincode package as above.
 - install, approve, and commit as above.
@@ -157,21 +164,21 @@ curl -LO https://github.com/hyperledgendary/full-stack-asset-transfer-guide/rele
 
 ```
 
-- install, approve, and commit as above. 
+- install, approve, and commit as above.
 
 
-## Debug with Chaincode as a Service 
+## Debug with Chaincode as a Service
 
 - prepare a chaincode package with connection.json -> HOST IP:9999  (todo: link to dig out)
-- compute CHAINCODE_ID=shasum CC package.tgz 
+- compute CHAINCODE_ID=shasum CC package.tgz
 - docker run -e CHAINCODE_ID -e CHAINCODE_SERVER_ADDRESS ... $CHAINCODE_IMAGE in a different shell 
-- install, approve, commit as above. 
+- install, approve, commit as above.
 
 
-## Deploy Chaincode With Ansible 
+## Deploy Chaincode With Ansible
 
 - cp tgz from github releases -> _cfg/
-- edit _cfg/cc yaml with package name 
+- edit _cfg/cc yaml with package name
 - `just ... chaincode`  
 
 

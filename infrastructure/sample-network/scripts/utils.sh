@@ -152,7 +152,7 @@ function export_peer_context() {
   export CORE_PEER_MSPCONFIGPATH=${TEMP_DIR}/enrollments/${org}/users/${org}admin/msp
   export CORE_PEER_TLS_ROOTCERT_FILE=${TEMP_DIR}/channel-msp/peerOrganizations/${org}/msp/tlscacerts/tlsca-signcert.pem
   export CORE_PEER_CLIENT_CONNTIMEOUT=15s
-  export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
+  export CORE_PEER_DELIVERYCLIENT_CONNTIMEOUT=15s
 
 #  export | egrep "CORE_|FABRIC_"
 }

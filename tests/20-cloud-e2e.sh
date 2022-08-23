@@ -2,6 +2,9 @@
 
 set -v -eou pipefail
 
+# Log all commands
+set -x
+
 # All tests run in the workshop root folder
 cd "$(dirname "$0")"/..
 
@@ -93,7 +96,7 @@ kubectl get customresourcedefinition.apiextensions.k8s.io/ibporderers.ibp.com
 kubectl get customresourcedefinition.apiextensions.k8s.io/ibppeers.ibp.com
 
 # Bring up the network
-just cloud-fabric
+just cloud-network
 
 # Operator running?
 kubectl -n ${WORKSHOP_NAMESPACE} get deployment fabric-operator
@@ -141,7 +144,7 @@ find ${WORKSHOP_CRYPTO}
 # 30-chaincode
 ###############################################################################
 
-just check-fabric
+just check-network
 
 # env checks
 [[ ${FABRIC_CFG_PATH+x}         ]] || exit 1
@@ -152,13 +155,16 @@ just check-fabric
 
 
 # org1-peer1 peer CLI context
+export ORG1_PEER1_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer1-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+export ORG1_PEER2_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer2-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+
 export CORE_PEER_LOCALMSPID=Org1MSP
-export CORE_PEER_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer1-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+export CORE_PEER_ADDRESS=${ORG1_PEER1_ADDRESS}
 export CORE_PEER_TLS_ENABLED=true
 export CORE_PEER_MSPCONFIGPATH=${WORKSHOP_CRYPTO}/enrollments/org1/users/org1admin/msp
 export CORE_PEER_TLS_ROOTCERT_FILE=${WORKSHOP_CRYPTO}/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem
 export CORE_PEER_CLIENT_CONNTIMEOUT=15s
-export CORE_PEER_DELIVERYTIMEOUT_CONNTIMEOUT=15s
+export CORE_PEER_DELIVERYCLIENT_CONNTIMEOUT=15s
 export ORDERER_ENDPOINT=${WORKSHOP_NAMESPACE}-org0-orderersnode1-orderer.${WORKSHOP_INGRESS_DOMAIN}:443
 export ORDERER_TLS_CERT=${WORKSHOP_CRYPTO}/channel-msp/ordererOrganizations/org0/orderers/org0-orderersnode1/tls/signcerts/tls-cert.pem
 
@@ -180,7 +186,9 @@ function prepare_cc() {
 }
 
 function install_cc() {
-  peer lifecycle chaincode install $CHAINCODE_PACKAGE
+
+  CORE_PEER_ADDRESS=${ORG1_PEER1_ADDRESS} peer lifecycle chaincode install $CHAINCODE_PACKAGE
+  CORE_PEER_ADDRESS=${ORG1_PEER2_ADDRESS} peer lifecycle chaincode install $CHAINCODE_PACKAGE
 
   export PACKAGE_ID=$(peer lifecycle chaincode calculatepackageid $CHAINCODE_PACKAGE) && echo $PACKAGE_ID
 
@@ -233,8 +241,8 @@ kubectl -n test-network describe pods -l app.kubernetes.io/created-by=fabric-bui
 kubectl -n ${WORKSHOP_NAMESPACE} describe pods -l app.kubernetes.io/created-by=fabric-builder-k8s
 COUNT=$(kubectl -n ${WORKSHOP_NAMESPACE} get pods -l app.kubernetes.io/created-by=fabric-builder-k8s | wc -l)
 
-# one pod + header line
-[[ $COUNT -eq 2 ]]
+# one pod per peer + header line
+[[ $COUNT -eq 3 ]]
 
 
 
@@ -253,8 +261,8 @@ check_cc_meta
 
 COUNT=$(kubectl -n ${WORKSHOP_NAMESPACE} get pods -l app.kubernetes.io/created-by=fabric-builder-k8s | wc -l)
 
-# one pod + header line
-[[ $COUNT -eq 3 ]]
+# one pod per peer + header line
+[[ $COUNT -eq 5 ]]
 
 
 ###############################################################################
@@ -273,8 +281,8 @@ check_cc_meta
 
 COUNT=$(kubectl -n ${WORKSHOP_NAMESPACE} get pods -l app.kubernetes.io/created-by=fabric-builder-k8s | wc -l)
 
-# one pod + header line
-[[ $COUNT -eq 4 ]]
+# one pod per peer + header line
+[[ $COUNT -eq 7 ]]
 
 
 ###############################################################################
@@ -363,28 +371,52 @@ kubectl kustomize \
   | envsubst \
   | kubectl -n ${WORKSHOP_NAMESPACE} apply -f -
 
-unset HOST_ALIAS
-export ENDPOINT=${WORKSHOP_NAMESPACE}-org1-peer-gateway.${WORKSHOP_INGRESS_DOMAIN}:443
 
+# Try submitting a few transactions to the different peer endpoints
+unset HOST_ALIAS
+
+
+# Try a few times with org1-peer1
+export ENDPOINT=${WORKSHOP_NAMESPACE}-org1-peer1-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
 npm start getAllAssets
 
 
+# Then with org1-peer2
+export ENDPOINT=${WORKSHOP_NAMESPACE}-org1-peer2-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+
+
+# Then with the gateway endpoint.  Connections will be distributed across org1-peer1 and org1-peer2
+export ENDPOINT=${WORKSHOP_NAMESPACE}-org1-peer-gateway.${WORKSHOP_INGRESS_DOMAIN}:443
+
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+
+npm start transact
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+
 popd
-
-
-
-
-
-
 
 
 ###############################################################################
 # 90-teardown
 ###############################################################################
 
-just cloud-fabric-down
-
-
+just cloud-network-down
 
 
 ###############################################################################
