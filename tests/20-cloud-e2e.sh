@@ -363,19 +363,53 @@ kubectl kustomize \
   | envsubst \
   | kubectl -n ${WORKSHOP_NAMESPACE} apply -f -
 
-unset HOST_ALIAS
-export ENDPOINT=${WORKSHOP_NAMESPACE}-org1-peer-gateway.${WORKSHOP_INGRESS_DOMAIN}:443
 
+# Install the next sequence of the smart contract to the org1-peer2 node:
+export SEQUENCE=$((SEQUENCE + 1))
+export CORE_PEER_ADDRESS=${WORKSHOP_NAMESPACE}-org1-peer2-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+
+install_cc
+check_cc_meta
+
+
+# Try submitting a few transactions to the different peer endpoints
+unset HOST_ALIAS
+
+
+# Try a few times with org1-peer1
+export ENDPOINT=${WORKSHOP_NAMESPACE}-org1-peer1-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
 npm start getAllAssets
 
 
+# Then with org1-peer2
+export ENDPOINT=${WORKSHOP_NAMESPACE}-org1-peer2-peer.${WORKSHOP_INGRESS_DOMAIN}:443
+
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+
+
+# Then with the gateway endpoint.  Connections will be distributed across org1-peer1 and org1-peer2
+export ENDPOINT=${WORKSHOP_NAMESPACE}-org1-peer-gateway.${WORKSHOP_INGRESS_DOMAIN}:443
+
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+
+npm start transact
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+npm start getAllAssets
+
 popd
-
-
-
-
-
-
 
 
 ###############################################################################
@@ -383,8 +417,6 @@ popd
 ###############################################################################
 
 just cloud-fabric-down
-
-
 
 
 ###############################################################################
