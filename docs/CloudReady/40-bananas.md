@@ -109,6 +109,7 @@ peer further dispatching transaction requests to peers while maintaining a balan
 To set up a load-balanced Gateway [Service and Ingress](../../infrastructure/sample-network/config/gateway/org1-peer-gateway.yaml) URL in Kubernetes:
 ```shell
 
+# Set up a load-balanced virtual host name and Ingress for the org peers:
 kubectl kustomize \
   ../../infrastructure/sample-network/config/gateway \
   | envsubst \
