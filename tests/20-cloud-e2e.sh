@@ -354,7 +354,28 @@ npm start transact
 
 npm start getAllAssets
 
+
+##### Take it further: Gateway load balancing
+
+# Set up the k8s Ingress and Service
+kubectl kustomize \
+  ../../infrastructure/sample-network/config/gateway \
+  | envsubst \
+  | kubectl -n ${WORKSHOP_NAMESPACE} apply -f -
+
+unset HOST_ALIAS
+export ENDPOINT=${WORKSHOP_NAMESPACE}-org1-peer-gateway.${WORKSHOP_INGRESS_DOMAIN}:443
+
+npm start getAllAssets
+
+
 popd
+
+
+
+
+
+
 
 
 ###############################################################################

@@ -66,6 +66,7 @@ spec:
           hosts:
             - "org2-peer2"
             - "org2-peer2.${KUBE_DNS_DOMAIN}"
+            - "test-network-org2-peer-gateway.${INGRESS_DOMAIN}"
   chaincodeBuilderConfig:
     peername: org2-peer2
   service:

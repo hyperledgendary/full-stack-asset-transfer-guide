@@ -96,11 +96,41 @@ popd
 
 ```
 
+# Take it Further 
+
 ## Gateway Load Balancing
 
-- todo: set up a gateway Service alias in Kubernetes.
-- todo: the peer CA cert needs a new SAN in the enrollment to accept the host name of the gateway service.   This works well with the Kube test network, but needs some work with the operator, which bootstraps the node TLS certs behind the scenes.
-- todo: if we can't issue a new TLS cert for the peer with the gateway host SAN, try using the HOST_ALIAS as set above, connecting via the Gateway Service endpoint.  This may not work with the ingress routing.
+In the example above, the gateway client connects directly to a peer using the specific peer node's 
+gRPCs URL.  This can be extended with a level of fail-over and load balancing, by instructing the gateway 
+client to connect at a virtual host Ingress and Kubernetes Service.  When connecting in this fashion,
+Gateway client connections are load balanced across the org's peers in the network, with the gateway
+peer further dispatching transaction requests to peers while maintaining a balanced ledger height.
+
+To set up a load-balanced Gateway [Service and Ingress](../../infrastructure/sample-network/config/gateway/org1-peer-gateway.yaml) URL in Kubernetes:
+```shell
+
+# Set up a load-balanced virtual host name and Ingress for the org peers:
+kubectl kustomize \
+  ../../infrastructure/sample-network/config/gateway \
+  | envsubst \
+  | kubectl -n ${WORKSHOP_NAMESPACE} apply -f -  
+
+```
+
+Re-run the gateway client application, using the load-balanced Gateway service:
+```shell
+
+unset HOST_ALIAS
+export ENDPOINT=${WORKSHOP_NAMESPACE}-org1-peer-gateway.${WORKSHOP_INGRESS_DOMAIN}:443
+
+npm start getAllAssets
+
+```
+
+Note that in order to support ingress and host access with the new virtual domain, the peer 
+CRDs have been instructed to [designate an additional SAN alias](../../infrastructure/sample-network/config/peers/org1-peer1.yaml#L69)
+/ host name when provisioning the node TLS certificate with the CA.
+
 
 ---
 

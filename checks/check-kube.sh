@@ -22,7 +22,7 @@ function nginx() {
 }
 
 function container_registry() {
-  curl --fail http://localho.st:5000/v2/_catalog &>/dev/null
+  curl --fail http://${WORKSHOP_INGRESS_DOMAIN}:5000/v2/_catalog &>/dev/null
 }
 
 
@@ -31,7 +31,7 @@ must_declare WORKSHOP_NAMESPACE
 
 check cluster_info        "k8s API controller is running"
 check nginx               "Nginx ingress is running at https://${WORKSHOP_INGRESS_DOMAIN}"
-check container_registry  "Container registry is running at localhost:5000"
+check container_registry  "Container registry is running at ${WORKSHOP_INGRESS_DOMAIN}:5000"
 
 exit $EXIT
 
