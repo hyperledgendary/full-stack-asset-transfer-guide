@@ -2,7 +2,23 @@
 
 First, let's try listening for chaincode events to see what information is included in events emitted by the smart contract transaction functions.
 
-1. Run the **listen** command to listen for chaincode events. Once you have received the available events, interrupt the application using `Control-C`.
+In a new terminal window, navigate to the [applications/trader-typescript](../../applications/trader-typescript/) directory so that we can run the listen application.
+It is assumed that you have already built the application in prior steps.
+
+1. If you are using a new terminal window, set environment variables to point to resources required by the application.
+    ```bash
+    export ENDPOINT=org1peer-api.127-0-0-1.nip.io:8080
+    export MSP_ID=org1MSP
+    export CERTIFICATE=../../_cfg/uf/_msp/org1/org1admin/msp/signcerts/org1admin.pem
+    export PRIVATE_KEY=../../_cfg/uf/_msp/org1/org1admin/msp/keystore/cert_sk
+    ```
+
+1. Run the **listen** command to listen for ledger updates. The listen command will return prior events and also wait for future events.
+    ```bash
+    npm start listen
+    ```
+
+1. Once you have received the available events, interrupt the application using `Control-C`.
 
 1. Run the **listen** command again. What do we see this time?
 
