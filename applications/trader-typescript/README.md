@@ -18,7 +18,7 @@ The following steps prepare the client application for execution:
 
 The client application uses environment variables to supply configuration options. You must set the following environment variables when running the application:
 
-- `ENDPOINT` - endpoint address for the Gateway service to which the client will connect in the form **hostname:port**. Depending on your environment, this can be the address of a specific peer within the user's organization, or an ingress endpoint that dispatches to aany available peer in the user's organization.
+- `ENDPOINT` - endpoint address for the Gateway service to which the client will connect in the form **hostname:port**. Depending on your environment, this can be the address of a specific peer within the user's organization, or an ingress endpoint that dispatches to any available peer in the user's organization.
 - `MSP_ID` - member service provider ID for the user's organization.
 - `CERTIFICATE` - PEM file containing the user's X.509 certificate.
 - `PRIVATE_KEY` - PEM file containing the user's private key.

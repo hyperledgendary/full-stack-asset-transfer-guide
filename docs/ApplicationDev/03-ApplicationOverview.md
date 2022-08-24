@@ -4,16 +4,16 @@ This topic describes key parts of the client application and how it uses the Fab
 
 ## Connect to the Gateway service
 
-Connection to the Gateway service is driven by the **runCommand()** function in [app.ts](../../applications/trader-typescript/src/app.ts). This calls to two other functions to perform the two tasks required before the client application can trasact with the Fabric network:
+Connection to the peer Gateway service is driven by the **runCommand()** function in [app.ts](../../applications/trader-typescript/src/app.ts). This calls to two other functions to perform the two tasks required before the client application can transact with the Fabric network:
 
-1. **Create gRPC connection to Gateway endpoint** - this is done in the **newGrpcConnection()** function in [connect.ts](../../applications/trader-typescript/src/connect.ts):
+1. **Create gRPC connection to peer Gateway endpoint** - this is done in the **newGrpcConnection()** function in [connect.ts](../../applications/trader-typescript/src/connect.ts):
     ```typescript
     const tlsCredentials = grpc.credentials.createSsl(tlsRootCert);
     return new grpc.Client(GATEWAY_ENDPOINT, tlsCredentials);
     ```
     The gRPC client connection is established using the [gRPC API](https://grpc.io/docs/) and is managed by the client application. The application can use the same gRPC connection to transact on behalf of many client identities.
 
-1. **Create Gateway connection** - this is done in the **newGatewayConnection()** function in [connect.ts](../../applications/trader-typescript/src/connect.ts):
+1. **Create peer Gateway connection** - this is done in the **newGatewayConnection()** function in [connect.ts](../../applications/trader-typescript/src/connect.ts):
     ```typescript
     return connect({
         client,
@@ -73,6 +73,8 @@ When invoked, the command is passed the **Gateway** instance it should use to in
         const assets = await smartContract.getAllAssets();
         ```
 
+The application CLI commands represent a simplified application that performs one action per call. Note that real world applications will typically be long running, and will re-use a connection to the peer Gateway service when making transaction requests on behalf of client applications. The connection may utilize a single organization identity on behalf of various user requests.
+
 ## Gateway API calls
 
 The **AssetTransfer** class in [contract.ts](../../applications/trader-typescript/src/contract.ts) presents the smart contract in a form appropriate to the business application. Internally it uses the Fabric Gateway client API to invoke transaction functions, and deals with the translation between the business application and API representation of parameters and return values.
@@ -80,6 +82,8 @@ The **AssetTransfer** class in [contract.ts](../../applications/trader-typescrip
 Refer to the [Contract API documentation](https://hyperledger.github.io/fabric-gateway/main/api/node/interfaces/Contract.html) for more details on the available calls.
 
 ### Transaction submit
+
+The transaction submit function will submit the request to the peer Gateway service. The peer Gateway service will invoke chaincode and collect the required endorsements from different organization's peers to meet the contract's endorsement policy, and will then submit the transaction to the ordering service on behalf of the client application so that the blockchain ledger can be updated.
 
 An example of transaction submit is in the **createAsset()** method:
 
@@ -91,6 +95,8 @@ await this.#contract.submit('CreateAsset', {
 
 ### Transaction evaluate
 
+The transaction evaluate function will request the peer Gateway service to invoke the chaincode and return the results to the client, without submitting a transaction to the ordering service. Use the evaluate function to query the state of the blockchain ledger.
+
 An example of evaluating a transaction is in the **getAllAssets()** method:
 ```typescript
 const result = await this.#contract.evaluate('GetAllAssets');
@@ -98,7 +104,7 @@ const result = await this.#contract.evaluate('GetAllAssets');
 
 ## Retry of transaction submit
 
-The nature of the transaction submit flow in Fabric means that failures can occur at different points in the flow. To aid client handling off failures, the Gateway API produces errors of specific types to indicate the point in the flow a failure occured. The **submitWithRetry()** function in [contract.ts](../../applications/trader-typescript/src/contract.ts) retries transactions that fail to commit successfully:
+The nature of the transaction submit flow in Fabric means that failures can occur at different points in the flow. To aid client handling of failures, the Gateway API produces errors of specific types to indicate the point in the flow a failure occurred. The **submitWithRetry()** function in [contract.ts](../../applications/trader-typescript/src/contract.ts) retries transactions that fail to commit successfully:
 
 ```typescript
 let lastError: unknown | undefined;

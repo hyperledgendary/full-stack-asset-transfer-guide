@@ -1,6 +1,6 @@
 # Client Application Development
 
-This session consistes of the following topics to be covered in order:
+This session consists of the following topics to be covered in order:
 
 1. [Fabric Gateway](01-FabricGateway.md) - overview of the Fabric Gateway service used by client applications to interact with the Fabric network.
 1. **Exercise:** [Run the client application](02-Exercise-RunApplication.md) - run the Trader sample application.
