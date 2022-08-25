@@ -37,8 +37,9 @@ _default:
 check:
   ${CWDIR}/check.sh
 
-cluster_name   := env_var_or_default("WORKSHOP_CLUSTER_NAME",   "kind")
-ingress_domain := env_var_or_default("WORKSHOP_INGRESS_DOMAIN", "localho.st")
+cluster_name    := env_var_or_default("WORKSHOP_CLUSTER_NAME",       "kind")
+cluster_runtime := env_var_or_default("WORKSHOP_CLUSTER_RUNTIME",    "kind")
+ingress_domain  := env_var_or_default("WORKSHOP_INGRESS_DOMAIN",     "localho.st")
 
 
 # Start a local KIND cluster with nginx, localhost:5000 registry, and *.localho.st alias in kube DNS
@@ -50,7 +51,6 @@ kind: kind-down
     # check connectivity to local k8s
     kubectl cluster-info &>/dev/null
 
-
 # Shut down the KIND cluster
 kind-down:
     #!/bin/bash
@@ -61,6 +61,18 @@ kind-down:
         docker kill kind-registry
         docker rm kind-registry
     fi
+
+# Bring up the nginx ingress controller on the target k8s cluster
+nginx:
+    #!/bin/bash
+      kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/ingress/{{ cluster_runtime }}
+
+      sleep 10
+
+      kubectl wait --namespace ingress-nginx \
+          --for=condition=ready pod \
+          --selector=app.kubernetes.io/component=controller \
+          --timeout=3m
 
 
 ###############################################################################
