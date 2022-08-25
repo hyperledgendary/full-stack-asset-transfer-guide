@@ -67,6 +67,15 @@ tail -f infrastructure/sample-network/network-debug.log
 
 # Take it Further:  
 
+### Launch the [Fabric Operations Console](https://github.com/hyperledger-labs/fabric-operations-console)
+
+```shell
+
+just console
+
+```
+
+
 ### Build a network with the [Ansible Blockchain Collection](https://github.com/IBM-Blockchain/ansible-collection)
 
 - Run the [00-complete](../../infrastructure/fabric_network_playbooks/00-complete.yml) play:
@@ -93,7 +102,7 @@ echo "open https://fabricinfra-hlf-console-console.localho.st/nodes"
   and view the network structure in the Operations Console user interface. 
 
 
-### Build a network with the [Fabric Operations Console](https://github.com/hyperledger-labs/fabric-operations-console)  
+### Build a network with the Fabric Operations Console
 
 - Launch the [fabric-operator](https://github.com/hyperledger-labs/fabric-operator) and console
 ```shell
