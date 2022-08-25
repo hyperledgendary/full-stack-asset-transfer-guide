@@ -142,6 +142,7 @@ function print_help() {
 . scripts/utils.sh
 . scripts/prereqs.sh
 . scripts/sample_network.sh
+. scripts/console.sh
 . scripts/channel.sh
 
 # check for kind, kubectl, etc.
@@ -173,6 +174,16 @@ elif [ "${MODE}" == "channel" ]; then
   log "Creating channel \"${CHANNEL_NAME}\":"
   channel_up
   log "🏁 - Channel is ready."
+
+elif [ "${MODE}" == "operator" ]; then
+  log "Launching Fabric operator"
+  launch_operator
+  log "🏁 - Operator is ready."
+
+elif [ "${MODE}" == "console" ]; then
+  log "Launching Fabric Operations Console"
+  console_up
+  log "🏁 - Console is ready"
 
 else
   print_help

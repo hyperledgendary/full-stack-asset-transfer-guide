@@ -65,14 +65,26 @@ kind-down:
 # Bring up the nginx ingress controller on the target k8s cluster
 nginx:
     #!/bin/bash
-      kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/ingress/{{ cluster_runtime }}
+    kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/ingress/{{ cluster_runtime }}
 
-      sleep 10
+    sleep 10
 
-      kubectl wait --namespace ingress-nginx \
-          --for=condition=ready pod \
-          --selector=app.kubernetes.io/component=controller \
-          --timeout=3m
+    kubectl wait --namespace ingress-nginx \
+      --for=condition=ready pod \
+      --selector=app.kubernetes.io/component=controller \
+      --timeout=3m
+
+# Just start the operator
+operator: operator-crds
+    infrastructure/sample-network/network operator
+
+# Just start the console
+console: operator
+    infrastructure/sample-network/network console
+
+# Just install the operator CRDs
+operator-crds: check-kube
+    kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
 
 
 ###############################################################################
