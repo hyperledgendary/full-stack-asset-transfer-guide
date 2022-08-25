@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eou pipefail
+set -eo pipefail
 
 # All checks run in the workshop root folder
 cd "$(dirname "$0")"/..
@@ -31,7 +31,10 @@ must_declare WORKSHOP_NAMESPACE
 
 check cluster_info        "k8s API controller is running"
 check nginx               "Nginx ingress is running at https://${WORKSHOP_INGRESS_DOMAIN}"
-check container_registry  "Container registry is running at ${WORKSHOP_INGRESS_DOMAIN}:5000"
+
+if [ x"${WORKSHOP_CLUSTER_RUNTIME}" == x"kind" ]; then
+  check container_registry  "Container registry is running at ${WORKSHOP_INGRESS_DOMAIN}:5000"
+fi
 
 exit $EXIT
 
