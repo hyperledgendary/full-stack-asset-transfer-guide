@@ -110,6 +110,10 @@ test-cloud:
 test-ansible:
     tests/30-ansible-e2e.sh
 
+# Run tests of the console setup using the direct line to kube API controller (not ansible)
+test-console:
+    tests/40-console.sh
+
 
 ###############################################################################
 # MICROFAB / DEV TARGETS                                                      #
