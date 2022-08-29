@@ -4,6 +4,18 @@
 
 ---
 
+With cloud-native Fabric, all the components can run directly on your development workstation.  In this exercise,
+you will configure:
+
+- A local [kind](https://kind.sigs.k8s.io) cluster, running Kubernetes in Docker.
+
+- A local [Ingress controller](https://github.com/kubernetes/ingress-nginx), routing traffic into the cluster at the `*.localho.st` virtual DNS domain.
+
+- A local [Container Registry](https://docs.docker.com/registry/insecure/), allowing you to upload chaincode Docker images to the cluster.
+
+![Local KIND](../images/CloudReady/10-kube.png)
+
+
 ## Ready?
 
 ```shell
@@ -14,6 +26,8 @@ just check-setup
 
 ## Kubernetes IN Docker (KIND)
 
+- Set the cluster ingress domain and target k8s namespace.  The `localho.st` domain is a public DNS wildcard resolver
+  mapping `*.localho.st` to 127.0.0.1.
 ```shell
 
 export WORKSHOP_INGRESS_DOMAIN=localho.st
@@ -26,15 +40,15 @@ export WORKSHOP_NAMESPACE=test-network
 
 just kind
 
-# KIND will set the current kube client context in ~/.kube/config 
-kubectl cluster-info
-
 ```
 
 - Open a new terminal window and observe the target namespace:
 ```shell
 
-k9s -n $WORKSHOP_NAMESPACE
+# KIND will set the current kubectl context in ~/.kube/config 
+kubectl cluster-info
+
+k9s -n test-network
 
 ```
 

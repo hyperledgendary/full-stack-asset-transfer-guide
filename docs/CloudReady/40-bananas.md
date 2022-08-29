@@ -106,6 +106,8 @@ client to connect at a virtual host Ingress and Kubernetes Service.  When connec
 Gateway client connections are load balanced across the org's peers in the network, with the gateway
 peer further dispatching transaction requests to peers while maintaining a balanced ledger height.
 
+![Fabric Gateway deployment](../images/ApplicationDev/fabric-gateway-deployment.png)
+
 To set up a load-balanced Gateway [Service and Ingress](../../infrastructure/sample-network/config/gateway/org1-peer-gateway.yaml) URL in Kubernetes:
 
 

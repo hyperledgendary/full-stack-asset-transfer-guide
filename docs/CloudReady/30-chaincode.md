@@ -4,7 +4,45 @@
 
 ---
 
-## Checks
+Using the traditional chaincode lifecycle, smart contract deployment requires a Fabric administrator to prepare
+and install a chaincode package declaring the contract source code, metadata, and target langage/runtime.  When the
+contract is committed to a channel, peers are responsible for compiling a custom chaincode binary and launching the
+contract as a child process.  This workflow creates several issues for container-based runtimes, where the `build`
+phase is additionally responsible for compiling a Docker image, and the `run` phase is responsible for managing the
+lifecycle of a chaincode process in a container orchestrator.  
+
+In container based environments such as Kubernetes, the classical chaincode deployment was generally supported with a
+custom chaincode server / launcher.
+
+With the introduction of [Chaincode as a Service](https://hyperledger-fabric.readthedocs.io/en/latest/cc_service.html)
+(>= 2.4.1), Fabric administrators were provided an alternative deployment option whereby an external chaincode
+builder could be configured as a _"no-op builder"_.  Using CCaaS, an administrator could prepare a custom chaincode
+container, upload the image to a container registry, launch the chaincode "as a service," and complete the peer
+lifecycle using traditional `peer` CLI commands.
+
+While the CCaaS / _no-op_ builder alleviated some mechanical issues and offered full customization of the chaincode
+lifecycle, it placed two new major responsibilities on the Fabric network administrator: 
+
+- `build` : The admin must prepare a chaincode image and upload to a container registry.
+- `run` : The admin must prepare a `Service`, `Deployment`, and configure TLS for the chaincode endpoint.
+
+_"But - I just want to write some chaincode!"_
+
+
+In this exercise, we will see how the new [Kubernetes Chaincode Builder](https://github.com/hyperledger-labs/fabric-builder-k8s)
+enables an external container build pipeline and eliminates the administrative burdens associated with CCaaS.
+
+Using the fabric-k8s-builder, you will deploy (and iterate) a smart contract definition by:
+
+1. Preparing a chaincode container image and uploading to a distribution registry.
+2. Preparing a `type=k8s` chaincode package specifying the unique and immutable [container image digest](https://github.com/opencontainers/image-spec/blob/main/descriptor.md#digests).
+3. Using the `peer` CLI binaries to install and commit the smart contract to a channel.
+
+
+![Fabric k8s Builder](../images/CloudReady/30-chaincode.png)
+
+
+## Ready?
 
 ```shell
 

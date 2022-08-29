@@ -6,7 +6,7 @@ node_modules
 _*
 *tgz
 *.tar.gz
-
+~*.pptx
 
 bin
 ./config/

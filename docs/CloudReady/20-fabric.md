@@ -4,6 +4,19 @@
 
 ---
 
+[Fabric-operator](https://github.com/hyperledger-labs/fabric-operator) extends the core Kubernetes API with a set of
+[custom resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) suitable for
+describing the nodes of a Hyperledger Fabric Network.  With the operator, a set of [CA](../../infrastructure/sample-network/config/cas),
+[peer](../../infrastructure/sample-network/config/peers), and [orderer](../../infrastructure/sample-network/config/orderers)
+resources are applied to the Kube API controller.  In turn, the operator reflects the network as a series of `Pod`,
+`Deployment`, `Service`, and `Ingress` resources in the target namespace.
+
+After the nodes in the Fabric network have been started, the fabric `peer` and CLI binaries are used to connect to the
+network via Ingress, preparing a channel for smart contracts and application development. 
+
+![Fabric Operator](../images/CloudReady/20-fabric.png)
+
+
 ## Ready?
 
 ```shell
@@ -12,7 +25,7 @@ just check-kube
 
 ```
 
-## Operator Sample Network
+## Sample Network
 
 - Install the fabric-operator [Kubernetes Custom Resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/)
 ```shell
@@ -21,21 +34,24 @@ kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/
 
 ```
 
-- Apply a series of CA, peer, and orderer resources directly to the Kube API controller
+- Apply a series of [CA](../../infrastructure/sample-network/config/cas), [peer](../../infrastructure/sample-network/config/peers),
+  and [orderer](../../infrastructure/sample-network/config/orderers) resources directly to the Kube API controller.  In
+  turn, fabric-operator will reconcile a network of Kubernetes `Pods`, `Deployments`, `Services`, and `Ingress` to
+  reflect the target network structure.
 ```shell
 
 just cloud-network
 
 ```
 
-- Create a Fabric channel
+- Create a Fabric channel:
 ```shell
 
 just cloud-channel
 
 ```
 
-- Set the location for the network's TLS certificates, channel MSP, and user enrollments
+- Set the location for the network's TLS certificates, channel MSP, and user enrollments:
 ```shell
 
 export WORKSHOP_CRYPTO=$WORKSHOP_PATH/infrastructure/sample-network/temp
@@ -67,63 +83,8 @@ tail -f infrastructure/sample-network/network-debug.log
 
 # Take it Further:  
 
-### Launch the [Fabric Operations Console](https://github.com/hyperledger-labs/fabric-operations-console)
-
-```shell
-
-just console
-
-```
-
-
-### Build a network with the [Ansible Blockchain Collection](https://github.com/IBM-Blockchain/ansible-collection)
-
-- Run the [00-complete](../../infrastructure/fabric_network_playbooks/00-complete.yml) play:
-```shell
-
-export WORKSHOP_NAMESPACE=fabricinfra
-
-# Generate default ansible playbook properties in _cfg/
-just ansible-review-config
-
-# Start the operator and Fabric Operations Console
-just ansible-operator
-just ansible-console
-
-# Construct a network and channel with ansible playbooks
-just ansible-network
-
-# The console will be available at the Nginx ingress domain alias:
-echo "open https://fabricinfra-hlf-console-console.localho.st/nodes"
-
-```
-
-- Connect to the console URL (accept the self-signed certificate), log in as admin/password, 
-  and view the network structure in the Operations Console user interface. 
-
-
-### Build a network with the Fabric Operations Console
-
-- Launch the [fabric-operator](https://github.com/hyperledger-labs/fabric-operator) and console
-```shell
-
-export WORKSHOP_NAMESPACE=fabricinfra
-
-# Generate default ansible playbook properties in _cfg/
-just ansible-review-config
-
-# Start the operator and Fabric Operations Console
-just ansible-operator
-just ansible-console
-
-# The console will be available at the Nginx ingress domain alias:
-echo "open https://fabricinfra-hlf-console-console.localho.st/"
-
-```
-
-- Open the console (accept the self-signed cert), log in as `admin : password`, and change the admin password.  
-
-- [Build a network](https://cloud.ibm.com/docs/blockchain?topic=blockchain-ibp-console-build-network)
+- Deploy the [Fabric Operations Console](21-fabric-operations-console.md)
+- Build a network with the [Ansible Blockchain Collection](22-fabric-ansible-collection.md)
 
 
 ---
