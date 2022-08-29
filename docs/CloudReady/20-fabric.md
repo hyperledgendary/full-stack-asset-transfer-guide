@@ -81,7 +81,7 @@ tail -f infrastructure/sample-network/network-debug.log
 ```
 
 
-# Take it Home:  
+# Take it Further:  
 
 - Deploy the [Fabric Operations Console](21-fabric-operations-console.md)
 - Build a network with the [Ansible Blockchain Collection](22-fabric-ansible-collection.md)

@@ -59,7 +59,7 @@ k9s -n test-network
 - Run KIND on an [EC2 instance](12-kube-ec2-vm.md) at AWS
 
 
-## Take it Home: 
+## Take it Further: 
 
 - Run the workshop on an [IKS or EKS Cloud Kubernetes cluster](13-kube-public-cloud.md).
 - Run the workshop on an AWS VM, using your AWS account and an EC2 [#cloud-config](../../infrastructure/ec2-cloud-config.yaml).
