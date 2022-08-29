@@ -39,7 +39,7 @@ else
 
   KUBECTL_CLIENT_VERSION=$(kubectl version --client --output=yaml | grep gitVersion | cut -c 15-)
   KUBECTL_CLIENT_MINOR_VERSION=$(kubectl version --client --output=yaml | grep minor | cut -c 11-12)
-  if [ ${KUBECTL_CLIENT_MINOR_VERSION} != "24" ]; then
+  if [ "${KUBECTL_CLIENT_MINOR_VERSION}" -lt "24" ]; then
     echo -e "${WARN} Found kubectl client version ${KUBECTL_CLIENT_VERSION}, which may be out of date.  Please ensure client version >= ${KUBECTL_VERSION}"
     EXIT=1
   fi
