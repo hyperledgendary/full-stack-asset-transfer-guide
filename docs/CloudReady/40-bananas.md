@@ -4,7 +4,18 @@
 
 ---
 
-## Checks
+In this final workshop exercise, we will port the Gateway Client routines you developed in the
+[ApplicationDev](../ApplicationDev) module to run on a cloud-native Fabric network.
+
+In order to query the ledger and submit transactions to the `asset-transfer` smart contract, the client application
+must run with an identity certificate and key pair issued by the organization's CA.  Once the user identity has
+been enrolled with the CA, we'll use the new identity to create, transfer, and exchange virtual "token" assets
+on a shared ledger.
+
+![Gateway Client Application](../../docs/images/CloudReady/40-gateway-client-app.png)
+
+
+## Ready?
 
 ```shell
 
@@ -80,16 +91,20 @@ npm install
 
 ```shell
 
+# Create a yellow banana token owned by appleman@org1 
 npm start create banana bananaman yellow
 
 npm start getAllAssets
 
+# Transfer the banana among users / orgs 
 npm start transfer banana appleman Org1MSP
 
 npm start getAllAssets
 
+# Transfer the banana among users / orgs 
 npm start transfer banana bananaman Org2MSP
 
+# Error! Which org owns the banana? 
 npm start transfer banana bananaman Org1MSP
 
 popd
