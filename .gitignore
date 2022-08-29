@@ -10,6 +10,7 @@ _*
 
 bin
 ./config/
+./config/multipass-kube-config.yaml
 
 .DS_Store
 .idea/
