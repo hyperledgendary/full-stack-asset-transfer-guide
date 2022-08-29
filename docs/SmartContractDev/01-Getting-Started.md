@@ -173,7 +173,7 @@ peer lifecycle chaincode install contract.tgz
 The ChaincodeID that is returned from this install command needs to be saved, typically this is best as an environment variable
 
 ```bash
-export CHAINCODE_ID=asset-transfer:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e
+export CHAINCODE_ID=$(peer lifecycle chaincode calculatepackageid contract.tgz)
 ```
 
 Next, define the chaincode on the blockchain channel by approving it and committing it. If you have already deployed the chaincode using the `just` recipe above, then increment the `--sequence` number to `2`.
@@ -220,11 +220,11 @@ From your chaincode terminal window lets start the Smart Contract node module. R
 Note: Use your specific CHAINCODE_ID from earlier; the `CHAINCODE_SERVER_ADDRESS` is different - this is because in this case it is telling the chaincode where to listen for incoming connections from the Peer. We'll use port 9999 on the local machine.
 
 ```
-export CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999
-export CHAINCODE_ID=asset-transfer:133f3cdf089ae8e20fdda3e0a98cde3eb15ddbcf319bc83cb919ee28763d6e3e
+source ${WORKSHOP_PATH}/_cfg/uf/org1admin.env
 
-# or if you ran the short cut above...
-# source ${WORKSHOP_PATH}/_cfg/uf/org1admin.env
+# if you ran the short cut above, these will already be exported...
+export CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999
+export CHAINCODE_ID=$(peer lifecycle chaincode calculatepackageid contract.tgz)
 
 npm run start:server-debug
 ```
