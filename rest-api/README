@@ -1,0 +1,9 @@
+Make sure all the certificates are generated as per the documentation in the below link
+https://github.com/hyperledgendary/full-stack-asset-transfer-guide/blob/main/docs/CloudReady/40-bananas.md
+
+
+Run the below commands to run code
+npm install
+npm run prod
+
+Import the postman collections and verify the apis
