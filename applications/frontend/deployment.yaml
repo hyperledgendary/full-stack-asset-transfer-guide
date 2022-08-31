@@ -1,50 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rest-api
+  name: frontend
   labels:
-    app: rest-api
+    app: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: rest-api
+      app: frontend
   template:
     metadata:
       labels:
-        app: rest-api
+        app: frontend
     spec:
-      volumes:
-        - name: secret-volume
-          secret:
-            secretName: client-secret
       containers:
-        - name: rest-api
-          image: localhost:5000/rest-api:latest
+        - name: frontend
+          image: localhost:5000/frontend:latest
           ports:
-            - containerPort: 8080
-          env:
-            - name: rest-certs
-              valueFrom:
-                secretKeyRef:
-                  name: rest-certs
-                  key: key.pem
-          volumeMounts:
-            - name: secret-volume
-              readOnly: true
-              mountPath: "/etc/secret-volume"
+            - containerPort: 80
 ---
 kind: Service
 apiVersion: v1
 metadata:
-  name: rest-api
+  name: frontend
 spec:
   selector:
-    app: rest-api
+    app: frontend
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 80
 
 
   # kubectl create secret generic client-secret --from-file=keyPath=/home/ramdisk/my-full-stack/infrastructure/sample-network/temp/enrollments/org1/users/org1user/msp/keystore/key.pem --from-file=certPath=/home/ramdisk/my-full-stack/infrastructure/sample-network/temp/enrollments/org1/users/org1user/msp/signcerts/cert.pem --from-file=tlsCertPath=/home/ramdisk/my-full-stack/infrastructure/sample-network/temp/channel-msp/peerOrganizations/org1/msp/tlscacerts/tlsca-signcert.pem -n test-network
@@ -52,12 +38,12 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: rest-api
+  name: frontend
   annotations:
     nginx.ingress.kubernetes.io/proxy-connect-timeout: 60s
-    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    # nginx.ingress.kubernetes.io/ssl-passthrough: "true"
   # labels:
-  #   app: rest-api
+  #   app: frontend
   #   app.kubernetes.io/instance: fabricpeer
   #   app.kubernetes.io/managed-by: fabric-operator
   #   app.kubernetes.io/name: fabric
@@ -66,16 +52,16 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: restapi.localho.st
+    - host: frontend.localho.st
       http:
         paths:
           - backend:
               service:
-                name: rest-api
+                name: frontend
                 port:
                   number: 80
             path: /
             pathType: ImplementationSpecific
-  # tls:
-  #   - hosts:
-  #       - restapi.localho.st
+  tls:
+    - hosts:
+        - restapi.localho.st
