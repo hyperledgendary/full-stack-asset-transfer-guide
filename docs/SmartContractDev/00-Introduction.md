@@ -26,27 +26,27 @@ An initial and perhaps the most important decision is - "what information needs 
     - how large is the amount of data? the smaller the better! remember this data needs to be transfered around many parties. Would a salted secure hash of say a scanned document work rather than the entire document?
     - though 'rich query' of the state is possible, the ledger isn't optimised in the same way a database is. Can rich queries be performed off the ledger, and the results 'validated' via a smart contract?
 
-For any end-end tutorial there is a trade-off between making the scenario realistic, but not sufficiently complicated. For this tutorial we'll define the data stored on ledger as being a single 'object' with the following fields. This has been kept very simple, but the approach should be familar.
+For any end-end tutorial there is a trade-off between making the scenario realistic, but not sufficiently complicated. For this tutorial we'll define the data stored on ledger as being a single 'object' with the following fields. This has been kept very simple, but the approach should be familiar.
 
 - ID: string unique-identifier
-- Color: string representing a colour
+- Color: string representing a color
 - Size: string representing a size
 - Owner: string of the identity name of the owner
 - Appraised Value: numerical value.
 
-Argueably not all these values need to be on the ledger, for production use case a reference to off-ledger 'oracle' that held the information of the asset's features, which then provides a hash that could be stored in the ledger. 
+Arguably not all these values need to be on the ledger, for production use case a reference to off-ledger 'oracle' that held the information of the asset's features, which then provides a hash that could be stored in the ledger. 
 
-It is important to take care over the 'key' that will be used, composite keys are possible. These are constructured to form a hierarchial structure. More information in the next section. 
+It is important to take care over the 'key' that will be used, composite keys are possible. These are constructured to form a hierarchical structure. More information in the next section. 
 
 ### Keys and Queries
 
-Hyperledger Fabric offers two forms of ledger query. One is 'Rich Query', and this requires the 'state database' to be configured as CouchDB. (as in this tutorial) and requires that information stored in the ledger is in JSON format. CouchDB indices can be provided (and a strongly recommened). The second is a query by key or partial-key. Think of the ledger as being a form of key-value store.
+Hyperledger Fabric offers two forms of ledger query. One is 'Rich Query', and this requires the 'state database' to be configured as CouchDB. (as in this tutorial) and requires that information stored in the ledger is in JSON format. CouchDB indices can be provided (and strongly recommended). The second is a query by key or partial-key. Think of the ledger as being a form of key-value store.
 
 A key string is formed from a list of strings, separated by the `u+0000` nil byte. There must be at least one string in the list. If there is only one string, this is referred to as `simple` key, otherwise it is a `composite` key. A composite key's first string is referred to as the 'type' to suggest that putting some identification of a type here is a good idea, but this is not enforced by any type system etc. 
 
 A powerful way of querying is by using the concept of range queries. These allow you specify a start and end key, and return an iterator of all key-values between those start and end points (inclusively). The keys are order in alphanumeric order.
 
-For simple keys, there are apis such as `getStateByRange(startKey: string, endKey: string)`.
+For simple keys, there are APIs such as `getStateByRange(startKey: string, endKey: string)`.
 
 Complex keys provide a richer query mechanism as they offer a range query by partial key. For example if a composite key has the strings `fruit:pineapples:supplier_fred:consignment_xx`  (using a colon here to make it easier to read, as the nil byte isn't easy to read).
 
@@ -54,9 +54,9 @@ It is possible to issue queries with only a partial key, for example you could q
 
 To get query all values held my `supplier_fred`   `fruit:pineapples:supplier_fred`
 
-A way of thinking about this is visualize the keys as forming a hieracrhy.
+A way of thinking about this is visualize the keys as forming a hierarchy.
 
-Note that the 'simple' and 'composite' keys are held distinct from each other. Therefore a query on a simple key won't return anything held under a composite key, and conversly a composite key won't return anything held under a simple key. 
+Note that the 'simple' and 'composite' keys are held distinct from each other. Therefore a query on a simple key won't return anything held under a composite key, and conversely a composite key won't return anything held under a simple key. 
 
 ## Transaction Functions
 
@@ -68,17 +68,17 @@ Each transaction function needs to be marked as such (using language specific co
 
 Each function will need to consider how it handles data to marshal into the format needed for the ledger. 
 
-Ensure that each function ensures that any initial state is correct. For example before transfering an asset from Alice to Bob, ensure that Alice does own the asset. 
+Ensure that each function ensures that any initial state is correct. For example before transferring an asset from Alice to Bob, ensure that Alice does own the asset. 
 
 ### Creation Functions
 
-Consider in the create function if you want to pass in the indiviual data elements, or a fully formed object. This is largely a matter of personal preference; remember though that any unique identifier must be created outside of the smart contract. Any form of random choice or other non-deterministic process can not be used.
+Consider in the create function if you want to pass in the individual data elements, or a fully formed object. This is largely a matter of personal preference; remember though that any unique identifier must be created outside of the smart contract. Any form of random choice or other non-deterministic process can not be used.
 
 Often there are extra elements of data (such as the submitting organization) that need to be added. 
 
 ### Retrieval
 
-It is a good idea to think ahead of the types of retrival operations that are needed. Can the key structure be created to allow for range queries? 
+It is a good idea to think ahead of the types of retrieval operations that are needed. Can the key structure be created to allow for range queries? 
 
 If rich queries are required, aim to make these as simple as possible and include indexes. Also ensure that if you wish to do a rich query that involves the same data as the 'key' that it is included in the JSON structure.
 
@@ -90,24 +90,24 @@ The updates a transaction function makes to the state, aren't actioned immediate
 
 If data under a key is updated, and then queried *in the same function* the returned data will be the *original* value - not the updated value. 
 
-You will see the error 'MVCC Conflicts': this means that two transaction functions have executed at the same time and attempted to updated the same keys. All code *must* be written with the idea of having to compenstate for this. Typically though this is a simple as re-issuing the transaction. 
+You will see the error 'MVCC Conflicts': this means that two transaction functions have executed at the same time and attempted to update the same keys. All code *must* be written with the idea of having to compensate for this. Typically though this is a simple as re-submitting the transaction. 
 
 You can also minimise exposure by careful creation of the keys. Minimise or remove any form of shared key that needs to be udpated. 
 
 ## Audit Trails vs Asset Store
 
-An important decision to make is whether the state held on the ledger is representing an 'audit trail' of activity, or the 'source of truth' of the actual assets.  Storing the information about the assets, as shown in the following samples, is conceptualy straightforward keep in mind that this is a distributed database, rather than a database. 
+An important decision to make is whether the state held on the ledger is representing an 'audit trail' of activity, or the 'source of truth' of the actual assets.  Storing the information about the assets, as shown in the following samples, is conceptually straightforward - keep in mind that this is a distributed database, rather than a database. 
 
-Storing a form of audit trail can work well with the ledger concept. The 'source of truth' here is that a certain action was taken and it's results. For example the ownership of an asset changed. Details of the actual asset are off chain. This does need more infrastructure provided around the ledger, but is worth considering if the primary business reason is for audit purposes. For example tracking the state of a process and how it moved from one state to the next.
+Storing a form of audit trail can work well with the ledger concept. The 'source of truth' here is that a certain action was taken and its results. For example the ownership of an asset changed. Details of the actual asset are off-chain. This does need more infrastructure provided around the ledger, but is worth considering if the primary business reason is for audit purposes. For example tracking the state of a process and how it moved from one state to the next.
 
-To help with integration of other systems it is well worth issuing events from the transaction functions. These events will be available to the client applications when the transaction is finally comitted. These can be very useful in triggering other processes.
+To help with integration of other systems it is well worth issuing events from the transaction functions. These events will be available to the client applications when the transaction is finally committed. These can be very useful in triggering other processes.
 
 ## Is it Smart Contract or Chaincode?
 
-Simply both - the terms have been used in Fabric history almost interchangable; Chaincode was original name, but then Smart Contracts is a common a blockchain term. The class/structure that is extended/implemented in code is called `Contract`.
+Simply both - the terms have been used in Fabric history almost interchangably; Chaincode was the original name, but then Smart Contracts is a common blockchain term. The class/structure that is extended/implemented in code is called `Contract`.
 
 The aim is to standardize on 
-- the Smart Contract(s) are classes/structures - the code - that your write in Go/JavaScript/TypeSciript/Java etc. 
+- the Smart Contract(s) are classes/structures - the code - that your write in Go/JavaScript/TypeScript/Java etc. 
 - these are then packaged up and run inside a Chaincode-container (chaincode-image / chaincode-runtime depending on exactly the format of the packaging)
 - the chaincode definition is more that just the Smart Contract code, as it includes things such as the couchdb indexes, and the endorsement policy
 
