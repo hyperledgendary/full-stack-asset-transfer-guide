@@ -1,6 +1,9 @@
-# Develop, Debug and Deploy Smart Contracts - DRAFT
+# Test and Debug Reference
 
-**Aim:** Stand up a Hyperledger Fabric Smart Contract so it can easily debugged
+[PREVIOUS - Adding a Transaction Function](./02-Exercise-Adding-tx-function.md)
+
+**Aim:** Stand up a Hyperledger Fabric Smart Contract so it can easily be debugged
+
 **Objectives:**
 
 - Introduce what Chaincode-as-a-Service is, and how it helps
@@ -16,21 +19,21 @@ It helps to think of three 'parts'
 
 - The Fabric network, consisting of the peers, orderers, certificate authorities etc. Along with configured channels and identities.
   For our purposes here, this can be considered as a 'black box'. The 'black box' can be configured a number of different ways, but typically will be one or docker containers.
-- The Chaincode - this will be running in it's own docker container.
+- The Chaincode - this will be running in its own docker container.
 - The editor - VSCode is covered here, but the approach should hold with other debuggers and editors.
 
 The _high level process_ is
 
-0. Stand up Fabric
+0. Stand-up Fabric
 1. Develop the Smart Contract
 3. Create a chaincode package but using the chaincode-as-a-service approach
    Install/Approve/Commit this package
 4. Stand up the Chaincode using the chaincode-as-a-service approach
    Attach your debugger to the running chaincode
 5. Invoke a transaction, this will then halt in the debugger to let you step over the code
-5. Find the bugs and repeat **from step 4** - note   step 4... you don't need to go back to a new package or approval cycle.
+5. Find the bugs and repeat **from step 4** - note step 4... you don't need to go back to a new package or approval cycle.
 
-This is the exact process that you will have followed in the ['Getting Stared'](./01-Getting-Started.md) section
+This is the exact process that you will have followed in the ['Getting Stared'](./01-Exercise-Getting-Started.md) section
 
 ### What do you need?
 
@@ -41,20 +44,20 @@ You'll need to have docker available to you, along with VSCode. Also, install th
 
 ### What is Chaincode as Service?
 
-The chaincode-as-a-service feature is a very useful and practical way to run 'Smart Contracts'. Traditionally the Fabric Peer has taken on the role of orchestrating 
+The chaincode-as-a-service feature is a very useful and practical way to run 'Smart Contracts. Traditionally the Fabric Peer has taken on the role of orchestrating 
 the complete lifecycle of the chaincode. It required access to the Docker Daemon to create images, and start containers. Java, Node.js and Go chaincode frameworks were
  explicitly known to the peer including how they should be built and started.
 
-As a result this makes it very hard to deploy into Kubernetes (K8S) style environments, or to run in any form of debug mode. Additionally, the code is being rebuilt by
+As a result, this makes it very hard to deploy into Kubernetes (K8S) style environments or to run in any form of debug mode. Additionally, the code is being rebuilt by
  the peer therefore there is some degree of uncertainty about what dependencies have been pulled in.
 
 Chaincode-as-service requires you to orchestrate the build and deployment phase yourself. Whilst this is an additional step, it gives control back. The Peer still 
-requires a 'chaincode package' to be installed. In this case this doesn't contain code, but the information about where the chaincode is hosted. (Hostname,Port,TLS config etc)
+requires a 'chaincode package' to be installed. In this case, this doesn't contain code, but the information about where the chaincode is hosted. (Hostname, Port, TLS config etc)
 
 
 ## Running the Smart Contracts
 
-An important point is that the code written for the Smart Contract is exactly the same, whether it's managed by the peer or Chaincode-as-a-Service. 
+An important point is that the code written for the Smart Contract is the same, whether it's managed by the peer or Chaincode-as-a-Service. 
 What is different is how that is started and packaged. This repo contains a chaincode for each language, these are copied from the Fabric-Samples repo. 
 Note that in all cases, the Java/Typescript/Go code is the same, the difference is in the packaging.
 
@@ -69,12 +72,12 @@ Using the Typescript contract as an example, the difference is easier to see. Th
    "start:server-debug": "set -x && NODE_OPTIONS='--inspect=0.0.0.0:9229' fabric-chaincode-node server --chaincode-address=$CHAINCODE_SERVER_ADDRESS --chaincode-id=$CHAINCODE_ID"
 ```
 
-The first, is used when the peer is completely controlling the chaincode. The second `start:server-nontls` starts in the Chaincode-as-a-service mode (without using TLS). The command
+The first is used when the peer is completely controlling the chaincode. The second `start:server-nontls` starts in the Chaincode-as-a-service mode (without using TLS). The command
 is very similar `fabric-chainmcode-node server` rather than `fabric-chaincode-node start`. Two options are provided here, these are the network address the chaincode
- will listen on and it's id. (aside when the Peer runs the chaincode, it does pass extra options, but they aren't seen in the package.json)
+ will listen on and its id. (aside when the Peer runs the chaincode, it does pass extra options, but they aren't seen in the package.json)
 
 The third `start:server` adds the required TLS configuration, but is otherwise the same.
-The forth `start:server-debug` is the same as the non-TLS case, but includes the environment variable required to get Node.js to open a port to allow a debugger to connect remotly.
+The forth `start:server-debug` is the same as the non-TLS case, but includes the environment variable required to get Node.js to open a port to allow a debugger to connect remotely.
 
 ### Java
 
@@ -82,16 +85,16 @@ The changes for the Java chaincode are logically the same. The build.gradle (or 
 TypeScript compilation). With the v2.4.1 Java Chaincode libraries, there are no code changes to make or build changes. The '-as-a-service' mode will be used if
  the environment variable `CHAINCODE_SERVER_ADDRESS` is set.
 
-For the non-TLS case the Java chaincode is started with `java -jar /chaincode.jar` - and will use the Chaincode-as-a-service mode _if_ the  environment variable `CHAINCODE_SERVER_ADDRESS` is set.
+For the non-TLS case the Java chaincode is started with `java -jar /chaincode.jar` - and will use the Chaincode-as-a-service mode _if_ the environment variable `CHAINCODE_SERVER_ADDRESS` is set.
 
 For debug, the JVM needs to put into debug mode `java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:8000 -jar /chaincode.jar`
 
 ## How is the chaincode package different?
 
-A key difference is that the chaincode package, does not contain code. It is used as a holder of data that indicates to the peer where teh chaincode is. What 
-host/port and what TLS configuration is needed. Chaincode packages already can hold data about the couchdn indicies to use or the private data collections. 
+A key difference is that the chaincode package does not contain code. It is used as a holder of data that indicates to the peer where the chaincode is. What 
+host/port and what TLS configuration is needed? Chaincode packages already can hold data about the couchdb indicies to use or the private data collections. 
 
-Within the package the `connection.json` is a key file. At it's simplest it would be 
+Within the package, the `connection.json` is a key file. At its simplest it would be 
 
 ```json
 {
@@ -101,34 +104,31 @@ Within the package the `connection.json` is a key file. At it's simplest it woul
 }
 ```
 
-This is telling the peer the chaincode is on host `assettransfer_ccaas` port 9999. 10s timeout on connecting, and tls is not needed. 
+This is telling the peer the chaincode is on host `assettransfer_ccaas` port 9999. 10s timeout on connecting and tls is not needed. 
 
 The packager can be constructed by hand, it's a set of json files, collected together with `tgz`. To help there is [bash script](./contracts/ccaas_pkg.sh) to create the package in this repo.
 
 ### Important networking warning
 
-The chaincode package that is installed critically contains the hostname and port that the peer is expecting the chaincode to listening on. If nothing answers the 
+The chaincode package that is installed critically contains the hostname and port that the peer is expecting the chaincode to listen on. If nothing answers the 
 peer, it obviously will fail the transaction. 
 
 Note that it is ok not to have the chaincode running at all times, the peer won't complain until it is asked to actually connect to the chaincode. This is an important
- ability as it let's debug, and restart the container.
+ ability as it allows for debugging and restarting of the container.
 
-The hostname that is supplied must be something that the peer, from it's perspective can resolve. Typically the peer will be inside a docker container, therefore
- suppling `localhost` or `127.0.0.1` will resolve to the same container the the peer is running in.
+The hostname that is supplied must be something that the peer, from its perspective, can resolve. Typically the peer will be inside a docker container, therefore
+ supplying `localhost` or `127.0.0.1` will resolve to the same container the peer is running in.
 
-Assuming that the peer is running in a docker container, the chaincode could either be run in it's down docker container, on the same docker network as the peers
+Assuming that the peer is running in a docker container, the chaincode could either be run in its own docker container, on the same docker network as the peers
  container, or it could be run directly on the host system. 
 
 Depending your host OS, the 'specialhostname' that is used from within the docker container to access the host varies.
- For example see this [stackoverflow post](https://stackoverflow.com/questions/24319662/from-inside-of-a-docker-container-how-do-i-connect-to-the-localhost-of-the-mach#:~:text=To%20access%20host%20machine%20from,using%20it%20to%20anything%20else.&text=Then%20make%20sure%20that%20you,0.0%20.)
+ For example, see this [stackoverflow post](https://stackoverflow.com/questions/24319662/from-inside-of-a-docker-container-how-do-i-connect-to-the-localhost-of-the-mach#:~:text=To%20access%20host%20machine%20from,using%20it%20to%20anything%20else.&text=Then%20make%20sure%20that%20you,0.0%20.)
 
-The advantage of this is the chaincode can run locally on your hostmachine and is simple to conenct to from a debugger. 
+The advantage of this is the chaincode can run locally on your host machine and is simple to connect to from a debugger. 
 
-Alternatively, you can package the chaincode into it's own docker container, and run that. You can still debug into this, but need to ensure that the ports of the 
+Alternatively, you can package the chaincode into its own docker container, and run that. You can still debug into this, but need to ensure that the ports of the 
 container are exposed correctly for your language runtime.
-
-The first practical will show the approach of using the 'specialhostname', the other examples show how to use a docker container. Neither Fabric, or the Chaincode or
- VSCode really care which approach is used, so long as the network connections can resolve themselves.
 
 ## Single stepping and timeouts
 

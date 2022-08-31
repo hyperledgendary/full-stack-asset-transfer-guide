@@ -88,7 +88,7 @@ Note that when MicroFab started it automatically launched a Certificate Authorit
 Pick one if the id files and look at the JSON content including the public certificate and private key.
 
 ```
-cat _cfg/_wallets/org1/org1admin.id | jq
+cat _cfg/uf/_wallets/org1/org1admin.id | jq
 {
   "credentials": {
     "certificate": "-----BEGIN CERTIFICATE-----\n  xxxx \n-----END CERTIFICATE-----\n",
@@ -199,7 +199,7 @@ npm install
 npm run build
 ```
 
-On it's own a smart contract can't do a lot, however an easy way to test the contract has been built ok, is to generate the 'Contract Metatadata'. This is a language agnostic definition of the contracts, and the datatypes the contract returns. It borrows from the OpenAPI used for defining REST APIs.  It is also very useful to share to teams writing client applications so they know the data structures and transaction functions they can call.
+On it's own a smart contract can't do a lot, however an easy way to test the contract has been built ok, is to generate the 'Contract Metadata'. This is a language agnostic definition of the contracts, and the datatypes the contract returns. It borrows from the OpenAPI used for defining REST APIs.  It is also very useful to share to teams writing client applications so they know the data structures and transaction functions they can call.
 As it's a JSON document, it's amenable to process to create other resources.
 
 The metadata-generate command has been put into the `package.json`:
@@ -311,7 +311,7 @@ Remember to set a breakpoint at the start of the transaction function you want t
 
 Watch out for:
     - VSCode uses node, so take care in selecting the right process
-    - remember the client/fabric transaction timeout, whilst you've the chaicode stopped in the debugger, the timeout is still 'ticking'
+    - remember the client/fabric transaction timeout, whilst you have the chaincode stopped in the debugger, the timeout is still 'ticking'
 
 
-Look at the [Test and Debuging Contracts](./03-Test-And-Debug.md) for more details and information on other languages.
+Look at the [Test and Debugging Contracts](./03-Test-And-Debug.md) for more details and information on other languages.
