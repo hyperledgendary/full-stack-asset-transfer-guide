@@ -1,6 +1,6 @@
 # Getting Started with a Smart Contract
 
-[PREVIOUS - Introduction](./00-Introduction.md) <==>  [NEXT Create a Blank Contract](./02-Creating-Blank-Contract.md)
+[PREVIOUS - Introduction](./00-Introduction.md) <==>  [NEXT - Adding a Transaction Function](./02-Exercise-Adding-tx-function.md)
 
 ---
 
@@ -10,13 +10,13 @@ cd workshop
 export WORKSHOP_PATH=$(pwd)
 ```
 
-First please check you've got the [required tools](../../SETUP.md) needed for the dev part of this workshop (docker, just, weft, nodejs, and Fabric peer binary). To double check run the `check.sh` script
+First please check you've got the [required tools](../../SETUP.md) needed for the dev part of this workshop (docker, just, weft, nodejs, and Fabric peer binary). To double-check check run the `check.sh` script
 
 ```
 ${WORKSHOP_PATH}/check.sh
 ```
 
-Let's dive straight into creating some code to manage an 'asset'; best to have two windows open, one for running the 'FabricNetwork' and one for 'ChaincodeDev'. You may wish to open a third to watch the logs of the running Fabric Network.
+Let's dive straight into creating some code to manage an 'asset'; it is suggested to have two windows open, one for running the 'FabricNetwork' and one for 'ChaincodeDev'. You may wish to open a third to watch the logs of the running Fabric Network.
 
 ## Start the Fabric Infrastructure
 
@@ -64,17 +64,17 @@ Next let's look at the three directories that are created `_msp`, `_gateways`, `
 
 Firstly the `_msp` directory contains the membership services provider (MSP) credentials necessary to run the Fabric Peer CLI commands as the org1 admin, including the user's public certificate and private key for signing transactions. The MSP location is referenced in the `CORE_PEER_MSGCONFIGPATH` environment variable and contains the credential subdirectories expected by the Peer CLI command.
 
-Secondly the `_gateways` directory contains two JSON files, one per organization. This file contains details of the Peer's endpoint url to connect clients to. Older Fabric Client SDKs would need all the information in this file, but the new "Gateway SDKs" remove the need for all the detail. The new Gateway SDKs just need the peer's endpoint and TLS configuration. See this [example code](../../applications/ping-chaincode/src/fabric-connection-profile.ts) on how to parse this file easily for the Gateway SDK.
+Secondly, the `_gateways` directory contains two JSON files, one per organization. This file contains details of the Peer's endpoint url to connect clients to. Older Fabric Client SDKs would need all the information in this file, but the new "Gateway SDKs" remove the need for all the detail. The new Gateway SDKs just need the peer's endpoint and TLS configuration. See this [example code](../../applications/ping-chaincode/src/fabric-connection-profile.ts) on how to parse this file easily for the Gateway SDK.
 
-Third is the `_wallets` directory - there are three subdirectories, one each for the Ordering Organization, Organizations 1, and Organization 2. These directories contain `*.id` files that contain details of identities and their respective credentials, similar to the MSP content, but in a JSON format that applications can more easily parse:
+The third is the `_wallets` directory - there are three subdirectories, one each for the Ordering Organization, Organizations 1, and Organization 2. These directories contain `*.id` files that contain details of identities and their respective credentials, similar to the MSP content, but in a JSON format that applications can more easily parse:
 
 ```
 _wallets
 ├── Orderer
-│   └── ordereradmin.id
+│   └── ordereradmin.id
 ├── org1
-│   ├── org1admin.id
-│   └── org1caadmin.id
+│   ├── org1admin.id
+│   └── org1caadmin.id
 └── org2
     ├── org2admin.id
     └── org2caadmin.id
@@ -121,12 +121,12 @@ You will see the chaincode id and deployment steps returned.
 
 ### Details of this packaging and deployment
 
-If you would like to understand chaincode packaging and deployment process in more detail you can walk through the steps manually here. Otherwise you can [skip ahead to the next section to run the chaincode](#run-the-chaincode-locally).
+If you would like to understand chaincode packaging and the deployment process in more detail you can walk through the steps manually here. Otherwise, you can [skip ahead to the next section to run the chaincode](#run-the-chaincode-locally).
 
 Fabric chaincode packages are a `tgz` format archive that contain two files:
 
 - `metadata.json` - the chaincode label and type
-- `code.tar.gz` - source artifacts for the chaincode
+- `code.tar.gz` - source artefacts for the chaincode
 
 Create the `metadata.json` first, this tells the Peer the type of chaincode and a label to use to refer to this later
 
@@ -162,7 +162,7 @@ Create the final chaincode package archive.
 tar -czf contract.tgz metadata.json code.tar.gz
 ```
 
-We're going to use the peer CLI commands to install and deploy the chaincode. Chaincode is 'deployed' by indicating agreement to it and then committing it to a channel:
+We're going to use the peer CLI commands to install and deploy the chaincode. Chaincode is 'deployed' by indicating an agreement to it and then committing it to a channel:
 
 ```
 source _cfg/uf/org1admin.env
@@ -199,7 +199,7 @@ npm install
 npm run build
 ```
 
-On it's own a smart contract can't do a lot, however an easy way to test the contract has been built ok, is to generate the 'Contract Metatadata'. This is a language agnostic definition of the contracts, and the datatypes the contract returns. It borrows from the OpenAPI used for defining REST APIs.  It is also very useful to share to teams writing client applications so they know the data structures and transaction functions they can call.
+On it's own a smart contract can't do a lot, however an easy way to test the contract has been built ok, is to generate the 'Contract Metatadata'. This is a language-agnostic definition of the contracts, and the datatypes the contract returns. It borrows from the OpenAPI used for defining REST APIs.  It is also very useful to share to teams writing client applications so they know the data structures and transaction functions they can call.
 As it's a JSON document, it's amenable to process to create other resources.
 
 The metadata-generate command has been put into the `package.json`:
@@ -215,7 +215,7 @@ Review the generated `metadata.json` and see the summary of the contract informa
 
 **All the steps up until here are one time only. You can now iterate over the development of your contract**
 
-From your chaincode terminal window lets start the Smart Contract node module. Remember that the `CHAINCODE_ID` and the `CHAINCODE_SERVER_ADDRESS` are the only pieces of information needed.
+From your chaincode terminal window, let's start the Smart Contract node module. Remember that the `CHAINCODE_ID` and the `CHAINCODE_SERVER_ADDRESS` are the only pieces of information needed.
 
 Note: Use your specific CHAINCODE_ID from earlier; the `CHAINCODE_SERVER_ADDRESS` is different - this is because in this case it is telling the chaincode where to listen for incoming connections from the Peer. We'll use port 9999 on the local machine.
 
@@ -232,7 +232,7 @@ npm run start:server-debug
 ### Run some transactions
 
 Choose a terminal window to run the transactions from; initially we'll use the `peer` CLI to run the commands.
-Make sure that the peer binary and the config directory are set (run the `${WORKSHOP_PATH}/check.sh` script to double check).
+Make sure that the peer binary and the config directory are set (run the `${WORKSHOP_PATH}/check.sh` script to double-check).
 
 Set up the environment context for acting as the Org 1 Administrator.
 
@@ -267,7 +267,7 @@ You'll see the asset returned:
 
 ### Making a change and re-running the code
 
-If we invoke a query command on a asset that does not exist, for example 002, we'll get back an error:
+If we invoke a query command on an asset that does not exist, for example 002, we'll get back an error:
 
 ```
 peer chaincode query -C mychannel -n asset-transfer -c '{"Args":["ReadAsset","002"]}'
@@ -284,7 +284,7 @@ Let's say we want to change that error message to something else.
 - Stop the running chaincode (CTRL-C in the chaincode terminal)
 - Load the `src/assetTransfer.ts` file into an editor of your choice
 - Around line 51, find the error string and make a modification. Remember to save the change.
-- Rebuild this as it's typescript with "npm run build"
+- Rebuild this as its typescript with "npm run build"
 
 You can now restart the contract as before
 
@@ -301,7 +301,7 @@ peer chaincode query -C mychannel -n asset-transfer -c '{"Args":["ReadAsset","00
 
 ## Debugging
 
-As the chaincode was started with the Node.js debug setting, you can connect a node.js debugger. For example VSCode has a good typescript/node.js debugger.
+As the chaincode was started with the Node.js debug setting, you can connect a node.js debugger. For example, VSCode has a good typescript/node.js debugger.
 
 If you select the debug tab, and open the debug configurations, add "Attach to a node.js process" configuration.
 VSCode will prompt you with the template. The default port should be sufficient here.
