@@ -29,7 +29,7 @@ An initial and perhaps the most important decision is - "what information needs 
 For any end-end tutorial there is a trade-off between making the scenario realistic, but not sufficiently complicated. For this tutorial, we'll define the data stored on the ledger as being a single 'object' with the following fields. This has been kept very simple, but the approach should be familiar.
 
 - ID: string unique-identifier
-- Color: string representing a colour
+- Color: string representing a color
 - Size: string representing a size
 - Owner: string of the identity name of the owner
 - Appraised Value: numerical value.
@@ -107,7 +107,7 @@ To help with the integration of other systems it is well worth issuing events fr
 Simply both - the terms have been used in Fabric history almost interchangeable; Chaincode was the original name, but then Smart Contracts is a common a blockchain term. The class/structure that is extended/implemented in code is called `Contract`.
 
 The aim is to standardize on 
-- the Smart Contract(s) are classes/structures - the code - that your write in Go/JavaScript/TypeSciript/Java etc. 
+- the Smart Contract(s) are classes/structures - the code - that your write in Go/JavaScript/TypeScript/Java etc. 
 - these are then packaged up and run inside a Chaincode-container (chaincode-image / chaincode-runtime depending on exactly the format of the packaging)
 - the chaincode definition is more than just the Smart Contract code, as it includes things such as the couchdb indexes, and the endorsement policy
 
