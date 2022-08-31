@@ -2,29 +2,29 @@
 
 [PREVIOUS - Getting Started](./01-Exercise-Getting-Started.md) <==>  [NEXT - Test And Debug](./03-Test-And-Debug-Reference.md)
  
- In this exercise we're going to add a transaction function to check the appraised value. We're going to write this function as part of develoment cycle, so there is no requirement to stop fabric or worry about versions of deployed chaincode.
+ In this exercise, we're going to add a transaction function to check the appraised value. We're going to write this function as part of the development cycle, so there is no requirement to stop fabric or worry about versions of deployed chaincode.
 
 The function will:
 
 - be a 'read-only' function
-- take a given asset id, and a upper and lower value
+- take a given asset id, and an upper and lower value
 - return a true/false indication if the appraised value is within the upper/lower values
 
 ## Steps
 
 Firstly ensure that you've run the Smart Contract and been able to issue transactions against it. It's also worth making sure that you can stop and restart the code after making some minor changes. 
 
-- In the `assetTransfer.ts` file create a new function `ValidateValue` . The `ReadAsset` function is a good one to use as a basis. This is a read-only function, and already gets the asset from the ledger.
--  Add in an upper and lower value to the parameters of the function
+- In the `assetTransfer.ts` file create a new function `ValidateValue` . The `ReadAsset` function is a good one to use as a basis. This is a read-only function and already gets the asset from the ledger.
+-  Add an upper and lower value to the parameters of the function
 - `ReadAsset` returns the asset directly, look at the `UpdateAsset` function for how to process the data
 - Check the value and return true/false depending on if the value is in the bounds.
 - If you wish also set an event.
 
-Remember to stop the running code, rebuild it and start again. Remeber you can attach the debugger to help track down issues
+Remember to stop the running code, rebuild it and start again. Remember you can attach the debugger to help track down issues
 
 ## Testing
 
-You can invoke this then with the similar commands as in Getting Started
+You can invoke this then with similar commands as in Getting Started
 For example to check if the value is between 1000 and 4200, issue something like
 
 ```
