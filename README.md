@@ -7,6 +7,11 @@ Fabric can be used to track and update anything about these assets, common examp
 
 This workshop will demonstrate how a generic asset transfer solution can be modeled and deployed to take advantage of a blockchains qualitites of service.
 
+The workshop will be split into three sections:
+- Smart Contract Development
+- Client Application Development
+- Cloud Native Fabric Deployment
+
 **OBJECTIVES:**
 
 - Show how an Asset Transfer smart contract can be written to encapsulate business logic
@@ -21,7 +26,7 @@ This workshop will demonstrate how a generic asset transfer solution can be mode
 
 ---
 
-**Please ensure you've got the [required tools](./SETUP.md) on your local machine  -- To check, run `./check.sh`**
+**Please ensure you've got the [required tools](./SETUP.md) on your local machine or in a virtual machine  -- To check, run `./check.sh`**
 
 ---
 
@@ -31,7 +36,7 @@ This workshop will demonstrate how a generic asset transfer solution can be mode
 Fabric is a multi-server decentralized system with orderer and peer nodes, so it can be quite complex to configure. Even the simplest smart contract needs a running Fabric Infrastructure and one size does not fit all.
 
 There are configurations that can run Fabric either as local binaries, in a single docker container, in multiple containers, or in K8S.
-This workshop will show some of the approaches that can be used for developing applications and contracts, and how a production deployment can be achieved.
+This workshop will show some of the approaches that can be used for developing applications and contracts with a minimal Fabric environment (Microfab), and how a production deployment can be achieved.
 There are other ways of deploying Fabric produced by the community - these are equally valid and useful. Feel free to try the others, once you understand the basic concepts to find what works best for you.
 
 At a high-level remember that a solution using Fabric has (a) client application to send in transaction requests (b) Fabric infrastructure to service those requests (c) Smart Contract to action the transactions.
@@ -42,21 +47,20 @@ There will be minor variations in deployment (eg local docker container vs remot
 
 If you're running on Windows, please check the [hints and tips](./docs/tips-for-windows-dev.md)
 
-- Ensure you've got the tools you may need installed, or the Vagrant DevImage started
+- Ensure you've got the tools you may need, either installed locally or in a multipass virtual machine. See the [setup page](./SETUP.md) for details.
 - Clone this repository to a convient location
 - We suggest that you open 3 or 4 terminal windows
   - One for running chaincode in dev mode
   - One for running the fabric infrastructure and optionally one for monitoring it
   - One for client applications
 
-- Work through the sections below in order, initially using the supplied scripts and resources
-- There are suggested changes highlighted in each section; this lets you experiment with different stages of development.
+- Work through the sections below in order, although you don't necessarily need to complete all the Exercises before moving to the next section.
 
 ---
 ## Scenario
 
-As a real-world example, lets assuming a 'game/trading card'. Each card represents a comic book character, with their attributes such as strength.
-These can be passed between people, with some cards having more 'value' due to rarity or having notable attributes.
+Lets assume the assets you are tracking on the blockchain ledger are trading cards. Each trading card represents a comic book character and has an id, size, favorite color, and owner.
+These trading cards can be passed between people, with some cards having more 'value' due to rarity or having notable attributes.
 
 In token terms, think of these cards as non-fungible tokens. Each card has different attributes and individual cards can't be subdivided.
 
@@ -64,20 +68,18 @@ We'll create a digital representation of these cards on the blockchain ledger. T
 
 - Ledger - The blockchain ledger on each peer maintains the current state of each card (asset), as well as the history of transactions that led to the current state, so that there is no doubt about the assets issuance, provenance, attributes, and ownership.
 - Asset transfer smart contract - manage changes to asset state such as the transfer of cards between people
-- Organizations - Since this is a permissioned blockchain we'll model the participants as organizations that are authorized to run nodes or transact on the Fabric network.
-    - Escrow organization - the original holder of all the cards and runs peers that can endorse their transfer.
-    - Regulator organization - runs the ordering service to ensure transactions get ordered into blocks fairly
-    - Owner Organizations - 3 organizations that people can belong too. Each owner organization is authorized to run peers and submit transfer transactions for the cards that they own.
+- Organizations - Since this is a permissioned blockchain we'll model the participants as organizations that are authorized to run nodes or transact on the Fabric network. Our simple network will consist of an ordering service organization and two transacting organizations.
+    - Ordering service organization - runs the ordering service to ensure transactions get ordered into blocks fairly, this may be a consortium leader or regulator in the industry.
+    - Owner Organizations - 2 organizations that people can belong too. Each owner organization is authorized to run peers and submit transfer transactions for the cards (assets) that they own.
 
 
 ## Smart Contract Development
 
 - [Introduction](./docs/SmartContractDev/00-Introduction.md)
 - **Exercise**: [Getting Started with a Smart Contract](./docs/SmartContractDev/01-Exercise-Getting-Started.md)
-- **Exercise**: [Adding a new transaction function](./docs/SmartContractDev/02-Exercise-Adding-tx-function.md) 
+- **Exercise**: [Adding a new transaction function](./docs/SmartContractDev/02-Exercise-Adding-tx-function.md)
 - Reference:
   - [Detailed Test and Debug](./docs/SmartContractDev/03-Test-And-Debug-Reference.md)
-
 
 ## Client Application Development
 
@@ -96,7 +98,6 @@ We'll create a digital representation of these cards on the blockchain ledger. T
 - **Exercise:** [Deploy a Fabric Network](docs/CloudReady/20-fabric.md)
 - **Exercise:** [Deploy a Smart Contract](docs/CloudReady/30-chaincode.md)
 - **Exercise:** [Deploy a Client Application](docs/CloudReady/40-bananas.md)
-
 
 ## Epilogue
 

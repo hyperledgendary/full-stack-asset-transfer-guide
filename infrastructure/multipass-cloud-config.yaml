@@ -1,7 +1,7 @@
 #cloud-config
 users:
   - name: dev
-    groups: 
+    groups:
       - sudo
       - docker
     lock_passwd: false
@@ -14,13 +14,13 @@ users:
 pacakge_update: true
 package_upgrade: true
 packages:
-  - jq 
+  - jq
   - curl
-  - software-properties-common  
+  - software-properties-common
 
 write_files:
 - path: /config/provision-root.sh
-  permissions: '0744'    
+  permissions: '0744'
   content: |
     #!/usr/bin/env bash
     set -ex
@@ -53,7 +53,7 @@ write_files:
     # APT setup for kubectl
     curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
     apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
-   
+
     # Install kubectl
     apt-get -y --no-upgrade install kubectl
 
@@ -105,11 +105,16 @@ write_files:
 
 - path: /config/provision-user.sh
   permissions: '0777'
-  owner: dev:dev
+  owner: ubuntu:ubuntu
   content: |
     export NVM_DIR="$HOME/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] || curl --fail --silent --show-error -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.3/install.sh | bash
     . "$NVM_DIR/nvm.sh"
+
+    # Install latest node v16.x, latest typescript, weft
+    nvm install 16
+    npm install -g typescript
+    npm install -g @hyperledger-labs/weft
 
 # Use Google DNS as the mac resolvers are not 100% reliable for the npm dependency builds in Docker
 bootcmd:
@@ -123,6 +128,6 @@ runcmd:
   - apt-get install -y docker.io
   - usermod -a -G docker ubuntu
   - /config/provision-root.sh
-  - su -c /config/provision-user.sh dev
+  - su -c /config/provision-user.sh ubuntu
 
-final_message: "The system is finally up, after $UPTIME seconds"  
+final_message: "The system is finally up, after $UPTIME seconds"
