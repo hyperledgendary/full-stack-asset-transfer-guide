@@ -3,6 +3,7 @@
 [PREVIOUS - Adding a Transaction Function](./02-Exercise-Adding-tx-function.md)
 
 **Aim:** Stand up a Hyperledger Fabric Smart Contract so it can easily be debugged
+
 **Objectives:**
 
 - Introduce what Chaincode-as-a-Service is, and how it helps
@@ -18,7 +19,7 @@ It helps to think of three 'parts'
 
 - The Fabric network, consisting of the peers, orderers, certificate authorities etc. Along with configured channels and identities.
   For our purposes here, this can be considered as a 'black box'. The 'black box' can be configured a number of different ways, but typically will be one or docker containers.
-- The Chaincode - this will be running in it's own docker container.
+- The Chaincode - this will be running in its own docker container.
 - The editor - VSCode is covered here, but the approach should hold with other debuggers and editors.
 
 The _high level process_ is
@@ -91,9 +92,9 @@ For debug, the JVM needs to put into debug mode `java -agentlib:jdwp=transport=d
 ## How is the chaincode package different?
 
 A key difference is that the chaincode package does not contain code. It is used as a holder of data that indicates to the peer where the chaincode is. What 
-host/port and what TLS configuration is needed? Chaincode packages already can hold data about the couchdn indicies to use or the private data collections. 
+host/port and what TLS configuration is needed? Chaincode packages already can hold data about the couchdb indicies to use or the private data collections. 
 
-Within the package, the `connection.json` is a key file. At it's simplest it would be 
+Within the package, the `connection.json` is a key file. At its simplest it would be 
 
 ```json
 {
@@ -113,12 +114,12 @@ The chaincode package that is installed critically contains the hostname and por
 peer, it obviously will fail the transaction. 
 
 Note that it is ok not to have the chaincode running at all times, the peer won't complain until it is asked to actually connect to the chaincode. This is an important
- ability as it let's debug, and restart the container.
+ ability as it allows for debugging and restarting of the container.
 
-The hostname that is supplied must be something that the peer, from it's perspective, can resolve. Typically the peer will be inside a docker container, therefore
+The hostname that is supplied must be something that the peer, from its perspective, can resolve. Typically the peer will be inside a docker container, therefore
  supplying `localhost` or `127.0.0.1` will resolve to the same container the peer is running in.
 
-Assuming that the peer is running in a docker container, the chaincode could either be run in it's down docker container, on the same docker network as the peers
+Assuming that the peer is running in a docker container, the chaincode could either be run in its own docker container, on the same docker network as the peers
  container, or it could be run directly on the host system. 
 
 Depending your host OS, the 'specialhostname' that is used from within the docker container to access the host varies.
@@ -126,7 +127,7 @@ Depending your host OS, the 'specialhostname' that is used from within the docke
 
 The advantage of this is the chaincode can run locally on your host machine and is simple to connect to from a debugger. 
 
-Alternatively, you can package the chaincode into it's own docker container, and run that. You can still debug into this, but need to ensure that the ports of the 
+Alternatively, you can package the chaincode into its own docker container, and run that. You can still debug into this, but need to ensure that the ports of the 
 container are exposed correctly for your language runtime.
 
 ## Single stepping and timeouts
