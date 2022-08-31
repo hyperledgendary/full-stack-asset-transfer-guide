@@ -311,7 +311,7 @@ Remember to set a breakpoint at the start of the transaction function you want t
 
 Watch out for:
     - VSCode uses node, so take care in selecting the right process
-    - remember the client/fabric transaction timeout, whilst you've the chaicode stopped in the debugger, the timeout is still 'ticking'
+    - remember the client/fabric transaction timeout, whilst you have the chaincode stopped in the debugger, the timeout is still 'ticking'
 
 
 Look at the [Test and Debugging Contracts](./03-Test-And-Debug.md) for more details and information on other languages.
