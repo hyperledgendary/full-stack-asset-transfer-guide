@@ -5,7 +5,7 @@
 ---
 
 Using the traditional chaincode lifecycle, smart contract deployment requires a Fabric administrator to prepare
-and install a chaincode package declaring the contract source code, metadata, and target langage/runtime.  When the
+and install a chaincode package declaring the contract source code, metadata, and target language/runtime.  When the
 contract is committed to a channel, peers are responsible for compiling a custom chaincode binary and launching the
 contract as a child process.  This workflow creates several issues for container-based runtimes, where the `build`
 phase is additionally responsible for compiling a Docker image, and the `run` phase is responsible for managing the
