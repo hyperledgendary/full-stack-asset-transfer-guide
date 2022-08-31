@@ -1,6 +1,6 @@
 # Getting Started with a Smart Contract
 
-[PREVIOUS - Introduction](./00-Introduction.md) <==>  [NEXT Create a Blank Contract](./02-Creating-Blank-Contract.md)
+[PREVIOUS - Introduction](./00-Introduction.md) <==>  [NEXT - Adding a Transaction Function](./02-Exercise-Adding-tx-function.md)
 
 ---
 
