@@ -25,6 +25,7 @@ This workshop will demonstrate how a generic asset transfer solution can be mode
 
 ---
 
+
 ## Before you begin....
 
 Fabric is a multi-server decentralized system with orderer and peer nodes, so it can be quite complex to configure. Even the simplest smart contract needs a running Fabric Infrastructure and one size does not fit all.
@@ -38,6 +39,8 @@ The nature of (b) the fabric infrastructure will change depending on your scenar
 There will be minor variations in deployment (eg local docker container vs remote K8S cluster) but fundamentally the process is the same.
 
 ## Running the workshop
+
+If you're running on Windows, please check the [hints and tips](./docs/tips-for-windows-dev.md)
 
 - Ensure you've got the tools you may need installed, or the Vagrant DevImage started
 - Clone this repository to a convient location
@@ -71,11 +74,10 @@ We'll create a digital representation of these cards on the blockchain ledger. T
 
 - [Introduction](./docs/SmartContractDev/00-Introduction.md)
 - **Exercise**: [Getting Started with a Smart Contract](./docs/SmartContractDev/01-Getting-Started.md)
-- **Exercise**: [Adding a new transaction function](./docs/SmartContractDev/02-Adding-tx-function.md)  COMING_SOON
+- **Exercise**: [Adding a new transaction function](./docs/SmartContractDev/02-Adding-tx-function.md) 
 - Reference:
   - [Detailed Test and Debug](./docs/SmartContractDev/03-Test-And-Debug.md)
-  - [Smart Contract Resourfces](./docs/SmartContractDev/04-Smart-Contract-Resources.md)
-  - [Contract Packaging in depth](./docs/SmartContractDev/05-Contract-packaging-Reference.md)
+
 
 ## Client Application Development
 
