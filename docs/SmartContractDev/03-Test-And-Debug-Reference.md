@@ -33,7 +33,7 @@ The _high level process_ is
 5. Invoke a transaction, this will then halt in the debugger to let you step over the code
 5. Find the bugs and repeat **from step 4** - note step 4... you don't need to go back to a new package or approval cycle.
 
-This is the exact process that you will have followed in the ['Getting Stared'](./01-Exercise-Getting-Started.md) section
+This is the exact process that you will have followed in the ['Getting Started'](./01-Exercise-Getting-Started.md) section
 
 ### What do you need?
 
