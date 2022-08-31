@@ -66,7 +66,7 @@ The following diagram demonstrates recommended practice for enabling access to a
 
 ![Fabric Gateway deployment](../images/ApplicationDev/fabric-gateway-deployment.png)
 
-An alternative (or complimentary) approach that can be employed is to assign multiple records for a single Gateway DNS name. This allows clients to select from a set of Gateway peer IP addresses associated with a single Gateway endpoint.
+An alternative (or complementary) approach that can be employed is to assign multiple records for a single Gateway DNS name. This allows clients to select from a set of Gateway peer IP addresses associated with a single Gateway endpoint.
 
 Note that peers must include the externally visible endpoint address in their TLS certificates for clients to successfully complete a TLS handshake.
 
