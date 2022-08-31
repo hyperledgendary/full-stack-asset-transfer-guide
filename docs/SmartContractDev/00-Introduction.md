@@ -10,7 +10,7 @@ This example shows how details of an asset may be stored in the ledger itself, w
 - Delete an asset
 - Transfer ownership between parties
 
-If you've never used Fabric before, or if you want to dive into the code, please skip to the [getting started](./01-Getting-Started.md) come back to this page as a reference later.
+If you've never used Fabric before, or if you want to dive into the code, please skip to the [getting started](./01-Excercise-Getting-Started.md) come back to this page as a reference later.
 
 Please remember that Hyperledger Fabric is a  Blockchain Ledger and not a Database!
 
