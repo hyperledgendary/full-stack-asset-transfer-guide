@@ -1,6 +1,8 @@
 ## Adding a Transaction Function
 
-In this exercise we're going to add a transaction function to check the appraised value. We're going to write this function as part of develoment cycle, so there is no requirement to stop fabric or worry about versions of deployed chaincode.
+[PREVIOUS - Getting Started](./01-Exercise-Getting-Started.md) <==>  [NEXT - Test And Debug](./03-Test-And-Debug-Reference.md)
+ 
+ In this exercise we're going to add a transaction function to check the appraised value. We're going to write this function as part of develoment cycle, so there is no requirement to stop fabric or worry about versions of deployed chaincode.
 
 The function will:
 

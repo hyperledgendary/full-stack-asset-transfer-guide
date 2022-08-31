@@ -10,11 +10,11 @@ This example shows how details of an asset may be stored in the ledger itself, w
 - Delete an asset
 - Transfer ownership between parties
 
-If you've never used Fabric before, or if you want to dive into the code, please skip to the [getting started](./01-Getting-Started.md) come back to this page as a reference later.
+If you've never used Fabric before, or if you want to dive into the code, please skip to the [getting started](./01-Exercise-Getting-Started.md) come back to this page as a reference later.
 
 Please remember that Hyperledger Fabric is a  Blockchain Ledger and not a Database!
 
-[NEXT - Getting Stared with Code](./01-Getting-Started.md)
+[NEXT - Getting Stared with Code](./01-Exercise-Getting-Started.md)
 
 ---
 ## Design the assets and contracts
@@ -116,5 +116,4 @@ There still is some 'play' in the usage; but hopefully this is clearer.
 ## Packaging
 
 In v1 and still supported as 'the old lifecycle' in v2, the CDS package format was used. The v2 'new lifecycle' should be used now - with standard `tar.gz` format. Using `tar` and `gzip` are standard techniques with standard tools. Therefore the main issue becomes what goes into those files and when/how are they used.
-
 
