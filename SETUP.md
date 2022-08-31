@@ -1,6 +1,6 @@
 # Essential Setup
 
-Remeber to clone this repository!
+Remember to clone this repository!
 
 ```shell
 git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git workshop
