@@ -28,7 +28,7 @@ You can invoke this then with similar commands as in Getting Started
 For example to check if the value is between 1000 and 4200, issue something like
 
 ```
-peer chaincode query -C mychannel -n asset-transfer -c '{"Args":["ValidateValue","002","1000","4200"]}'
+peer chaincode query -C mychannel -n asset-transfer -c '{"Args":["ValidateValue","001","1000","4200"]}'
 ```
 
 ## Example implementation
