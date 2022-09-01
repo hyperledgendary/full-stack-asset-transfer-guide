@@ -74,8 +74,9 @@ Install the workshop prerequisites with instructions from running `./check.sh`, 
 - [full-stack-asset-transfer-guide](https://github.com/hyperledgendary/full-stack-asset-transfer-guide) (this GitHub project):
 ```shell
 
-git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git
-cd full-stack-asset-transfer-guide
+git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git workshop
+cd workshop
+
 
 ```
 

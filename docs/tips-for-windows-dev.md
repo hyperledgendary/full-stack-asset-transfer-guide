@@ -22,11 +22,7 @@ multipass launch --name fabric-dev --disk 80G --cpus 8 --mem 8G --cloud-init htt
 C:\Users\014961866>multipass list
 Name                    State             IPv4             Image
 primary                 Running           172.31.125.88    Ubuntu 20.04 LTS
-fabdev                  Running           172.31.121.24    Ubuntu 20.04 LTS
-                                          172.17.0.1
 fabric-dev              Running           172.31.118.103   Ubuntu 20.04 LTS
-                                          172.17.0.1
-fabric-dev-2            Running           172.31.124.235   Ubuntu 20.04 LTS
                                           172.17.0.1
 ```
 

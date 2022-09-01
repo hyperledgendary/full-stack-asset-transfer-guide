@@ -7,12 +7,15 @@ target: k8s
 arch: amd64
 
 # k8s namespace for the operator and console
-namespace: fabricinfra
+namespace: ${namespace}
+
+# used if this is openshift
+project: ${namespace}
 
 # Console name/domain
 console_name: hlf-console
 console: hlf-console
-console_domain: localho.st
+console_domain: ${ingress_domain}
 
 #  default configuration for the console
 # password reset will be required on first login
@@ -21,7 +24,7 @@ console_default_password: password
 
 # different k8s clusters will be shipped with differently named default storage providers
 # or none at all.  KIND for example has one called 'standard'
-console_storage_class: standard
+console_storage_class: ${storage_class}
 
 
 container_cli: podman

@@ -12,6 +12,7 @@ just check-setup
 
 ```
 
+**WINDOWS note**, please create the multipass VM with the command below from an elevated command prompt. Then proceed from logged into this VM with the [KIND instructions](./10-kube.md)
 
 ## Provision a Multipass Virtual Machine
 
