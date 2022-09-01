@@ -75,7 +75,7 @@ curl \
 
 ```shell
 
-# While running "just network":
+# While running "just cloud-network and/or just cloud-channel":
 tail -f infrastructure/sample-network/network-debug.log
 
 ```
