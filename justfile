@@ -40,10 +40,14 @@ check:
 cluster_name    := env_var_or_default("WORKSHOP_CLUSTER_NAME",       "kind")
 cluster_runtime := env_var_or_default("WORKSHOP_CLUSTER_RUNTIME",    "kind")
 ingress_domain  := env_var_or_default("WORKSHOP_INGRESS_DOMAIN",     "localho.st")
+storage_class   := env_var_or_default("WORKSHOP_STORAGE_CLASS",      "standard")
 
 
 # Start a local KIND cluster with nginx, localhost:5000 registry, and *.localho.st alias in kube DNS
 kind: kind-down
+    #!/bin/bash
+    set -e -o pipefail
+
     infrastructure/kind_with_nginx.sh {{cluster_name}}
     ls -lart ~/.kube/config
     chmod o+r ~/.kube/config
@@ -281,9 +285,9 @@ check-chaincode: check-network
 # ANSIBLE PLAYBOOK TARGETS                                                    #
 ###############################################################################
 
-ansible_image   := env_var_or_default("ANSIBLE_IMAGE",      "ghcr.io/ibm-blockchain/ofs-ansibe:sha-65a953b")
+ansible_image   := env_var_or_default("ANSIBLE_IMAGE",      "ghcr.io/ibm-blockchain/ofs-ansibe:sha-4373f74")
 namespace       := env_var_or_default("WORKSHOP_NAMESPACE", "fabricinfra")
-
+kubecfg         := env_var_or_default("WORKSHOP_ANSIBLE_KUBECFG", "")
 
 # just set up everything with Ansible
 ansible-doit: ansible-review-config ansible-operator ansible-console ansible-network
@@ -297,38 +301,52 @@ ansible-review-config:
 
     cp ${CWDIR}/infrastructure/configuration/*.yml ${CWDIR}/_cfg
 
-    echo ">> Fabric Operations Console Configuration"
-    echo ""
-    cat ${CWDIR}/_cfg/operator-console-vars.yml
+    cat ${CWDIR}/infrastructure/configuration/operator-console-vars.yml | envsubst > ${CWDIR}/_cfg/operator-console-vars.yml
 
+    echo ""
     echo ">> Fabric Common Configuration"
     echo ""
     cat ${CWDIR}/_cfg/fabric-common-vars.yml
 
+    echo ""
     echo ">> Fabric Org1 Configuration"
     echo ""
     cat ${CWDIR}/_cfg/fabric-org1-vars.yml
 
+    echo ""
     echo ">> Fabric Org2 Configuration"
     echo ""
     cat ${CWDIR}/_cfg/fabric-org2-vars.yml
 
+    echo ""
     echo ">> Fabric Orderer Configuration"
     echo ""
     cat ${CWDIR}/_cfg/fabric-ordering-org-vars.yml
 
+    echo ""
+    echo ">> Fabric Operations Console Configuration"
+    echo ""
+    cat ${CWDIR}/_cfg/operator-console-vars.yml
+    echo ""
 
+# -e KUBECONFIG=/_cfg/k8s_context.yaml \
 # Start the Kubernetes fabric-operator with the Ansible Blockchain Collection
 ansible-operator:
     #!/bin/bash
     set -ex -o pipefail
+
+    export EXTRAS=""
+    if [ ! -z "${kubeconfig}" ]       
+    then 
+        export EXTRAS=" -e KUBECONFIG=${kubeconfig}"
+    fi
 
     docker run \
         --rm \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
         -v ${CWDIR}/_cfg:/_cfg \
         -v $(pwd)/infrastructure/kind_console_ingress:/playbooks \
-        --network=host \
+        --network=host ${EXTRAS} \
         --workdir /playbooks \
         {{ansible_image}} \
             ansible-playbook /playbooks/90-KIND-ingress.yml
@@ -337,7 +355,7 @@ ansible-operator:
         --rm \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
         -v ${CWDIR}/_cfg:/_cfg \
-        -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
+        -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks ${EXTRAS} \
         --network=host \
         {{ansible_image}} \
             ansible-playbook /playbooks/01-operator-install.yml
@@ -348,10 +366,16 @@ ansible-console:
     #!/bin/bash
     set -ex -o pipefail
 
+    export EXTRAS=""
+    if [ ! -z "${kubeconfig}" ]       
+    then 
+        export EXTRAS=" -e KUBECONFIG=${kubeconfig}"
+    fi
+
     docker run \
         --rm \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
-        -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks \
+        -v $(pwd)/infrastructure/operator_console_playbooks:/playbooks  ${EXTRAS} \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         {{ansible_image}} \
@@ -377,11 +401,17 @@ ansible-network:
     #!/bin/bash
     set -ex -o pipefail
 
+    export EXTRAS=""
+    if [ ! -z "${kubeconfig}" ]       
+    then 
+        export EXTRAS=" -e KUBECONFIG=${kubeconfig}"
+    fi
+
     docker run \
         --rm \
         -u $(id -u) \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
-        -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks \
+        -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks  ${EXTRAS} \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         {{ansible_image}} \
@@ -433,6 +463,7 @@ ansible-deploy-chaincode:
         --rm \
         -u $(id -u) \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
+        -e KUBECONFIG=/_cfg/k8s_context.yaml \
         -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
@@ -443,6 +474,7 @@ ansible-deploy-chaincode:
         --rm \
         -u $(id -u) \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
+        -e KUBECONFIG=/_cfg/k8s_context.yaml \
         -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \

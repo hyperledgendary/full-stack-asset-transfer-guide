@@ -77,7 +77,7 @@ just nginx
 ### IKS 
 ```shell
 
-INGRESS_IPADDR=$(kubectl -n ingress-nginx get svc/ingress-nginx-controller -o json | jq -r .status.loadBalancer.ingress[0].ip)
+export INGRESS_IPADDR=$(kubectl -n ingress-nginx get svc/ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[0].ip')
 export WORKSHOP_INGRESS_DOMAIN=$(echo $INGRESS_IPADDR | tr -s '.' '-').nip.io
 
 ```
@@ -85,8 +85,8 @@ export WORKSHOP_INGRESS_DOMAIN=$(echo $INGRESS_IPADDR | tr -s '.' '-').nip.io
 ### EKS 
 ```shell
 
-INGRESS_HOSTNAME=$(kubectl -n ingress-nginx get svc/ingress-nginx-controller -o json  | jq -r .status.loadBalancer.ingress[0].hostname)
-INGRESS_IPADDR=$(dig $INGRESS_HOSTNAME +short)
+export INGRESS_HOSTNAME=$(kubectl -n ingress-nginx get svc/ingress-nginx-controller -o json  | jq -r '.status.loadBalancer.ingress[0].hostname')
+export INGRESS_IPADDR=$(dig $INGRESS_HOSTNAME +short)
 export WORKSHOP_INGRESS_DOMAIN=$(echo $INGRESS_IPADDR | tr -s '.' '-').nip.io
 
 ```

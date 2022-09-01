@@ -19,29 +19,64 @@ just check-kube
 
 ```
 
-
 ## Build a Fabric Network
 
-- Note: if you are not using `localho.st` as the network ingress domain, after running `ansible-review-config`
-  target below, edit the local `_cfg/operator-console-vars.yaml` file and set the ingress domain to
-  `${WORKSHOP_INGRESS_DOMAIN}` before starting the console or configuring the network.
+The first step is to create the configuration that Ansible will use, then run the Ansible Playbooks
+
+- Define the namespace and storage class that will be used for console
+
+```shell
+export WORKSHOP_NAMESPACE="fabricinfra"
+# for *IBM CLoud K8S* use this storage class
+export WORKSHOP_STORAGE_CLASS="ibmc-file-gold"
+```
+
+- Install the Nginx controller to the cluster
+
+```shell
+just nginx
+```
+
+- Check the Ingress controllers domain
+
+For IKS:
+```shell
+export INGRESS_IPADDR=$(kubectl -n ingress-nginx get svc/ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[0].ip')
+export WORKSHOP_INGRESS_DOMAIN=$(echo $INGRESS_IPADDR | tr -s '.' '-').nip.io
+```
+
+- Generate Ansible Playbook configuration
+
+```shell
+# check the output to ensure the correct domain, storage class and namespace
+just ansible-review-config
+```
+
+Please check the local `_cfg/operator-console-vars.yaml` file. Ensure that the ingress domain, storage class and namespace are correct.  By default the all the `WORKSHOP_xxx` varirables are used to see the Ansible configuration, but it's worth double checking the files
 
 For example:
 ```shell
 # Console name/domain
-console_name: hlf-console
-console: hlf-console
 console_domain: 203-0-113-42.nip.io
+console_storage_class: ibmc-file-gold
+```
+
+- Set Kubectl context
+
+A Kubectl context is also requried; for example to use the current context
+``` shell
+kubectl config view --minify > _cfg/k8s_context.yaml
+```
+
+Alternatively your K8S provider may give you a different command to get the K8S cxontext.
+For IKS use this command instead
+```shell
+ibmcloud ks cluster config --cluster <clusterid> --output yaml > _cfg/k8s_context.yaml
 ```
 
 
 - Run the [00-complete](../../infrastructure/fabric_network_playbooks/00-complete.yml) play:
 ```shell
-
-export WORKSHOP_NAMESPACE=fabricinfra
-
-# Generate default ansible playbook properties in _cfg/
-just ansible-review-config
 
 # Start the operator and Fabric Operations Console
 just ansible-operator
@@ -51,7 +86,7 @@ just ansible-console
 just ansible-network
 
 # The console will be available at the Nginx ingress domain alias:
-echo "open https://fabricinfra-hlf-console-console.localho.st/nodes"
+echo "open https://fabricinfra-hlf-console-console.<WORKSHOP_INGRESS_DOMAIN>/nodes"
 
 ```
 
