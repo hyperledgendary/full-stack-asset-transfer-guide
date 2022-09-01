@@ -128,6 +128,7 @@ To set up a load-balanced Gateway [Service and Ingress](../../infrastructure/sam
 
 - Create a virtual host name / Ingress endpoint for the org peers: 
 ```shell
+pushd applications/trader-typescript
 
 kubectl kustomize \
   ../../infrastructure/sample-network/config/gateway \
@@ -145,6 +146,7 @@ export ENDPOINT=${WORKSHOP_NAMESPACE}-org1-peer-gateway.${WORKSHOP_INGRESS_DOMAI
 
 npm start getAllAssets
 
+popd
 ```
 
 Note that in order to support ingress and host access with the new virtual domain, the peer 
