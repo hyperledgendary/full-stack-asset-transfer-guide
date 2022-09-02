@@ -103,10 +103,14 @@ npm install -g typescript
 npm install -g @hyperledger-labs/weft
 ```
 
+- [jq](https://stedolan.github.io/jq/) jq JSON command-line processor
+```shell
+sudo apt-get update && sudo apt-get install -y jq
+```
+
 - Fabric peer CLI
 ```shell
-curl -sSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh && chmod +x install-fabric.sh
-./install-fabric.sh binary
+curl -sSL https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh | bash -s -- binary
 export WORKSHOP_PATH=$(pwd)
 export PATH=${WORKSHOP_PATH}/bin:$PATH
 export FABRIC_CFG_PATH=${WORKSHOP_PATH}/config
@@ -122,16 +126,12 @@ export FABRIC_CFG_PATH=${WORKSHOP_PATH}/config
 
 ### Beta Ansible Playbooks
 
-The v2.0.0-beta Ansible Collection for Hyperledger Fabric is required for Kubernetes deployment. This isn't yet being published.
+The v2.0.0-beta Ansible Collection for Hyperledger Fabric is required for Kubernetes deployment. This isn't yet being published to DockerHub but is being published to Github Packages. 
 
-```shell
-git clone https://github.com/IBM-Blockchain/ansible-collection.git  
-cd ansible-collection
-docker build -t ofs-ansible .
-```
+For reference check the latest version of [ofs-ansible](https://github.com/IBM-Blockchain/ansible-collection/pkgs/container/ofs-ansibe)
 
-Note to extract a PR
-```shell
-git fetch origin pull/615/head:latest
-git checkout latest
-```
+The Ansible scripts in the workshop are set to use the latest image here by default.
+
+
+
+

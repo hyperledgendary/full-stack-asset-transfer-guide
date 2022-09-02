@@ -114,6 +114,15 @@ else
   echo -e "${SUCCESS} weft found:\t\t$(cat /tmp/cmdpath)"
 fi
 
+# Install jq
+if ! command -v jq &> /tmp/cmdpath
+then
+  echo "${WARN} Please install jq; suggested install commands:"
+  echo "sudo apt-update && sudo apt-install -y jq"
+  EXIT=1
+else
+  echo -e "${SUCCESS} jq found:\t\t$(cat /tmp/cmdpath)"
+fi
 
 
 if ! command -v peer &> /tmp/cmdpath

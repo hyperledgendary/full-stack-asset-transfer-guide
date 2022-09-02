@@ -90,6 +90,8 @@ curl --insecure https://${WORKSHOP_INGRESS_DOMAIN}:443
 # Bring up the operator and console
 just ansible-review-config
 
+just ansible-ingress
+
 just ansible-operator
 
 just ansible-console

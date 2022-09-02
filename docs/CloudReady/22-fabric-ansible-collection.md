@@ -101,6 +101,11 @@ The `k8s_context.yaml` will be detected by the shell scripts and that will be us
 - Run the [00-complete](../../infrastructure/fabric_network_playbooks/00-complete.yml) play:
 ```shell
 
+# if you are using IKS/KIND 
+# do not do this for OpenShift
+just ansible-ingress
+
+
 # Start the operator and Fabric Operations Console
 just ansible-operator
 just ansible-console
@@ -118,5 +123,6 @@ echo "open https://fabricinfra-hlf-console-console.<WORKSHOP_INGRESS_DOMAIN>/nod
 
 
 ---
+
 
 [PREV: Deploy a Kube](10-kube.md) <==> [NEXT: Install Chaincode](30-chaincode.md)
