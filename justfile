@@ -287,7 +287,6 @@ check-chaincode: check-network
 
 ansible_image   := env_var_or_default("ANSIBLE_IMAGE",      "ghcr.io/ibm-blockchain/ofs-ansibe:sha-4373f74")
 namespace       := env_var_or_default("WORKSHOP_NAMESPACE", "fabricinfra")
-kubecfg         := env_var_or_default("WORKSHOP_ANSIBLE_KUBECFG", "")
 
 # just set up everything with Ansible
 ansible-doit: ansible-review-config ansible-operator ansible-console ansible-network
@@ -336,9 +335,8 @@ ansible-operator:
     set -ex -o pipefail
 
     export EXTRAS=""
-    if [ ! -z "${kubeconfig}" ]       
-    then 
-        export EXTRAS=" -e KUBECONFIG=${kubeconfig}"
+    if [ -f "/_cfg/k8s_context.yaml" ]; then    
+        export EXTRAS=" -e KUBECONFIG=/_cfg/k8s_context.yaml"
     fi
 
     docker run \
@@ -367,10 +365,10 @@ ansible-console:
     set -ex -o pipefail
 
     export EXTRAS=""
-    if [ ! -z "${kubeconfig}" ]       
-    then 
-        export EXTRAS=" -e KUBECONFIG=${kubeconfig}"
+    if [ -f "/_cfg/k8s_context.yaml" ]; then    
+        export EXTRAS=" -e KUBECONFIG=/_cfg/k8s_context.yaml"
     fi
+
 
     docker run \
         --rm \
@@ -402,9 +400,8 @@ ansible-network:
     set -ex -o pipefail
 
     export EXTRAS=""
-    if [ ! -z "${kubeconfig}" ]       
-    then 
-        export EXTRAS=" -e KUBECONFIG=${kubeconfig}"
+    if [ -f "/_cfg/k8s_context.yaml" ]; then    
+        export EXTRAS=" -e KUBECONFIG=/_cfg/k8s_context.yaml"
     fi
 
     docker run \
@@ -448,12 +445,18 @@ ansible-deploy-chaincode:
     #!/bin/bash
     set -ex -o pipefail
 
+    export EXTRAS=""
+    if [ -f "/_cfg/k8s_context.yaml" ]; then    
+        export EXTRAS=" -e KUBECONFIG=/_cfg/k8s_context.yaml"
+    fi
+
+
     cp ${CWDIR}/contracts/asset-transfer-typescript/asset-transfer-chaincode-vars.yml ${CWDIR}/_cfg
     docker run \
         --rm \
         -u $(id -u) \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
-        -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
+        -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks ${EXTRAS} \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         {{ansible_image}} \
@@ -464,7 +467,7 @@ ansible-deploy-chaincode:
         -u $(id -u) \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
         -e KUBECONFIG=/_cfg/k8s_context.yaml \
-        -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
+        -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks ${EXTRAS} \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         {{ansible_image}} \
@@ -475,7 +478,7 @@ ansible-deploy-chaincode:
         -u $(id -u) \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
         -e KUBECONFIG=/_cfg/k8s_context.yaml \
-        -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks \
+        -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks ${EXTRAS} \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         {{ansible_image}} \
