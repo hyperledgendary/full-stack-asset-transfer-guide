@@ -144,6 +144,7 @@ function print_help() {
 . scripts/sample_network.sh
 . scripts/console.sh
 . scripts/channel.sh
+. scripts/rest_sample.sh
 
 # check for kind, kubectl, etc.
 check_prereqs
@@ -183,6 +184,10 @@ elif [ "${MODE}" == "operator" ]; then
 elif [ "${MODE}" == "console" ]; then
   log "Launching Fabric Operations Console"
   console_up
+  log "🏁 - Console is ready"
+elif [ "${MODE}" == "rest-easy" ]; then
+  log "Launching Fabric Operations Console"
+  launch_rest_sample
   log "🏁 - Console is ready"
 
 else

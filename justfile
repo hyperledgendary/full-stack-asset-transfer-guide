@@ -280,6 +280,9 @@ check-network: check-kube
 check-chaincode: check-network
     checks/check-chaincode.sh
 
+# Create 'rest-easy'
+cloud-rest-easy:
+    infrastructure/sample-network/network rest-easy
 
 ###############################################################################
 # ANSIBLE PLAYBOOK TARGETS                                                    #
