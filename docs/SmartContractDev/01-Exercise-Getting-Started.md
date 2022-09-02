@@ -159,7 +159,7 @@ tar -czf code.tar.gz connection.json
 Create the final chaincode package archive.
 
 ```bash
-tar -czf contract.tgz metadata.json code.tar.gz
+tar -czf asset-transfer.tgz metadata.json code.tar.gz
 ```
 
 We're going to use the peer CLI commands to install and deploy the chaincode. Chaincode is 'deployed' by indicating agreement to it and then committing it to a channel:
@@ -167,13 +167,13 @@ We're going to use the peer CLI commands to install and deploy the chaincode. Ch
 ```
 source _cfg/uf/org1admin.env
 
-peer lifecycle chaincode install contract.tgz
+peer lifecycle chaincode install asset-transfer.tgz
 ```
 
 The ChaincodeID that is returned from this install command needs to be saved, typically this is best as an environment variable
 
 ```bash
-export CHAINCODE_ID=$(peer lifecycle chaincode calculatepackageid contract.tgz)
+export CHAINCODE_ID=$(peer lifecycle chaincode calculatepackageid asset-transfer.tgz)
 ```
 
 Next, define the chaincode on the blockchain channel by approving it and committing it. If you have already deployed the chaincode using the `just` recipe above, then increment the `--sequence` number to `2`.
@@ -187,9 +187,16 @@ peer lifecycle chaincode commit --channelID mychannel --name asset-transfer -v 0
 
 We'll use the example typescript contract already written in `$WORKSHOP_PATH/contracts/asset-transfer-typescript`. Feel free to take a look at the contract code in `contracts/asset-transfer-typescript/src/assetTransfer`.
 
-As with any typescript module we need to run `npm install` to manage the dependencies and then build (compile) the typescript to javascript.
+Use another terminal window for the chaincode. Make sure the terminal is setup with the same environment variables as the first terminal:
 
-Use another terminal window for the chaincode:
+```
+cd full-stack-asset-transfer-guide
+export WORKSHOP_PATH=$(pwd)
+export PATH=${WORKSHOP_PATH}/bin:$PATH
+export FABRIC_CFG_PATH=${WORKSHOP_PATH}/config
+```
+
+As with any typescript module we need to run `npm install` to manage the dependencies for the chaincode and then build (compile) the chaincode typescript to javascript.
 
 ```
 cd contracts/asset-transfer-typescript
@@ -224,7 +231,7 @@ source ${WORKSHOP_PATH}/_cfg/uf/org1admin.env
 
 # if you ran the short cut above, these will already be exported...
 export CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999
-export CHAINCODE_ID=$(peer lifecycle chaincode calculatepackageid contract.tgz)
+export CHAINCODE_ID=$(peer lifecycle chaincode calculatepackageid asset-transfer.tgz)
 
 npm run start:server-debug
 ```
@@ -232,6 +239,16 @@ npm run start:server-debug
 ### Run some transactions
 
 Choose a terminal window to run the transactions from; initially we'll use the `peer` CLI to run the commands.
+
+If this is a new terminal window set the environment variables:
+
+```
+cd full-stack-asset-transfer-guide
+export WORKSHOP_PATH=$(pwd)
+export PATH=${WORKSHOP_PATH}/bin:$PATH
+export FABRIC_CFG_PATH=${WORKSHOP_PATH}/config
+```
+
 Make sure that the peer binary and the config directory are set (run the `${WORKSHOP_PATH}/check.sh` script to double check).
 
 Set up the environment context for acting as the Org 1 Administrator.
