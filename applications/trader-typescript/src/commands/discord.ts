@@ -21,7 +21,7 @@ const startBlock = BigInt(0);
 // const webhookURL = 'https://discord.com/api/webhooks/1014964202428960828/SxpAdYFzzuk5cmewaNXuAgxoxapIsvqW9O875IUVZqUXw8sHWgdtMD1MA79VHgVpVKzz';
 
 //conga-bot
-//const webhookURL = 'https://discord.com/api/webhooks/1015000194368151632/BdZsgB14nE0f6knUHGO0ij138Vqv-1hj_ewhEN05M-C0bJ0oyoa0wBPONRzvyVWN2wqg';
+// const webhookURL = 'https://discord.com/api/webhooks/1015000194368151632/BdZsgB14nE0f6knUHGO0ij138Vqv-1hj_ewhEN05M-C0bJ0oyoa0wBPONRzvyVWN2wqg';
 
 // conga-bot-test
 const webhookURL = 'https://discord.com/api/webhooks/1015036514499051571/hGEHfpMrVeRyXnUcEG2ZFCEbCpLHStQMnOC0YaMKv2AkBy8IR-IQfvvP5qlzi6WMR8zv';
@@ -62,7 +62,8 @@ async function onEvent(event: ChaincodeEvent): Promise<void> {
     console.log(`\n<-- Chaincode event received: ${event.eventName} -`, payload);
 
     // Will upload an image / preview matching this name in the conga-bot/images folder.
-    const name = payload.ID;
+    // const name = payload.ID;
+    const name = "blockbert";
 
     const message:any = {
         username: username,
