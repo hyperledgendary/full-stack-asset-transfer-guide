@@ -285,7 +285,7 @@ check-chaincode: check-network
 # ANSIBLE PLAYBOOK TARGETS                                                    #
 ###############################################################################
 
-ansible_image   := env_var_or_default("ANSIBLE_IMAGE",      "ghcr.io/ibm-blockchain/ofs-ansibe:sha-4373f74")
+ansible_image   := env_var_or_default("ANSIBLE_IMAGE",      "ghcr.io/ibm-blockchain/ofs-ansibe:sha-e11e4ea")
 namespace       := env_var_or_default("WORKSHOP_NAMESPACE", "fabricinfra")
 
 # just set up everything with Ansible
@@ -328,9 +328,8 @@ ansible-review-config:
     cat ${CWDIR}/_cfg/operator-console-vars.yml
     echo ""
 
-# -e KUBECONFIG=/_cfg/k8s_context.yaml \
 # Start the Kubernetes fabric-operator with the Ansible Blockchain Collection
-ansible-operator:
+ansible-ingress:
     #!/bin/bash
     set -ex -o pipefail
 
@@ -349,6 +348,18 @@ ansible-operator:
         {{ansible_image}} \
             ansible-playbook /playbooks/90-KIND-ingress.yml
 
+
+
+# Start the Kubernetes fabric-operator with the Ansible Blockchain Collection
+ansible-operator:
+    #!/bin/bash
+    set -ex -o pipefail
+
+    export EXTRAS=""
+    if [ -f "/_cfg/k8s_context.yaml" ]; then    
+        export EXTRAS=" -e KUBECONFIG=/_cfg/k8s_context.yaml"
+    fi
+
     docker run \
         --rm \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
@@ -357,7 +368,6 @@ ansible-operator:
         --network=host \
         {{ansible_image}} \
             ansible-playbook /playbooks/01-operator-install.yml
-
 
 # Start the Fabric Operations Console with the Ansible Blockchain Collection
 ansible-console:
@@ -387,7 +397,7 @@ ansible-console:
     mkdir -p _cfg
     cat << EOF > $CWDIR/_cfg/auth-vars.yml
     api_key: $KEY
-    api_endpoint: http://{{namespace}}-hlf-console-console.{{ingress_domain}}/
+    api_endpoint: https://{{namespace}}-hlf-console-console.{{ingress_domain}}/
     api_authtype: basic
     api_secret: $SECRET
     EOF
@@ -412,7 +422,7 @@ ansible-network:
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         {{ansible_image}} \
-            ansible-playbook /playbooks/00-complete.yml
+            ansible-playbook /playbooks/00-complete.yml -vvv
 
 
 # Bring down the sample network created with the Ansible Blockchain Collection
