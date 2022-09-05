@@ -76,7 +76,7 @@ export class ConnectionHelper {
             return new grpc.Client(peerEndpoint, tlsCredentials);
     
         } else {
-    
+            console.log(peerEndpoint);
             return new grpc.Client(peerEndpoint, grpc.ChannelCredentials.createInsecure());
     
         }

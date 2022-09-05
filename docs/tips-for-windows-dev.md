@@ -1,6 +1,6 @@
 # Using Windows
 
-We recommend when running on Windows to use with the Windows Subsystem for Linux (WSL2) or use Multipass to create VMs
+We recommend using the Windows Subsystem for Linux (WSL2) or use Multipass to create VMs.  If you've never used either then Multipass is probably the quickest way to start initially.
 
 ## Multipass
 
@@ -10,8 +10,6 @@ We recommend when running on Windows to use with the Windows Subsystem for Linux
 ```
 multipass launch --name fabric-dev --disk 80G --cpus 8 --mem 8G --cloud-init https://raw.githubusercontent.com/hyperledgendary/full-stack-asset-transfer-guide/main/infrastructure/multipass-cloud-config.yaml
 ```
-
-
 
 ## Using VSCode
 - Setup [vscode](https://code.visualstudio.com/) and make sure you've the [remote development extension pack ](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)installed

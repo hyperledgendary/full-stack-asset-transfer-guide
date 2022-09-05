@@ -425,7 +425,7 @@ ansible-network:
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         {{ansible_image}} \
-            ansible-playbook /playbooks/00-complete.yml -vvv
+            ansible-playbook /playbooks/00-complete.yml
 
 
 # Bring down the sample network created with the Ansible Blockchain Collection
@@ -463,7 +463,6 @@ ansible-deploy-chaincode:
         export EXTRAS=" -e KUBECONFIG=/_cfg/k8s_context.yaml"
     fi
 
-
     cp ${CWDIR}/contracts/asset-transfer-typescript/asset-transfer-chaincode-vars.yml ${CWDIR}/_cfg
     docker run \
         --rm \
@@ -479,7 +478,6 @@ ansible-deploy-chaincode:
         --rm \
         -u $(id -u) \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
-        -e KUBECONFIG=/_cfg/k8s_context.yaml \
         -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks ${EXTRAS} \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
@@ -490,24 +488,27 @@ ansible-deploy-chaincode:
         --rm \
         -u $(id -u) \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
-        -e KUBECONFIG=/_cfg/k8s_context.yaml \
         -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks ${EXTRAS} \
         -v ${CWDIR}/_cfg:/_cfg \
         --network=host \
         {{ansible_image}} \
             ansible-playbook /playbooks/21-commit-chaincode.yml
 
+ansible-ready-application:
+    #!/bin/bash
+    set -ex -o pipefail
 
-# register-application:
-#     #!/bin/bash
-#     set -ex -o pipefail
+    export EXTRAS=""
+    if [ -f "/_cfg/k8s_context.yaml" ]; then    
+        export EXTRAS=" -e KUBECONFIG=/_cfg/k8s_context.yaml"
+    fi
 
-#     docker run \
-#         --rm \
-#         -u $(id -u) \
-#         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
-#         -v ${CWDIR}/infrastructure/fabric_network_playbooks:/playbooks \
-#         -v ${CWDIR}/_cfg:/_cfg \
-#         --network=host \
-#         {{ansible_image}}:latest \
-#             ansible-playbook /playbooks/22-register-application.yml
+    docker run \
+        --rm \
+        -u $(id -u) \
+        -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
+        -v ${CWDIR}/infrastructure/production_chaincode_playbooks:/playbooks ${EXTRAS} \
+        -v ${CWDIR}/_cfg:/_cfg \
+        --network=host \
+        {{ansible_image}} \
+            ansible-playbook /playbooks/22-register-application.yml
