@@ -4,8 +4,7 @@
 
 ---
 
-With cloud-native Fabric, all the components can run directly on your development workstation.  In this exercise,
-you will configure:
+With cloud-native Fabric, all the components can run directly on your development workstation.  In this exercise, you will configure:
 
 - A local [kind](https://kind.sigs.k8s.io) cluster, running Kubernetes in Docker.
 

@@ -1,5 +1,7 @@
 # Fabric Full Stack Development Workshop
 
+![Hyperledger](https://img.shields.io/badge/hyperledger-2F3134?style=for-the-badge&logo=hyperledger&logoColor=white)
+
 **AIM:** To show a full end-to-end development of a solution on the Hyperledger Fabric Platform
 
 Hyperledger Fabric can be used to represent assets of any kind on a permissioned decentralized ledger, from fungible tokens to non-fungible tokens, including monetary products, marbles, pineapples, classic cars, fine art, and anything else you can imagine.
@@ -45,7 +47,7 @@ There will be minor variations in deployment (eg local docker container vs remot
 
 ## Running the workshop
 
-If you're running on Windows, please check the [hints and tips](./docs/tips-for-windows-dev.md)
+![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white) If you're running on Windows, please check the [hints and tips](./docs/tips-for-windows-dev.md)
 
 - Ensure you've got the tools you may need, either installed locally or in a multipass virtual machine. See the [setup page](./SETUP.md) for details.
 - Clone this repository to a convient location

@@ -6,11 +6,11 @@
   hosts: localhost
   vars:
     wallet: "/_cfg"
-    smart_contract_name: conga-nft-contract  
   vars_files:
-    - common-vars.yml
-    - org1-vars.yml
-    - /_cfg/auth-vars.yml        
+    - /_cfg/asset-transfer-chaincode-vars.yml
+    - /_cfg/fabric-common-vars.yml
+    - /_cfg/fabric-org1-vars.yml
+    - /_cfg/auth-vars.yml    
   tasks:
     - name: Register a new identity
       ibm.blockchain_platform.registered_identity:
@@ -25,10 +25,22 @@
         enrollment_secret: "{{ application_enrollment_secret }}"
         max_enrollments: "{{ application_max_enrollments }}"
         type: "{{ application_enrollment_type }}"
-        wallet: "{{ wallet }}"
         attributes:
           - name: "{{ smart_contract_name }}.admin"
             value: "true"
+
+    - name: Enroll an identity
+      ibm.blockchain_platform.enrolled_identity:
+        api_endpoint: "{{ api_endpoint }}"
+        api_authtype: "{{ api_authtype }}"
+        api_key: "{{ api_key }}"
+        api_secret: "{{ api_secret | default(omit) }}"
+        api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
+        certificate_authority: "{{ org1_ca_name }}"
+        name:  "{{ smart_contract_name }}.admin"
+        enrollment_id: "{{ application_enrollment_id }}"
+        enrollment_secret: "{{ application_enrollment_secret }}"
+        path: "{{ wallet }}/{{  smart_contract_name }}_appid.json"
 
     - name: Create a connection profile
       ibm.blockchain_platform.connection_profile:
@@ -38,7 +50,7 @@
         api_secret: "{{ api_secret | default(omit) }}"
         api_token_endpoint: "{{ api_token_endpoint | default(omit) }}"
         name: "{{ org1_name }} Gateway"
-        path: "{{ wallet }}/{{ org1_name }} Gateway.json"
+        path: "{{ wallet }}/{{ org1_name }}_gateway.json"
         organization: "{{ org1_name }}"
         certificate_authority: "{{ org1_ca_name }}"
         peers:
