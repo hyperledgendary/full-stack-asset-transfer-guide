@@ -62,18 +62,6 @@ export PATH=${WORKSHOP_PATH}/bin:$PATH
 export FABRIC_CFG_PATH=${WORKSHOP_PATH}/config
 ```
 
-## Option 3: Use a docker container
-
-Experimental: but there is a `dockerfile` in the `_bootstrap` directory; docker and just are required
-(or if you don't have just, copy the docker run command from the justfile)
-
-```shell
-docker build -t fabgo .
-
-# run this in several cli windows
-just devshell
-```
-
 ## DEV - Required Tools
 
 You will need a set of tools to assist with chaincode and application development.
@@ -126,12 +114,8 @@ export FABRIC_CFG_PATH=${WORKSHOP_PATH}/config
 
 ### Beta Ansible Playbooks
 
-The v2.0.0-beta Ansible Collection for Hyperledger Fabric is required for Kubernetes deployment. This isn't yet being published to DockerHub but is being published to Github Packages. 
+The v2.0.0-beta Ansible Collection for Hyperledger Fabric is required for Kubernetes deployment. This isn't yet being published to DockerHub but is being published to Github Packages.
 
 For reference check the latest version of [ofs-ansible](https://github.com/IBM-Blockchain/ansible-collection/pkgs/container/ofs-ansibe)
 
 The Ansible scripts in the workshop are set to use the latest image here by default.
-
-
-
-
