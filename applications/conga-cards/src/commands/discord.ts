@@ -109,7 +109,7 @@ function splashyShoutMessage(event: ChaincodeEvent, asset: Asset): any {
                     image: {
                         // an actual conga comic (sometimes png and sometimes jpg)
                         // url: `https://congacomic.github.io/assets/img/blockheight-${offset}.png`
-                        url: `https://github.com/jkneubuh/full-stack-asset-transfer-guide/blob/feature/nano-bot/applications/conga-bot/images/${asset.ID}.png?raw=true`
+                        url: `https://github.com/hyperledgendary/full-stack-asset-transfer-guide/blob/main/applications/conga-cards/assets/${asset.ID}.png?raw=true`
                     }
                 }
             ],
