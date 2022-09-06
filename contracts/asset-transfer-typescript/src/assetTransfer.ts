@@ -3,12 +3,12 @@
  */
 
 import { X509Certificate } from 'crypto';
-import { Context, Contract, Info, Returns, Transaction } from 'fabric-contract-api';
+import { Context, Contract, Info, Param, Returns, Transaction } from 'fabric-contract-api';
 import { KeyEndorsementPolicy } from 'fabric-shim';
 import stringify from 'json-stringify-deterministic'; // Deterministic JSON.stringify()
 import sortKeysRecursive from 'sort-keys-recursive';
 import { TextDecoder } from 'util';
-import { Asset, newAsset } from './asset';
+import { Asset } from './asset';
 
 const utf8Decoder = new TextDecoder();
 
@@ -18,10 +18,11 @@ export class AssetTransferContract extends Contract {
      * CreateAsset issues a new asset to the world state with given details.
      */
     @Transaction()
-    async CreateAsset(ctx: Context, assetJson: string): Promise<void> {
-        const state: Partial<Asset> = unmarshal(assetJson);
+    @Param('assetObj', 'Asset', 'Part formed JSON of Asset')
+    async CreateAsset(ctx: Context, assetObj: Asset): Promise<void> {
+        const state: Partial<Asset> = assetObj; // unmarshal(assetJson);
         state.Owner = toJSON(clientIdentifier(ctx, state.Owner));
-        const asset = newAsset(state);
+        const asset = Asset.newAsset(state);
 
         const exists = await this.AssetExists(ctx, asset.ID);
         if (exists) {
@@ -40,9 +41,12 @@ export class AssetTransferContract extends Contract {
      * ReadAsset returns an existing asset stored in the world state.
      */
     @Transaction(false)
-    async ReadAsset(ctx: Context, id: string): Promise<string> {
-        const assetBytes = await this.#readAsset(ctx, id);
-        return utf8Decoder.decode(assetBytes);
+    @Returns('Asset')
+    async ReadAsset(ctx: Context, id: string): Promise<Asset> {
+        const existingAssetBytes = await this.#readAsset(ctx, id);
+        const existingAsset = Asset.newAsset(unmarshal(existingAssetBytes));
+
+        return existingAsset;
     }
 
     async #readAsset(ctx: Context, id: string): Promise<Uint8Array> {
@@ -59,14 +63,15 @@ export class AssetTransferContract extends Contract {
      * the asset ID.
      */
     @Transaction()
-    async UpdateAsset(ctx: Context, assetJson: string): Promise<void> {
-        const assetUpdate: Partial<Asset> = unmarshal(assetJson);
+    @Param('assetObj', 'Asset', 'Part formed JSON of Asset')
+    async UpdateAsset(ctx: Context, assetObj: Asset): Promise<void> {
+        const assetUpdate: Partial<Asset> = assetObj;
         if (assetUpdate.ID === undefined) {
             throw new Error('No asset ID specified');
         }
 
         const existingAssetBytes = await this.#readAsset(ctx, assetUpdate.ID);
-        const existingAsset = newAsset(unmarshal(existingAssetBytes));
+        const existingAsset = Asset.newAsset(unmarshal(existingAssetBytes));
 
         if (!hasWritePermission(ctx, existingAsset)) {
             throw new Error('Only owner can update assets');
@@ -75,7 +80,7 @@ export class AssetTransferContract extends Contract {
         const updatedState = Object.assign({}, existingAsset, assetUpdate, {
             Owner: existingAsset.Owner, // Must transfer to change owner
         });
-        const updatedAsset = newAsset(updatedState);
+        const updatedAsset = Asset.newAsset(updatedState);
 
         // overwriting original asset with new asset
         const updatedAssetBytes = marshal(updatedAsset);
@@ -92,7 +97,7 @@ export class AssetTransferContract extends Contract {
     @Transaction()
     async DeleteAsset(ctx: Context, id: string): Promise<void> {
         const assetBytes = await this.#readAsset(ctx, id); // Throws if asset does not exist
-        const asset = newAsset(unmarshal(assetBytes));
+        const asset = Asset.newAsset(unmarshal(assetBytes));
 
         if (!hasWritePermission(ctx, asset)) {
             throw new Error('Only owner can delete assets');
@@ -119,7 +124,7 @@ export class AssetTransferContract extends Contract {
     @Transaction()
     async TransferAsset(ctx: Context, id: string, newOwner: string, newOwnerOrg: string): Promise<void> {
         const assetString = await this.#readAsset(ctx, id);
-        const asset = newAsset(unmarshal(assetString));
+        const asset = Asset.newAsset(unmarshal(assetString));
 
         if (!hasWritePermission(ctx, asset)) {
             throw new Error('Only owner can transfer assets');
@@ -148,7 +153,7 @@ export class AssetTransferContract extends Contract {
         for (let result = await iterator.next(); !result.done; result = await iterator.next()) {
             const assetBytes = result.value.value;
             try {
-                const asset = newAsset(unmarshal(assetBytes));
+                const asset = Asset.newAsset(unmarshal(assetBytes));
                 assets.push(asset);
             } catch (err) {
                 console.log(err);
