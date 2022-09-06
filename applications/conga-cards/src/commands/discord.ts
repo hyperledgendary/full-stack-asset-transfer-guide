@@ -17,21 +17,15 @@ const checkpointFile = path.resolve(process.env.CHECKPOINT_FILE ?? 'checkpoint.j
 
 const startBlock = BigInt(0);
 
-// [#general](https://discord.gg/gCxFD9m3x5)
-// export WEBHOOK_URL='https://discord.com/api/webhooks/1014964202428960828/SxpAdYFzzuk5cmewaNXuAgxoxapIsvqW9O875IUVZqUXw8sHWgdtMD1MA79VHgVpVKzz'
+// Webhook / bot display names for create
+const createUsername = 'King Conga';
+const createAvatar = 'https://avatars.githubusercontent.com/u/49026922?s=200&v=4';
 
-// [#conga-bot](https://discord.gg/MAChZeA3ga)
-// export WEBHOOK_URL='https://discord.com/api/webhooks/1015000194368151632/BdZsgB14nE0f6knUHGO0ij138Vqv-1hj_ewhEN05M-C0bJ0oyoa0wBPONRzvyVWN2wqg'
+const transferUsername = createUsername;
+const transferAvatar = createAvatar;
 
-// [#conga-bart-test](https://discord.gg/JBMmpBE3dT)
-// export WEBHOOK_URL='https://discord.com/api/webhooks/1015586896711254037/hBSqZE7fvtqRHsdEpy3khs7pJAzQ6dST3ZYJuDO4rdR0KoXltK8SdHuoFPhNvQ7Wm69A'
-
-// [#conga-hyperledger](https://discord.gg/X8avnV3zXE)
-// export WEBHOOK_URL="https://discord.com/api/webhooks/1015639259656507392/NXnwEQD9WEezzP9o7tCkUkSUNk-qKUUGxScZvZj0R3VuYwoznRHDF-j6h5My6fIq1dYb"
-
-// Bot username and avatar URL
-const username = 'King Conga';
-const avatarURL = 'https://avatars.githubusercontent.com/u/49026922?s=200&v=4';
+const deleteUsername = createUsername;
+const deleteAvatar = createAvatar;
 
 export default async function main(gateway: Gateway): Promise<void> {
     const webhookURL = assertDefined(process.env['WEBHOOK_URL'], () => { return 'WEBHOOK_URL is not defined in the env' });
@@ -69,7 +63,8 @@ async function discord(webhookURL: string, event: ChaincodeEvent): Promise<void>
     const asset = parseJson(event.payload);
     console.log(`\n<-- Chaincode event received: ${event.eventName}: `, asset);
 
-    const message = prepareMessage(event, asset);
+    // const message = boringLogMessage(event, asset);
+    const message = splashyShoutMessage(event, asset);
 
     deliverMessage(webhookURL, message);
 }
@@ -88,15 +83,56 @@ function deliverMessage(webhookURL: string, message: any): void {
         });
 }
 
-function prepareMessage(event: ChaincodeEvent, asset: Asset): any {
+function boringLogMessage(event: ChaincodeEvent, asset: Asset): any {
     const owner = ownerNickname(asset);
     const text = format(event, asset, owner);
 
     return {
-        username: username,
-        avatar_url: avatarURL,
+        username: 'Ledger Troll',
+        // avatar_url: avatarURL,
         content: text,
     }
+}
+
+function splashyShoutMessage(event: ChaincodeEvent, asset: Asset): any {
+
+    const owner:any = JSON.parse(asset.Owner);
+
+    if (event.eventName == 'CreateAsset') {
+        return {
+            username: createUsername,
+            avatar_url: createAvatar,
+            content: `${bold(owner.user)} has caught a wild ${bold(asset.ID)}!` + getRandomEmoji(),
+            embeds: [
+                {
+                    title: `${owner.org}`,
+                    image: {
+                        // an actual conga comic (sometimes png and sometimes jpg)
+                        // url: `https://congacomic.github.io/assets/img/blockheight-${offset}.png`
+                        url: `https://github.com/jkneubuh/full-stack-asset-transfer-guide/blob/feature/nano-bot/applications/conga-bot/images/${asset.ID}.png?raw=true`
+                    }
+                }
+            ],
+        };
+    }
+
+    if (event.eventName == 'TransferAsset') {
+        return {
+            username: transferUsername,
+            avatar_url: transferAvatar,
+            content: `${bold(owner.user)} is now the owner of ${bold(asset.ID)}: ✈️ ${snippet(JSON.stringify(asset, null, 2))}`,
+        };
+    }
+
+    if (event.eventName == 'DeletaAsset') {
+        return {
+            username: deleteUsername,
+            avatar_url: deleteAvatar,
+            content: `${bold(asset.ID)} ran away from ${bold(owner.user)}! 😮`,
+        };
+    }
+
+    return {};
 }
 
 function format(event: ChaincodeEvent, asset: Asset, owner: string): string {
@@ -120,9 +156,9 @@ function bold(s: string) {
      return `**${s}**`;
 }
 
-//function snippet(s: string) {
-//    return "```" + s + "```";
-//}
+function snippet(s: string) {
+   return "```" + s + "```";
+}
 
 function ownerNickname(asset: Asset): string {
     const owner:any = JSON.parse(asset.Owner);
@@ -130,19 +166,11 @@ function ownerNickname(asset: Asset): string {
     return `${owner.org}, ${owner.user}`;
 }
 
+// https://github.com/discord/discord-example-app/blob/main/utils.js#L43
+// Simple method that returns a random emoji from list
+function getRandomEmoji(): string {
+  const emojiList = ['😭','😄','😌','🤓','😎','😤','🤖','😶‍🌫', '🌏','📸','💿','👋','🌊','✨'];
+  return emojiList[Math.floor(Math.random() * emojiList.length)];
+}
 
-/*
-    if (event.eventName == 'CreateAsset') {
-        message.embeds = [
-            {
-                // title: name,
-                image: {
-                    // an actual conga comic (sometimes png and sometimes jpg)
-                    // url: `https://congacomic.github.io/assets/img/blockheight-${offset}.png`
-                    url: `https://github.com/jkneubuh/full-stack-asset-transfer-guide/blob/feature/nano-bot/applications/conga-bot/images/${name}.png?raw=true`
-                }
-            }
-        ]
-    }
 
-*/

@@ -1,7 +1,7 @@
 {
-    "name": "trader",
+    "name": "conga-cards",
     "version": "1.0.0",
-    "description": "Asset transfer client application",
+    "description": "Conga Cards client application",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
     "engines": {
@@ -22,6 +22,7 @@
         "@grpc/grpc-js": "~1.6.7",
         "@hyperledger/fabric-gateway": "^1.1.0",
         "@hyperledger/fabric-protos": "^0.1.0-dev.2300102001.1",
+        "axios": "^0.27.2"
     },
     "devDependencies": {
         "@tsconfig/node16": "^1.0.3",
