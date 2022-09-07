@@ -35,7 +35,7 @@ just cloud-network-down
 - Shut down KIND, the private container registry, and Nginx: 
 ```shell
 
-just kind-down
+just unkind
 
 ```
 
