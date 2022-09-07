@@ -85,6 +85,7 @@ console: operator
 # Just install the operator CRDs
 operator-crds: check-kube
     kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
+    sleep 10
 
 
 ###############################################################################

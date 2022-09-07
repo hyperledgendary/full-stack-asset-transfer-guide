@@ -90,6 +90,9 @@ curl --insecure https://${WORKSHOP_INGRESS_DOMAIN}:443
 
 # Install operator CRDs
 kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
+
+sleep 10
+
 kubectl get customresourcedefinition.apiextensions.k8s.io/ibpcas.ibp.com
 kubectl get customresourcedefinition.apiextensions.k8s.io/ibpconsoles.ibp.com
 kubectl get customresourcedefinition.apiextensions.k8s.io/ibporderers.ibp.com
