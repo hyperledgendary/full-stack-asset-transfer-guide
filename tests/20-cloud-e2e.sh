@@ -106,7 +106,7 @@ kubectl version
 
 kind version
 
-kind describe crd 
+kubectl describe crd
 
 export LOG_ERROR_LINES=20
 
