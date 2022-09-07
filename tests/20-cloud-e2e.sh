@@ -41,7 +41,7 @@ export FABRIC_CFG_PATH="${WORKSHOP_PATH}/config"
 "${WORKSHOP_PATH}/check.sh"
 
 
-kubectl version
+kubectl version --client -o yaml
 
 kind version
 
