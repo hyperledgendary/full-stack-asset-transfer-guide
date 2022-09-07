@@ -41,6 +41,13 @@ export FABRIC_CFG_PATH="${WORKSHOP_PATH}/config"
 "${WORKSHOP_PATH}/check.sh"
 
 
+kubectl version
+
+kind version
+
+export LOG_ERROR_LINES=20
+
+
 ###############################################################################
 # 10-kube
 ###############################################################################
@@ -101,14 +108,6 @@ kubectl wait --for condition=established customresourcedefinition.apiextensions.
 kubectl wait --for condition=established customresourcedefinition.apiextensions.k8s.io/ibpconsoles.ibp.com
 kubectl wait --for condition=established customresourcedefinition.apiextensions.k8s.io/ibporderers.ibp.com
 kubectl wait --for condition=established customresourcedefinition.apiextensions.k8s.io/ibppeers.ibp.com
-
-kubectl version
-
-kind version
-
-kubectl describe crd
-
-export LOG_ERROR_LINES=20
 
 # Bring up the network
 just cloud-network
