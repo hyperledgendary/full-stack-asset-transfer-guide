@@ -70,17 +70,16 @@ async function discord(webhookURL: string, event: ChaincodeEvent): Promise<void>
 }
 
 // Send an event to a discord webhook.
-function deliverMessage(webhookURL: string, message: any): void {
+async function deliverMessage(webhookURL: string, message: any): Promise<void> {
     console.log('--> Sending to discord webhook: ' + webhookURL);
     console.log(JSON.stringify(message));
 
-    axios.post(webhookURL, message)
-        .then(function (response: any) {
-            // console.log(response);
-        })
-        .catch(function (error: any) {
-            console.log(error);
-        });
+    try {
+        await axios.post(webhookURL, message);
+
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 function boringLogMessage(event: ChaincodeEvent, asset: Asset): any {

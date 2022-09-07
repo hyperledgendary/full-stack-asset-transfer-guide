@@ -4,6 +4,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import * as sourceMapSupport from 'source-map-support';
+sourceMapSupport.install();
+
 import { Command, commands } from './commands';
 import { newGatewayConnection, newGrpcConnection } from './connect';
 import { ExpectedError } from './expectedError';
