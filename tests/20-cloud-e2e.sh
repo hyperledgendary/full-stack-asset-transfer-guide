@@ -91,12 +91,16 @@ curl --insecure https://${WORKSHOP_INGRESS_DOMAIN}:443
 # Install operator CRDs
 kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
 
-sleep 10
 
 kubectl get customresourcedefinition.apiextensions.k8s.io/ibpcas.ibp.com
 kubectl get customresourcedefinition.apiextensions.k8s.io/ibpconsoles.ibp.com
 kubectl get customresourcedefinition.apiextensions.k8s.io/ibporderers.ibp.com
 kubectl get customresourcedefinition.apiextensions.k8s.io/ibppeers.ibp.com
+
+kubectl wait --for condition=established customresourcedefinition.apiextensions.k8s.io/ibpcas.ibp.com
+kubectl wait --for condition=established customresourcedefinition.apiextensions.k8s.io/ibpconsoles.ibp.com
+kubectl wait --for condition=established customresourcedefinition.apiextensions.k8s.io/ibporderers.ibp.com
+kubectl wait --for condition=established customresourcedefinition.apiextensions.k8s.io/ibppeers.ibp.com
 
 # Bring up the network
 just cloud-network
