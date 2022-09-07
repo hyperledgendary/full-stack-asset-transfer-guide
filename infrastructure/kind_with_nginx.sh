@@ -21,6 +21,7 @@ set -eo pipefail
 set -x
 
 KIND_CLUSTER_NAME=kind
+KIND_CLUSTER_IMAGE=${KIND_CLUSTER_IMAGE:-kindest/node:v1.24.4}        # Important! k8s v1.25.0 brings breaking changes.
 KIND_API_SERVER_ADDRESS=${KIND_API_SERVER_ADDRESS:-127.0.0.1}
 KIND_API_SERVER_PORT=${KIND_API_SERVER_PORT:-8888}
 CONTAINER_REGISTRY_NAME=${CONTAINER_REGISTRY_NAME:-kind-registry}
@@ -51,7 +52,7 @@ function delete_cluster() {
 # Create a local KIND cluster
 #
 function create_cluster() {
-  cat << EOF | kind create cluster --name $KIND_CLUSTER_NAME --config=-
+  cat << EOF | kind create cluster --name $KIND_CLUSTER_NAME --image $KIND_CLUSTER_IMAGE --config=-
 ---
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4

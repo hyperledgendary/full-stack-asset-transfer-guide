@@ -44,7 +44,7 @@ storage_class   := env_var_or_default("WORKSHOP_STORAGE_CLASS",      "standard")
 
 
 # Start a local KIND cluster with nginx, localhost:5000 registry, and *.localho.st alias in kube DNS
-kind: kind-down
+kind: unkind
     #!/bin/bash
     set -e -o pipefail
 
@@ -56,7 +56,7 @@ kind: kind-down
     kubectl cluster-info &>/dev/null
 
 # Shut down the KIND cluster
-kind-down:
+unkind:
     #!/bin/bash
     kind delete cluster --name {{cluster_name}}
 
@@ -89,7 +89,6 @@ console: operator
 # Just install the operator CRDs
 operator-crds: check-kube
     kubectl apply -k https://github.com/hyperledger-labs/fabric-operator.git/config/crd
-    sleep 10
 
 
 ###############################################################################
