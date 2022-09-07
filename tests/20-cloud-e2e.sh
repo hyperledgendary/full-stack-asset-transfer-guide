@@ -102,6 +102,14 @@ kubectl wait --for condition=established customresourcedefinition.apiextensions.
 kubectl wait --for condition=established customresourcedefinition.apiextensions.k8s.io/ibporderers.ibp.com
 kubectl wait --for condition=established customresourcedefinition.apiextensions.k8s.io/ibppeers.ibp.com
 
+kubectl version
+
+kind version
+
+kind describe crd 
+
+export LOG_ERROR_LINES=20
+
 # Bring up the network
 just cloud-network
 
