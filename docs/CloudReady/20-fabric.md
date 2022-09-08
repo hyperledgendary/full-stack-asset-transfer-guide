@@ -12,7 +12,7 @@ resources are applied to the Kube API controller.  In turn, the operator reflect
 `Deployment`, `Service`, and `Ingress` resources in the target namespace.
 
 After the nodes in the Fabric network have been started, the fabric `peer` and CLI binaries are used to connect to the
-network via Ingress, preparing a channel for smart contracts and application development. 
+network via Ingress, preparing a channel for smart contracts and application development.
 
 ![Fabric Operator](../images/CloudReady/20-fabric.png)
 
@@ -69,6 +69,24 @@ curl \
   https://$WORKSHOP_NAMESPACE-org1-ca-ca.$WORKSHOP_INGRESS_DOMAIN/cainfo \
   | jq
 
+```
+
+## Peer logs
+
+To watch the peer logs throughout the workshop, we'll need to identify the pod name for one of the peers, let's find the pod name for org1-peer1.
+You can either use the [k9s utility](https://k9scli.io/topics/install/) to see the pods, or kubectl. Let's use kubectl here and set the default namespace to `test-network` so that we don't have to pass the namespace (`-n`) to each kubectl command:
+
+```shell
+kubectl config set-context --current --namespace=test-network
+kubectl get pods
+```
+
+You'll see the org1-peer1 pod with a name like `org1-peer1-79df64f8d8-7m9mt`, your pod name will be different!
+
+We can then tail the org1-peer1 log in a terminal window so that we can see proof that chaincodes get deployed, blocks get created, etc:
+
+```shell
+kubectl logs -f org1-peer1-79df64f8d8-7m9mt peer
 ```
 
 ## Troubleshooting
