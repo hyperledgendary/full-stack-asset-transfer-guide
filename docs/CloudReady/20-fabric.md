@@ -71,10 +71,10 @@ curl \
 
 ```
 
-## Peer logs
+## Kube Navigation and Peer Logs
 
-To watch the peer logs throughout the workshop, we'll need to identify the pod name for one of the peers, let's find the pod name for org1-peer1.
-You can either use the [k9s utility](https://k9scli.io/topics/install/) to see the pods, or kubectl. Let's use kubectl here and set the default namespace to `test-network` so that we don't have to pass the namespace (`-n`) to each kubectl command:
+To watch the peer logs throughout the workshop, we'll need to identify the pod name for one of the peers, let's find the pod name for org1-peer1 by using `kubectl`.
+Set the default namespace to `test-network` so that we don't have to pass the namespace (`-n`) to each kubectl command:
 
 ```shell
 kubectl config set-context --current --namespace=test-network
@@ -88,6 +88,14 @@ We can then tail the org1-peer1 log in a terminal window so that we can see proo
 ```shell
 kubectl logs -f org1-peer1-79df64f8d8-7m9mt peer
 ```
+
+Now that you know how to use kubectl, let's learn the shortcut! You can easily monitor all of the the pods in the [k9s utility](https://k9scli.io/topics/install/). If you haven't started k9s yet, start it in a new terminal:
+
+```shell
+k9s -n test-network
+```
+
+You'll see the fabric-operator, peer, orderer, and CA pods. Navigate around by hitting `ENTER` on one of the pods, `ENTER` again on one of the containers, and then hit `0` to tail the container's log. Go back up by hitting `ESCAPE`. More tips are available at the top of the k9s user interface.
 
 ## Troubleshooting
 
