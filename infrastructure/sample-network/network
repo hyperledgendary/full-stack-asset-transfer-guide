@@ -145,6 +145,7 @@ function print_help() {
 . scripts/console.sh
 . scripts/channel.sh
 . scripts/rest_sample.sh
+. scripts/frontend_build.sh
 
 # check for kind, kubectl, etc.
 check_prereqs
@@ -186,9 +187,13 @@ elif [ "${MODE}" == "console" ]; then
   console_up
   log "🏁 - Console is ready"
 elif [ "${MODE}" == "rest-easy" ]; then
-  log "Launching Fabric Operations Console"
+  log "Launching Rest API"
   launch_rest_sample
-  log "🏁 - Console is ready"
+  log "🏁 - Rest API is ready at https://restapi.localho.st"
+elif [ "${MODE}" == "frontend" ]; then
+  log "Launching frontend"
+  launch_frontend
+  log "🏁 - Frontend is ready at https://frontend.localho.st"
 
 else
   print_help
