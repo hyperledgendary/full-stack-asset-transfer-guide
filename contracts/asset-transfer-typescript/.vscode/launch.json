@@ -5,6 +5,25 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug chaincode",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "start:server-debug"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "env": {
+                "CHAINCODE_ID": "<set the id here>",
+                "CHAINCODE_SERVER_ADDRESS": "0.0.0.0:9999"
+              },
+            "console": "integratedTerminal"
+        },
+
+        {
             "name": "Attach by Process ID",
             "processId": "${command:PickProcess}",
             "request": "attach",
@@ -13,7 +32,6 @@
             ],
             "type": "node"
         }
-
 
     ]
 }
