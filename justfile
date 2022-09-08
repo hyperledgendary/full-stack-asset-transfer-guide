@@ -34,6 +34,7 @@ CWDIR := justfile_directory()
 _default:
   @just -f {{justfile()}} --list
 
+# Run the check script to validate tool versions installed
 check:
   ${CWDIR}/check.sh
 
