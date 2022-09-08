@@ -101,7 +101,7 @@ Additionally, you may see transactions invalidated with a 'MVCC Conflict' error:
 
 An important decision to make is whether the state held on the ledger is representing an 'audit trail' of activity or the 'source of truth' of the actual assets.  Storing the information about the assets, as shown in the following samples, is conceptually straightforward but keep in mind that this is a distributed database, rather than a database.
 
-Storing a form of audit trail can work well with the ledger concept. The 'source of truth' here is that a certain action was taken and it's results. For example the ownership of an asset changed. Details of the actual asset are off chain. This does need more infrastructure provided around the ledger but is worth considering if the primary business reason is for audit purposes. For example, tracking the state of a process and how it moved from one state to the next.
+Storing a form of audit trail can work well with the ledger concept. The 'source of truth' here is that a certain action was taken and it's results. For example the ownership of an asset changed. Details of the actual asset may be stored off chain. This does need more infrastructure provided around the ledger but is worth considering if the primary business reason is for audit purposes. For example, tracking the state of a process and how it moved from one state to the next.
 
 To help with the integration of other systems it is well worth issuing events from the transaction functions. These events will be available to the client applications when the transaction is finally committed. These can be very useful in triggering other processes.
 
@@ -110,10 +110,10 @@ To help with the integration of other systems it is well worth issuing events fr
 Simply both - the terms have been used in Fabric history almost interchangeable; Chaincode was the original name, but then Smart Contracts is a common a blockchain term. The class/structure that is extended/implemented in code is called `Contract`.
 
 The aim is to standardize on
-- the Smart Contract(s) are classes/structures - the code - that your write in Go/JavaScript/TypeScript/Java etc.
+- the Smart Contract(s) are classes/structures - the code - that you write in Go/JavaScript/TypeScript/Java etc.
 - these are then packaged up and run inside a Chaincode-container (chaincode-image / chaincode-runtime depending on exactly the format of the packaging)
 - the chaincode definition is more than just the Smart Contract code, as it includes things such as the couchdb indexes, and the endorsement policy
 
 ## Packaging
 
-In v1 and still supported as 'the old lifecycle' in v2, the CDS package format was used. The v2 'new lifecycle' should be used now - with standard `tar.gz` format. Using `tar` and `gzip` are standard techniques with standard tools. Therefore the main issue becomes what goes into those files and when/how are they used.
+In Hyperledger Fabric v1.x and still supported as 'the old lifecycle' in v2.x, the CDS chaincode package format was used. The v2.x 'new lifecycle' should be used now - with standard `tar.gz` format. Using `tar` and `gzip` are standard techniques with standard tools. Therefore the main issue becomes what goes into those files and when/how are they used.

@@ -22,6 +22,8 @@ Do you want to configure your local environment with the workshop dependencies?
 
 If you do not want to install dependencies on your local environment, you can use a Multipass Ubuntu image instead.
 
+Tip - You may need to stop any VPN client for the Multipass networking to work.
+
 - [Install multipass](https://multipass.run/install)
 
 - Launch the virtual machine and automatically install the workshop dependencies:
@@ -47,6 +49,8 @@ multipass mount $PWD fabric-dev:/home/ubuntu/full-stack-asset-transfer-guide
 multipass shell fabric-dev
 ```
 
+Tip - The vm creation log can be seen at /var/log/cloud-init-output.log if you need to troubleshoot anything.
+
 - You are now inside the virtual machine. cd to the workshop directory:
 
 ```shell
@@ -60,6 +64,19 @@ curl -sSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/ins
 export WORKSHOP_PATH=$(pwd)
 export PATH=${WORKSHOP_PATH}/bin:$PATH
 export FABRIC_CFG_PATH=${WORKSHOP_PATH}/config
+```
+
+Note - You'll probably want three terminal windows for running the workshop, go ahead and open the shells now:
+
+```shell
+multipass shell fabric-dev
+```
+
+- Eventual cleanup - To remove the multipass image when you are done with it after the workshop:
+```shell
+multipass delete fabric-dev
+multipass purge
+multipass list
 ```
 
 ## DEV - Required Tools

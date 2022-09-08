@@ -1,8 +1,10 @@
 # Getting Started with a Smart Contract
 
-[PREVIOUS - Introduction](./00-Introduction.md) <==>  [NEXT Create a Blank Contract](./02-Creating-Blank-Contract.md)
+[PREVIOUS - Introduction](./00-Introduction.md) <==>  [NEXT Adding a Transaction Function](./02-Exercise-Adding-tx-function.md)
 
 ---
+
+Make sure you have cloned the workshop:
 
 ```
 git clone https://github.com/hyperledgendary/full-stack-asset-transfer-guide.git workshop
@@ -10,7 +12,7 @@ cd workshop
 export WORKSHOP_PATH=$(pwd)
 ```
 
-First please check you've got the [required tools](../../SETUP.md) needed for the dev part of this workshop (docker, just, weft, nodejs, and Fabric peer binary). To double check run the `check.sh` script
+First please check you've got the [required tools](../../SETUP.md) needed for the dev part of this workshop (docker, just, weft, node.js, and Fabric peer binary). To double check run the `check.sh` script
 
 ```
 ${WORKSHOP_PATH}/check.sh
@@ -24,7 +26,7 @@ We're using MicroFab for the Fabric infrastructure as it's a single container th
 The MicroFab container includes an ordering service node and a peer process that is pre-configured to create a channel and call external chaincodes.
 It also includes credentials for an `org1` organization, which will be used to run the peer. We'll use an `org1` admin user when interacting with the environment.
 
-We'll use `just` recipes to execute multiple commands. `just` recipes are similar to `make` but simpler to understand. You can open the `justfile` in the project root directory to see which commands are run with each recipe.
+We'll use `just` recipes to execute multiple commands. `just` recipes are similar to `make` but simpler to understand. You can open the [justfile](../../justfile) in the project root directory to see which commands are run with each recipe.
 
 Start the MicroFab container by running the `just` recipe. This will set some properties for the MicroFab environment and start the MicroFab docker container.
 
@@ -32,7 +34,7 @@ Start the MicroFab container by running the `just` recipe. This will set some pr
 just microfab
 ```
 
-This will start the docker container, and also write out some configuration/data files in the `_cfg/uf` directory.
+This will start the docker container (automatically download it if necessary), and also write out some configuration/data files in the `_cfg/uf` directory.
 ```bash
 ls -1 _cfg/uf
 
@@ -50,7 +52,11 @@ Let's take a look at the environment variables and source the file to set the en
 ```bash
 source _cfg/uf/org1admin.env
 cat _cfg/uf/org1admin.env
+```
 
+You'll see these environment variables set:
+
+```bash
 # sample contents
 export CORE_PEER_LOCALMSPID=org1MSP
 export CORE_PEER_MSPCONFIGPATH=/workshop/full-stack-asset-transfer-guide/_cfg/uf/_msp/org1/org1admin/msp
@@ -60,13 +66,13 @@ export CORE_PEER_CLIENT_CONNTIMEOUT=15s
 export CORE_PEER_DELIVERYCLIENT_CONNTIMEOUT=15s
 ```
 
-Next let's look at the three directories that are created `_msp`, `_gateways`, `_wallets`.
+Next let's look at the three directories that are created `_msp`, `_gateways`, `_wallets`. If you are short on time you can [skip ahead to the next section to package and deploy a chaincode](#package-and-deploy-chaincode-to-fabric).
 
 Firstly the `_msp` directory contains the membership services provider (MSP) credentials necessary to run the Fabric Peer CLI commands as the org1 admin, including the user's public certificate and private key for signing transactions. The MSP location is referenced in the `CORE_PEER_MSGCONFIGPATH` environment variable and contains the credential subdirectories expected by the Peer CLI command.
 
 Secondly the `_gateways` directory contains two JSON files, one per organization. This file contains details of the Peer's endpoint url to connect clients to. Older Fabric Client SDKs would need all the information in this file, but the new "Gateway SDKs" remove the need for all the detail. The new Gateway SDKs just need the peer's endpoint and TLS configuration. See this [example code](../../applications/ping-chaincode/src/fabric-connection-profile.ts) on how to parse this file easily for the Gateway SDK.
 
-Third is the `_wallets` directory - there are three subdirectories, one each for the Ordering Organization, Organizations 1, and Organization 2. These directories contain `*.id` files that contain details of identities and their respective credentials, similar to the MSP content, but in a JSON format that applications can more easily parse:
+Third is the `_wallets` directory - there are three subdirectories, one each for the Ordering Organization, Organization 1, and Organization 2. These directories contain `*.id` files that contain details of identities and their respective credentials, similar to the MSP content, but in a JSON format that applications can more easily parse:
 
 ```
 _wallets
@@ -85,10 +91,15 @@ _wallets
 
 Note that when MicroFab started it automatically launched a Certificate Authority that created these identities and their respective credentials.
 
-Pick one if the id files and look at the JSON content including the public certificate and private key.
+Pick one if the id files and look at the JSON content including the public certificate and private key:
 
-```
+```bash
 cat _cfg/uf/_wallets/org1/org1admin.id | jq
+```
+
+You'll see the contents of org1admin.id:
+
+```bash
 {
   "credentials": {
     "certificate": "-----BEGIN CERTIFICATE-----\n  xxxx \n-----END CERTIFICATE-----\n",
@@ -98,8 +109,8 @@ cat _cfg/uf/_wallets/org1/org1admin.id | jq
   "type": "X.509",
   "version": 1
 }
-
 ```
+
 This information then can be used by the client applications. See [this example code](../../applications/ping-chaincode/src/jsonid-adapter.ts) for how you can directly parse this file to use with the gateway.
 
 At this point you may wish to run `docker logs -f microfab` in a separate window to watch the activity - you don't need to setup anything specific here.
@@ -185,7 +196,7 @@ peer lifecycle chaincode commit --channelID mychannel --name asset-transfer -v 0
 
 ## Run the chaincode locally
 
-We'll use the example typescript contract already written in `$WORKSHOP_PATH/contracts/asset-transfer-typescript`. Feel free to take a look at the contract code in `contracts/asset-transfer-typescript/src/assetTransfer`.
+We'll use the example typescript contract already written in `$WORKSHOP_PATH/contracts/asset-transfer-typescript`. Feel free to take a look at the contract code in [contracts/asset-transfer-typescript/src/assetTransfer.ts](../../contracts/asset-transfer-typescript/src/assetTransfer.ts). You'll see the implementation of contract functions such as `CreateAsset()` and `ReadAsset()` there.
 
 Use another terminal window for the chaincode. Make sure the terminal is setup with the same environment variables as the first terminal:
 
@@ -206,7 +217,7 @@ npm install
 npm run build
 ```
 
-On it's own a smart contract can't do a lot, however an easy way to test the contract has been built ok, is to generate the 'Contract Metadata'. This is a language agnostic definition of the contracts, and the datatypes the contract returns. It borrows from the OpenAPI used for defining REST APIs.  It is also very useful to share to teams writing client applications so they know the data structures and transaction functions they can call.
+An easy way to test the contract has been built ok, is to generate the 'Contract Metadata' into a `metadata.json` file. This is a language agnostic definition of the contracts, and the datatypes the contract returns. It borrows from the OpenAPI used for defining REST APIs.  It is also very useful to share to teams writing client applications so they know the data structures and transaction functions they can call.
 As it's a JSON document, it's amenable to process to create other resources.
 
 The metadata-generate command has been put into the `package.json`:
@@ -229,7 +240,7 @@ Note: Use your specific CHAINCODE_ID from earlier; the `CHAINCODE_SERVER_ADDRESS
 ```
 source ${WORKSHOP_PATH}/_cfg/uf/org1admin.env
 
-# if you ran the short cut above, these will already be exported...
+# if you ran the justfile above, these will already be exported, but you may want to double check they are set:
 export CHAINCODE_SERVER_ADDRESS=0.0.0.0:9999
 export CHAINCODE_ID=$(peer lifecycle chaincode calculatepackageid asset-transfer.tgz)
 
@@ -243,7 +254,7 @@ Choose a terminal window to run the transactions from; initially we'll use the `
 If this is a new terminal window set the environment variables:
 
 ```
-cd workshop
+cd full-stack-asset-transfer-guide
 export WORKSHOP_PATH=$(pwd)
 export PATH=${WORKSHOP_PATH}/bin:$PATH
 export FABRIC_CFG_PATH=${WORKSHOP_PATH}/config
@@ -270,7 +281,9 @@ Let's create an asset with ID=001:
 peer chaincode invoke -C mychannel -n asset-transfer -c '{"Args":["CreateAsset","{\"ID\":\"001\", \"Color\":\"Red\",\"Size\":52,\"Owner\":\"Fred\",\"AppraisedValue\":234234}"]}' --connTimeout 15s
 ```
 
-And read back that asset:
+If you are watching the MicroFab logs you'll see that the peer committed a new block to the ledger.
+
+Now read back that asset:
 
 ```
 peer chaincode query -C mychannel -n asset-transfer -c '{"Args":["ReadAsset","001"]}'
@@ -331,4 +344,4 @@ Watch out for:
     - remember the client/fabric transaction timeout, whilst you have the chaincode stopped in the debugger, the timeout is still 'ticking'
 
 
-Look at the [Test and Debugging Contracts](./03-Test-And-Debug.md) for more details and information on other languages.
+Look at the [Test and Debugging Contracts](./03-Test-And-Debug-Reference.md) for more details and information on other languages.

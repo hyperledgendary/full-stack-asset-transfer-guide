@@ -1,6 +1,6 @@
 # Exercise: Implement asset transfer
 
-Currently, our trader application can only create and delete assets. To really be useful it needs to be able to transfer assets to new owners.
+Currently, our trader application can only create, read, and delete assets by invoking the CreateAsset(), ReadAsset(), and DeleteAsset() chaincode functions. To really be useful it needs to be able to transfer assets to new owners by invoking the TransferAsset() chaincode function.
 
 There is already a **transfer** command implemented in [transfer.ts](../../applications/trader-typescript/src/commands/transfer.ts), which calls the `transferAsset()` method on our **AssetTransfer** class. Unfortunately, this has not yet been implemented and does nothing.
 

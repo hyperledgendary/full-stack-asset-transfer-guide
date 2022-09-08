@@ -57,7 +57,7 @@ When invoked, the command is passed the **Gateway** instance it should use to in
     const smartContract = new AssetTransfer(contract);
     ```
 
-1. **Invoke transaction functions** - for example:
+1. **Invoke transaction functions on a deployed chaincode** - for example:
     - Create an asset in [commands/create.ts](../../applications/trader-typescript/src/commands/create.ts)
         ```typescript
         await smartContract.createAsset({
