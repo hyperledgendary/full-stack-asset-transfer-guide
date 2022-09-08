@@ -288,7 +288,7 @@ cloud-rest-easy:
 # ANSIBLE PLAYBOOK TARGETS                                                    #
 ###############################################################################
 
-ansible_image   := env_var_or_default("ANSIBLE_IMAGE",      "ghcr.io/ibm-blockchain/ofs-ansibe:sha-e11e4ea")
+ansible_image   := env_var_or_default("ANSIBLE_IMAGE",      "ghcr.io/ibm-blockchain/ofs-ansibe:sha-a7b3685")
 namespace       := env_var_or_default("WORKSHOP_NAMESPACE", "fabricinfra")
 
 # just set up everything with Ansible
