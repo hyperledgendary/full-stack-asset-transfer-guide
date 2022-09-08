@@ -197,7 +197,7 @@ microfab: microfab-down
     echo
     echo 'source $WORKSHOP_PATH/_cfg/uf/org1admin.env'
 
-
+# Creates a chaincode package and install/approve/commit
 debugcc:
     #!/bin/bash
     set -e -o pipefail
@@ -236,18 +236,6 @@ debugcc:
     echo "Added CHAINCODE_ID and CHAINCODE_SERVER_ADDRESS to org1admin.env"
     echo
     echo '   source $WORKSHOP_PATH/_cfg/uf/org1admin.env'
-
-
-devshell:
-    docker run \
-        --rm \
-        -u $(id -u) \
-        -it \
-        -v ${CWDIR}:/home/dev/workshop \
-        -v /var/run/docker.sock:/var/run/docker.sock \
-        --network=host \
-        fabgo:latest
-
 
 ###############################################################################
 # CLOUD NATIVE TARGETS                                                        #
@@ -494,6 +482,7 @@ ansible-deploy-chaincode:
         {{ansible_image}} \
             ansible-playbook /playbooks/21-commit-chaincode.yml
 
+# Creates a new identity for an application to use
 ansible-ready-application:
     #!/bin/bash
     set -ex -o pipefail
