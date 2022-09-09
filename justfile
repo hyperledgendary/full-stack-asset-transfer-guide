@@ -272,6 +272,9 @@ check-chaincode: check-network
 # Create 'rest-easy'
 cloud-rest-easy:
     infrastructure/sample-network/network rest-easy
+# Create 'frontend'
+cloud-frontend:
+    infrastructure/sample-network/network frontend
 
 ###############################################################################
 # ANSIBLE PLAYBOOK TARGETS                                                    #
