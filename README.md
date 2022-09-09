@@ -96,7 +96,6 @@ We'll create a digital representation of these cards on the blockchain ledger. T
 
 - [Cloud Ready!](docs/CloudReady/00-setup.md)
 - **Exercise:** [Deploy a Kubernetes Cluster](docs/CloudReady/10-kube.md)
-- [Fabric Operator](docs/CloudReady/xx-todo.md)
 - **Exercise:** [Deploy a Fabric Network](docs/CloudReady/20-fabric.md)
 - **Exercise:** [Deploy a Smart Contract](docs/CloudReady/30-chaincode.md)
 - **Exercise:** [Deploy a Client Application](docs/CloudReady/40-bananas.md)
@@ -104,5 +103,4 @@ We'll create a digital representation of these cards on the blockchain ledger. T
 ## Epilogue
 
 - [Go Bananas](docs/CloudReady/40-bananas.md)
-- [Teardown](docs/CloudReady/90-teardown.md)
-- [Bring it Home](docs/CloudReady/100-bring-it-home.md) COMING_SOON
+- [Bring it Home](docs/CloudReady/90-teardown.md)
