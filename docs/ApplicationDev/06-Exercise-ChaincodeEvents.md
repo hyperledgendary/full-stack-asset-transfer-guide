@@ -26,7 +26,7 @@ On the second run of the **listen** command, you should have seen exactly the sa
 
 Let's implement checkpointing to ensure there are no duplicate or missed events.
 
-3. Implement checkpointing for the reading of chaincode events in [listen.ts](../../applications/trader-typescript/src/commands/listen.ts). Look at the [API documentation for Network](https://hyperledger.github.io/fabric-gateway/main/api/node/interfaces/Network.html) for ideas on how to proceed. Be sure to only checkpoint events *after* they are successfully processed!
+5. Implement checkpointing for the reading of chaincode events in [listen.ts](../../applications/trader-typescript/src/commands/listen.ts). Look at the [API documentation for Network](https://hyperledger.github.io/fabric-gateway/main/api/node/interfaces/Network.html) for ideas on how to proceed. Be sure to only checkpoint events *after* they are successfully processed!
 
 1. Ensure your changes are compiled, then run the **listen** command with the SIMULATED_FAILURE_COUNT environment variable set to simulate an application error during the processing of a chancode event:
     ```bash
@@ -41,6 +41,6 @@ Let's implement checkpointing to ensure there are no duplicate or missed events.
 
 So far we have been replaying previously emitted chaincode events. Let's use the **listen** command to notify us in realtime when we take ownership of assets.
 
-6. Modify the **onEvent()** function in [listen.ts](../../applications/trader-typescript/src/commands/listen.ts) to notify you if you become the owner of a new (`CreateAsset` event) or transferred (`TransferAsset` event) asset. Note that the `payload` property of the event is a [Uint8Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array) containing the [JSON](https://en.wikipedia.org/wiki/JSON) emitted by the smart contract. Look at the **readAsset()** method in [contract.ts](../../applications/trader-typescript/src/contract.ts) for ideas on how to convert this into a JavaScript object so you can inspect its `Owner` property.
+8. Modify the **onEvent()** function in [listen.ts](../../applications/trader-typescript/src/commands/listen.ts) to notify you if you become the owner of a new (`CreateAsset` event) or transferred (`TransferAsset` event) asset. Note that the `payload` property of the event is a [Uint8Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array) containing the [JSON](https://en.wikipedia.org/wiki/JSON) emitted by the smart contract. Look at the **readAsset()** method in [contract.ts](../../applications/trader-typescript/src/contract.ts) for ideas on how to convert this into a JavaScript object so you can inspect its `Owner` property.
 
 1. Try running the **listen** command in one terminal window while using another terminal window to create and transfer assets.
