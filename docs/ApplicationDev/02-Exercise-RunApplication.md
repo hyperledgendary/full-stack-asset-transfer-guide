@@ -41,12 +41,3 @@ These application CLI commands represent a simplified application that performs 
 Try using the **create**, **read** and **delete** commands to work with specific assets.
 
 See the application [Readme](../../applications/trader-typescript/README.md) for details on how to use the commands.
-
-The environment variable settings above run as a user from org1. If you want to run as a user from org2, use these environment variables:
-
-```bash
-export ENDPOINT=org2peer-api.127-0-0-1.nip.io:8080
-export MSP_ID=org2MSP
-export CERTIFICATE=../../_cfg/uf/_msp/org2/org2admin/msp/signcerts/org2admin.pem
-export PRIVATE_KEY=../../_cfg/uf/_msp/org2/org2admin/msp/keystore/cert_sk
-```

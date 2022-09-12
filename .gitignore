@@ -9,8 +9,7 @@ _*
 ~*.pptx
 
 bin
-./config/
-./config/multipass-kube-config.yaml
+config/
 
 .DS_Store
 .idea/

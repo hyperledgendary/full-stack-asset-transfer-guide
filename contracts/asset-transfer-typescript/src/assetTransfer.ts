@@ -19,10 +19,9 @@ export class AssetTransferContract extends Contract {
      */
     @Transaction()
     @Param('assetObj', 'Asset', 'Part formed JSON of Asset')
-    async CreateAsset(ctx: Context, assetObj: Asset): Promise<void> {
-        const state: Partial<Asset> = assetObj; // unmarshal(assetJson);
+    async CreateAsset(ctx: Context, state: Asset): Promise<void> {
         state.Owner = toJSON(clientIdentifier(ctx, state.Owner));
-        const asset = Asset.newAsset(state);
+        const asset = Asset.newInstance(state);
 
         const exists = await this.AssetExists(ctx, asset.ID);
         if (exists) {
@@ -44,7 +43,7 @@ export class AssetTransferContract extends Contract {
     @Returns('Asset')
     async ReadAsset(ctx: Context, id: string): Promise<Asset> {
         const existingAssetBytes = await this.#readAsset(ctx, id);
-        const existingAsset = Asset.newAsset(unmarshal(existingAssetBytes));
+        const existingAsset = Asset.newInstance(unmarshal(existingAssetBytes));
 
         return existingAsset;
     }
@@ -64,14 +63,13 @@ export class AssetTransferContract extends Contract {
      */
     @Transaction()
     @Param('assetObj', 'Asset', 'Part formed JSON of Asset')
-    async UpdateAsset(ctx: Context, assetObj: Asset): Promise<void> {
-        const assetUpdate: Partial<Asset> = assetObj;
+    async UpdateAsset(ctx: Context, assetUpdate: Asset): Promise<void> {
         if (assetUpdate.ID === undefined) {
             throw new Error('No asset ID specified');
         }
 
         const existingAssetBytes = await this.#readAsset(ctx, assetUpdate.ID);
-        const existingAsset = Asset.newAsset(unmarshal(existingAssetBytes));
+        const existingAsset = Asset.newInstance(unmarshal(existingAssetBytes));
 
         if (!hasWritePermission(ctx, existingAsset)) {
             throw new Error('Only owner can update assets');
@@ -80,7 +78,7 @@ export class AssetTransferContract extends Contract {
         const updatedState = Object.assign({}, existingAsset, assetUpdate, {
             Owner: existingAsset.Owner, // Must transfer to change owner
         });
-        const updatedAsset = Asset.newAsset(updatedState);
+        const updatedAsset = Asset.newInstance(updatedState);
 
         // overwriting original asset with new asset
         const updatedAssetBytes = marshal(updatedAsset);
@@ -97,7 +95,7 @@ export class AssetTransferContract extends Contract {
     @Transaction()
     async DeleteAsset(ctx: Context, id: string): Promise<void> {
         const assetBytes = await this.#readAsset(ctx, id); // Throws if asset does not exist
-        const asset = Asset.newAsset(unmarshal(assetBytes));
+        const asset = Asset.newInstance(unmarshal(assetBytes));
 
         if (!hasWritePermission(ctx, asset)) {
             throw new Error('Only owner can delete assets');
@@ -124,7 +122,7 @@ export class AssetTransferContract extends Contract {
     @Transaction()
     async TransferAsset(ctx: Context, id: string, newOwner: string, newOwnerOrg: string): Promise<void> {
         const assetString = await this.#readAsset(ctx, id);
-        const asset = Asset.newAsset(unmarshal(assetString));
+        const asset = Asset.newInstance(unmarshal(assetString));
 
         if (!hasWritePermission(ctx, asset)) {
             throw new Error('Only owner can transfer assets');
@@ -153,7 +151,7 @@ export class AssetTransferContract extends Contract {
         for (let result = await iterator.next(); !result.done; result = await iterator.next()) {
             const assetBytes = result.value.value;
             try {
-                const asset = Asset.newAsset(unmarshal(assetBytes));
+                const asset = Asset.newInstance(unmarshal(assetBytes));
                 assets.push(asset);
             } catch (err) {
                 console.log(err);
@@ -194,10 +192,10 @@ function hasWritePermission(ctx: Context, asset: Asset): boolean {
     return clientId.org === ownerId.org;
 }
 
-function clientIdentifier(ctx: Context, user = clientCommonName(ctx)): OwnerIdentifier {
+function clientIdentifier(ctx: Context, user?: string): OwnerIdentifier {
     return {
         org: ctx.clientIdentity.getMSPID(),
-        user,
+        user: user || clientCommonName(ctx),
     };
 }
 
