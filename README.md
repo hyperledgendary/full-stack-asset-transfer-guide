@@ -14,6 +14,8 @@ The workshop will be split into three sections:
 - Client Application Development
 - Cloud Native Fabric Deployment
 
+![Intro diagram](./docs/images/readme_diagram.png)
+
 **OBJECTIVES:**
 
 - Show how an Asset Transfer smart contract can be written to encapsulate business logic
