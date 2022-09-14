@@ -4,6 +4,11 @@
 
 ---
 
+
+## Conga Test 
+
+[#conga-test](https://discord.gg/tUSF2vU6cg) at Discord! 
+
 ## Final Exercise: Build Your (Social) Network 
 
 - Write down your email address / linkedin profile / # discord handle / etc. on the back of your Conga Card.

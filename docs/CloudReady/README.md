@@ -11,3 +11,5 @@
 - **Exercise:** [Deploy a Smart Contract](30-chaincode.md)
     - (optional) With the [Ansible Blockchain Collection](31-fabric-ansible-chaincode.md)
 - **Exercise:** [Deploy a Client Application](40-bananas.md)
+
+
