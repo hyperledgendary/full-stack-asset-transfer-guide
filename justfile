@@ -45,6 +45,7 @@ storage_class   := env_var_or_default("WORKSHOP_STORAGE_CLASS",      "standard")
 chaincode_name  := env_var_or_default("WORKSHOP_CHAINCODE_NAME",     "asset-transfer")
 internal_repo_endpoint  := env_var_or_default("WORKSHOP_INTERNAL_REPO",     "localhost:5000")
 external_repo_endpoint  := env_var_or_default("WORKSHOP_EXTERNAL_REPO",     "localhost:5000")
+cluster_type    := env_var_or_default("WORKSHOP_CLUSTER_TYPE",       "k8s")
 
 
 # Start a local KIND cluster with nginx, localhost:5000 registry, and *.localho.st alias in kube DNS
@@ -293,8 +294,8 @@ ansible-doit: ansible-review-config ansible-operator ansible-console ansible-net
 # Review the Ansible Blockchain Collection configuration in _cfg/
 ansible-review-config:
     #!/bin/bash
-    mkdir -p _cfg
-    rm -rf _cfg/*  || true
+    mkdir -p ${CWDIR}/_cfg
+    rm -rf ${CWDIR}/_cfg/*  || true
 
     cp ${CWDIR}/infrastructure/configuration/*.yml ${CWDIR}/_cfg
 
@@ -377,7 +378,6 @@ ansible-console:
         export EXTRAS=" -e KUBECONFIG=/_cfg/k8s_context.yaml"
     fi
 
-
     docker run \
         --rm \
         -v ${HOME}/.kube/:/home/ibp-user/.kube/ \
@@ -387,12 +387,15 @@ ansible-console:
         {{ansible_image}} \
             ansible-playbook /playbooks/02-console-install.yml
 
+ansible-auth:
+    #!/bin/bash
+    set -ex -o pipefail
+
     AUTH=$(curl -X POST https://{{namespace}}-hlf-console-console.{{ingress_domain}}:443/ak/api/v2/permissions/keys -u admin:password -k -H 'Content-Type: application/json' -d '{"roles": ["writer", "manager"],"description": "newkey"}')
     KEY=$(echo $AUTH | jq .api_key | tr -d '"')
     SECRET=$(echo $AUTH | jq .api_secret | tr -d '"')
 
     echo "Writing authentication file for Ansible based IBP (Software) network building"
-    mkdir -p _cfg
     cat << EOF > $CWDIR/_cfg/auth-vars.yml
     api_key: $KEY
     api_endpoint: https://{{namespace}}-hlf-console-console.{{ingress_domain}}/
@@ -403,7 +406,7 @@ ansible-console:
 
 
 # Build a sample Fabric network with the Ansible Blockchain Collection
-ansible-network:
+ansible-network: ansible-auth
     #!/bin/bash
     set -ex -o pipefail
 
@@ -462,7 +465,7 @@ ansible-deploy-chaincode:
         export EXTRAS=" -e KUBECONFIG=/_cfg/k8s_context.yaml"
     fi
 
-    cp ${CWDIR}/contracts/asset-transfer-typescript/asset-transfer-chaincode-vars.yml ${CWDIR}/_cfg
+    # cp ${CWDIR}/contracts/asset-transfer-typescript/asset-transfer-chaincode-vars.yml ${CWDIR}/_cfg
     docker run \
         --rm \
         -u $(id -u) \
