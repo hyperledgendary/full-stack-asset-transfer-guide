@@ -3,10 +3,15 @@
 #
 ---
 # The type of K8S cluster this is using
-target: k8s
+target: ${cluster_type}
 
 # If the target cluster is OpenShift use this value for target
 # target: openshift
+
+# If the target cluster is any other k8s use this value for target
+# target: k8s
+
+
 
 arch: amd64
 
