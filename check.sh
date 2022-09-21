@@ -138,11 +138,11 @@ else
 
   # double-check that the peer binary is compiled for the correct arch.  This can occur when installing fabric
   # binaries into a multipass VM, then running the Linux binaries from a Mac or windows Host OS via the volume share.
-  bin/peer version &> /dev/null
+  peer version &> /dev/null
   rc=$?
   if [ $rc -ne 0 ]; then
-    echo -e "${WARN}  Could not execute bin/peer.  Was it compiled for the correct architecture?"
-    bin/peer version
+    echo -e "${WARN}  Could not execute peer.  Was it compiled for the correct architecture?"
+    peer version
   fi
 fi
 
