@@ -42,6 +42,9 @@ cluster_name    := env_var_or_default("WORKSHOP_CLUSTER_NAME",       "kind")
 cluster_runtime := env_var_or_default("WORKSHOP_CLUSTER_RUNTIME",    "kind")
 ingress_domain  := env_var_or_default("WORKSHOP_INGRESS_DOMAIN",     "localho.st")
 storage_class   := env_var_or_default("WORKSHOP_STORAGE_CLASS",      "standard")
+chaincode_name  := env_var_or_default("WORKSHOP_CHAINCODE_NAME",     "asset-transfer")
+internal_repo_endpoint  := env_var_or_default("WORKSHOP_INTERNAL_REPO",     "localhost:5000")
+external_repo_endpoint  := env_var_or_default("WORKSHOP_EXTERNAL_REPO",     "localhost:5000")
 
 
 # Start a local KIND cluster with nginx, localhost:5000 registry, and *.localho.st alias in kube DNS
@@ -280,7 +283,7 @@ cloud-frontend:
 # ANSIBLE PLAYBOOK TARGETS                                                    #
 ###############################################################################
 
-ansible_image   := env_var_or_default("ANSIBLE_IMAGE",      "ghcr.io/ibm-blockchain/ofs-ansibe:sha-a7b3685")
+ansible_image   := env_var_or_default("ANSIBLE_IMAGE",      "ghcr.io/ibm-blockchain/ofs-ansibe:sha-ac6fd82")
 namespace       := env_var_or_default("WORKSHOP_NAMESPACE", "fabricinfra")
 
 # just set up everything with Ansible
@@ -434,14 +437,18 @@ ansible-build-chaincode:
     set -ex -o pipefail
     pushd ${CWDIR}/contracts/asset-transfer-typescript
 
-    export IMAGE_NAME=localhost:5000/asset-transfer
-    DOCKER_BUILDKIT=1 docker build -t ${IMAGE_NAME} . --target k8s
-    docker push ${IMAGE_NAME}
+    if [ "{{cluster_runtime}}" = "openshift" ]; then
+        export IMAGE_NAME="{{namespace}}/{{chaincode_name}}"
+    else
+        export IMAGE_NAME="{{chaincode_name}}"
+    fi
+    DOCKER_BUILDKIT=1 docker build -t {{external_repo_endpoint}}/${IMAGE_NAME} . --target k8s
+    docker push {{external_repo_endpoint}}/${IMAGE_NAME}
 
     # note the double { } for escaping
-    export IMG_SHA=$(docker inspect --format='{{{{index .RepoDigests 0}}' localhost:5000/asset-transfer | cut -d'@' -f2)
-    weft chaincode package k8s --name ${IMAGE_NAME} --digest ${IMG_SHA} --label asset-transfer
-
+    export IMG_SHA=$(docker inspect --format='{{{{index .RepoDigests 0}}' {{external_repo_endpoint}}/${IMAGE_NAME} | cut -d'@' -f2)
+    weft chaincode package k8s --name {{internal_repo_endpoint}}/${IMAGE_NAME} --digest ${IMG_SHA} --label {{chaincode_name}} 
+    mv {{chaincode_name}}.tgz ${CWDIR}/_cfg
     popd
 
 
