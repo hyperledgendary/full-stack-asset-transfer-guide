@@ -22,6 +22,7 @@ const chaincodeName = env.get('CHAINCODE_NAME').default('conga-nft-contract').as
 const connectionProfile = env.get('CONN_PROFILE_FILE').required().asString();
 const identityFile = env.get('ID_FILE').required().asString()
 const identityDir = env.get('ID_DIR').required().asString()
+const mspID = env.get('MSPID').required().asString()
 const tls = env.get('TLS_ENABLED').default("false").asBool();
 
 const utf8Decoder = new TextDecoder();
@@ -36,7 +37,7 @@ async function main(): Promise<void> {
     const client = await ConnectionHelper.newGrpcConnection(cp,tls);
     console.log("Created GRPC Connection")
 
-    const jsonAdapter: JSONIDAdapter = new JSONIDAdapter(path.resolve(identityDir),'Org1MSP');
+    const jsonAdapter: JSONIDAdapter = new JSONIDAdapter(path.resolve(identityDir),mspID);
     const identity = await jsonAdapter.getIdentity(identityFile);
     const signer = await jsonAdapter.getSigner(identityFile);
 
