@@ -201,7 +201,7 @@ We'll use the example typescript contract already written in `$WORKSHOP_PATH/con
 Use another terminal window for the chaincode. Make sure the terminal is setup with the same environment variables as the first terminal:
 
 ```
-cd full-stack-asset-transfer-guide
+cd workshop
 export WORKSHOP_PATH=$(pwd)
 export PATH=${WORKSHOP_PATH}/bin:$PATH
 export FABRIC_CFG_PATH=${WORKSHOP_PATH}/config
@@ -254,7 +254,7 @@ Choose a terminal window to run the transactions from; initially we'll use the `
 If this is a new terminal window set the environment variables:
 
 ```
-cd full-stack-asset-transfer-guide
+cd workshop
 export WORKSHOP_PATH=$(pwd)
 export PATH=${WORKSHOP_PATH}/bin:$PATH
 export FABRIC_CFG_PATH=${WORKSHOP_PATH}/config
