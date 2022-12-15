@@ -1,3 +1,9 @@
+This project has now migrated to an official sample!
+
+https://github.com/hyperledger/fabric-samples/tree/main/full-stack-asset-transfer-guide
+
+---
+
 ![Conga](https://avatars.githubusercontent.com/u/49026922?s=200&v=4)
 
 # Fabric Full Stack Development Workshop
